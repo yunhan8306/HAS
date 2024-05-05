@@ -6,9 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.myStash.core.data.usecase.tag.GetTagListUseCase
 import com.myStash.core.data.usecase.tag.SaveTagUseCase
 import com.myStash.core.model.Tag
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class TestViewModel @Inject constructor (
     private val saveTagUseCase: SaveTagUseCase,
     private val getTagListUseCase: GetTagListUseCase

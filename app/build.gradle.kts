@@ -61,6 +61,7 @@ dependencies {
     implementation(projects.feature.navigation)
     implementation(projects.core.data)
     implementation(projects.core.model)
+    implementation(projects.core.di)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.compose.lifecycle.runtime)

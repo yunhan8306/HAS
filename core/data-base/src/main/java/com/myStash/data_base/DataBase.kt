@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.myStash.data_base.converter.LongTypeListConverter
 import com.myStash.data_base.item.dao.ItemDao
 import com.myStash.data_base.style.dao.StyleDao
 import com.myStash.data_base.tag.dao.TagDao
@@ -20,6 +22,7 @@ import com.squareup.moshi.Moshi
     ],
     version = 1
 )
+@TypeConverters(value = [LongTypeListConverter::class])
 abstract class DataBase : RoomDatabase() {
 
     abstract fun ItemDao() : ItemDao
@@ -36,6 +39,8 @@ abstract class DataBase : RoomDatabase() {
             context = context,
             klass = DataBase::class.java,
             name = DATA_BASE_NAME
-        ).fallbackToDestructiveMigration().build()
+        )
+            .addTypeConverter(LongTypeListConverter(moshi))
+            .fallbackToDestructiveMigration().build()
     }
 }
