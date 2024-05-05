@@ -58,6 +58,7 @@ android {
 
 dependencies {
 
+    implementation(projects.feature.navigation)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.compose.lifecycle.runtime)
