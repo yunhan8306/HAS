@@ -19,3 +19,8 @@ dependencyResolutionManagement {
 rootProject.name = "myStash"
 include(":app")
 include(":core:design-system")
+include(":feature:navigation")
+include(":core:data-base")
+include(":core:di")
+include(":core:data")
+include(":core:model")
