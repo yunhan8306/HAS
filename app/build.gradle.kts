@@ -60,9 +60,11 @@ dependencies {
 
     implementation(projects.feature.navigation)
     implementation(projects.feature.gallery)
+    implementation(projects.feature.item)
     implementation(projects.core.data)
     implementation(projects.core.model)
     implementation(projects.core.di)
+    implementation(projects.core.designSystem)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.compose.lifecycle.runtime)
