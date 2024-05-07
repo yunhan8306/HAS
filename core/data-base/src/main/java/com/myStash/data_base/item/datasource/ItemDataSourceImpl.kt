@@ -2,6 +2,7 @@ package com.myStash.data_base.item.datasource
 
 import com.myStash.data_base.item.dao.ItemDao
 import com.myStash.data_base.item.entity.ItemEntity
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ItemDataSourceImpl @Inject constructor(
@@ -16,7 +17,7 @@ class ItemDataSourceImpl @Inject constructor(
     override suspend fun delete(entity: ItemEntity): Int =
         itemDao.delete(entity)
 
-    override suspend fun selectAll(): List<ItemEntity> =
+    override fun selectAll(): Flow<List<ItemEntity>> =
         itemDao.selectAll()
 
 }

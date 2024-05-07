@@ -4,6 +4,8 @@ import com.myStash.core.model.Style
 import com.myStash.data_base.style.datasource.StyleDataSource
 import com.myStash.data_base.style.entity.StyleEntity.Companion.toStyle
 import com.myStash.data_base.style.entity.StyleEntity.Companion.toStyleEntity
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class StyleRepositoryImpl @Inject constructor(
@@ -18,6 +20,6 @@ class StyleRepositoryImpl @Inject constructor(
     override suspend fun delete(style: Style): Int =
         styleDataSource.delete(style.toStyleEntity())
 
-    override suspend fun selectAll(): List<Style> =
-        styleDataSource.selectAll().map { it.toStyle() }
+    override fun selectAll(): Flow<List<Style>> =
+        styleDataSource.selectAll().map { list -> list.map { it.toStyle() } }
 }

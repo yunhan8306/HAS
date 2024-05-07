@@ -77,6 +77,8 @@ dependencies {
     implementation(libs.androidx.material.compose)
     implementation(libs.androidx.lifecycle.process)
     implementation(libs.coil)
+    implementation(libs.orbit.compose)
+    implementation(libs.orbit.viewmodel)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

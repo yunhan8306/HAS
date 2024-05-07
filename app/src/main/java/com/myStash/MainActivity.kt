@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.myStash.navigation.MainNavigation
 import dagger.hilt.android.AndroidEntryPoint
+import org.orbitmvi.orbit.compose.collectAsState
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -26,6 +28,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navHostController = rememberAnimatedNavController()
+            val state by viewModel.collectAsState()
 
             Scaffold(
                 bottomBar = {
@@ -35,7 +38,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.padding(paddingValues)
                 ) {
-                    MainNavHost(navHostController)
+                    MainNavHost(navHostController, state.data)
                 }
             }
 
@@ -44,7 +47,7 @@ class MainActivity : ComponentActivity() {
                     .size(100.dp)
                     .background(Color.Red)
                     .clickable {
-                        viewModel.test()
+                        viewModel.saveTest()
                     }
             )
         }
