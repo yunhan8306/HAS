@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.myStash.feature.gallery.launchGalleryTestActivity
 import com.myStash.navigation.MainNavigation
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.compose.collectAsState
@@ -47,7 +48,8 @@ class MainActivity : ComponentActivity() {
                     .size(100.dp)
                     .background(Color.Red)
                     .clickable {
-                        viewModel.saveTest()
+//                        viewModel.saveTest()
+                        launchGalleryTestActivity()
                     }
             )
         }

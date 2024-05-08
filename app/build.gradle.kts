@@ -59,6 +59,7 @@ android {
 dependencies {
 
     implementation(projects.feature.navigation)
+    implementation(projects.feature.gallery)
     implementation(projects.core.data)
     implementation(projects.core.model)
     implementation(projects.core.di)

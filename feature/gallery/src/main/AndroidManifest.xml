@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.myStash.feature.gallery">
+
+    <application>
+        <activity
+            android:name="com.myStash.feature.gallery.GalleryActivity"
+            android:exported="false"
+            android:launchMode="singleTask" />
+
+    </application>
+</manifest>
