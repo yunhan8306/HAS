@@ -20,6 +20,8 @@ class GalleryViewModel @Inject constructor(
 
     private var selectedList: List<Image> = emptyList()
 
+    private val selectedList2 = mutableListOf<Image>()
+
     fun setImage(images: List<Image>) {
         intent {
             reduce {
@@ -44,6 +46,24 @@ class GalleryViewModel @Inject constructor(
             reduce {
                 state.copy(
                     selectedImageList = newList
+                )
+            }
+        }
+    }
+
+    fun isSelected2(image: Image) {
+        intent {
+            selectedList2.apply {
+                val index = indexOfFirst { it.name == image.name }
+                if(index != -1) {
+                    removeAt(index)
+                } else {
+                    add(image)
+                }
+            }
+            reduce {
+                state.copy(
+                    selectedImageList = selectedList2.toList()
                 )
             }
         }

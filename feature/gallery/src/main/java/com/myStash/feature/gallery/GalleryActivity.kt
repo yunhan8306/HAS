@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
+import com.myStash.design_system.ui.theme.NoRippleTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
@@ -35,10 +36,9 @@ class GalleryActivity : ComponentActivity() {
         setContent {
             val state by viewModel.collectAsState()
 
-            GalleryScreen(
-                state = state,
-                onSelect = viewModel::isSelected
-            )
+            NoRippleTheme {
+                GalleryScreen()
+            }
         }
     }
 }
