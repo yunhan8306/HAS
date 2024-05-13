@@ -1,12 +1,14 @@
 package com.myStash
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Scaffold
@@ -24,12 +26,10 @@ import org.orbitmvi.orbit.compose.collectAsState
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<TestViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val navHostController = rememberAnimatedNavController()
-            val state by viewModel.collectAsState()
 
             Scaffold(
                 bottomBar = {
@@ -37,21 +37,26 @@ class MainActivity : ComponentActivity() {
                 }
             ) { paddingValues ->
                 Surface(
-                    modifier = Modifier.padding(paddingValues)
+                    modifier = Modifier.fillMaxSize().padding(paddingValues)
                 ) {
-                    MainNavHost(navHostController, state.data)
+                    MainNavHost(
+                        navHostController = navHostController,
+                        onShowTestActivity = {
+
+                        }
+                    )
                 }
             }
 
-            Box(
-                modifier = Modifier
-                    .size(100.dp)
-                    .background(Color.Red)
-                    .clickable {
-//                        viewModel.saveTest()
-                        launchGalleryTestActivity()
-                    }
-            )
+//            Box(
+//                modifier = Modifier
+//                    .size(100.dp)
+//                    .background(Color.Red)
+//                    .clickable {
+////                        viewModel.saveTest()
+//                        launchGalleryTestActivity()
+//                    }
+//            )
         }
     }
 }

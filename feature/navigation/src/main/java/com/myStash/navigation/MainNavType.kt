@@ -6,7 +6,7 @@ enum class MainNavType(
     val activeIcon: Int,
     val inactiveIcon: Int,
 ) {
-    TEST1(
+    ESSENTIAL(
         activeIcon = R.drawable.btn_btm_bar_swipe_on,
         inactiveIcon = R.drawable.btn_btm_bar_swipe_off
     ),

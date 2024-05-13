@@ -21,9 +21,9 @@ import com.myStash.navigation.MainNavType
 fun NavGraphBuilder.essentialScreen(
     onShowTestActivity: () -> Unit
 ) {
-    Log.d("qwe123", "MainNavType.ESSENTIAL.route - ${MainNavType.ESSENTIAL.route}")
+
     composable(
-        route = MainNavType.ESSENTIAL.route,
+        route = MainNavType.ESSENTIAL.name,
         enterTransition = { enterTransitionStart },
         exitTransition = { exitTransitionStart }
     ) {
