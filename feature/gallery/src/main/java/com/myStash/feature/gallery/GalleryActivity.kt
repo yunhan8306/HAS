@@ -34,11 +34,7 @@ class GalleryActivity : ComponentActivity() {
         }
 
         setContent {
-            val state by viewModel.collectAsState()
-
-            NoRippleTheme {
-                GalleryScreen()
-            }
+            GalleryScreen()
         }
     }
 }
