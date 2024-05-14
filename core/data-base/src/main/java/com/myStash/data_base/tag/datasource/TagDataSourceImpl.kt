@@ -20,4 +20,7 @@ class TagDataSourceImpl @Inject constructor(
     override fun selectAll(): Flow<List<TagEntity>> =
         tagDao.selectAll()
 
+    override suspend fun getTag(name: String): TagEntity? =
+        tagDao.getTag(name)
+
 }

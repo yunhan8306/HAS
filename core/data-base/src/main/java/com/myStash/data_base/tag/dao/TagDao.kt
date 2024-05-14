@@ -24,4 +24,7 @@ interface TagDao: BaseDao<TagEntity> {
     @Query("SELECT * FROM tag")
     fun selectAll() : Flow<List<TagEntity>>
 
+    @Query("SELECT * FROM tag WHERE name = :name LIMIT 1")
+    fun getTag(name: String): TagEntity?
+
 }
