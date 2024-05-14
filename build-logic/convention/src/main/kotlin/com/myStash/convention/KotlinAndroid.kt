@@ -48,7 +48,9 @@ private fun Project.configureKotlin() {
 
             freeCompilerArgs = freeCompilerArgs + listOf(
                 "-opt-in=kotlin.RequiresOptIn",
-                "-opt-in=androidx.compose.animation.ExperimentalAnimationApi"
+                "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
+                "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+                "-opt-in=kotlinx.coroutines.FlowPreview",
             )
         }
     }

@@ -11,6 +11,7 @@ android {
 dependencies {
     implementation(projects.core.model)
     implementation(projects.core.designSystem)
+    implementation(projects.core.data)
     implementation(projects.feature.navigation)
 
     implementation(libs.androidx.core.ktx)

@@ -1,10 +1,11 @@
 package com.myStash.feature.essential
 
-import com.myStash.core.model.Image
+import com.myStash.core.model.Item
+import com.myStash.core.model.Tag
 
 data class EssentialScreenState(
-    val imageList: List<Int> = emptyList(),
-    val selectedImageList: List<Int> = emptyList()
+    val itemList: List<Item> = emptyList(),
+    val tagTotalList: List<Tag> = emptyList()
 )
 
 sealed interface EssentialSideEffect
