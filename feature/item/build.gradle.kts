@@ -10,6 +10,9 @@ android {
 
 dependencies {
     implementation(projects.core.designSystem)
+    implementation(projects.core.model)
+    implementation(projects.core.data)
+    implementation(projects.common.compose)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.compose.lifecycle.runtime)
@@ -25,4 +28,6 @@ dependencies {
     implementation(libs.system.ui.controller)
     implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.compose.hilt.navigation)
+    implementation(libs.orbit.compose)
+    implementation(libs.orbit.viewmodel)
 }
