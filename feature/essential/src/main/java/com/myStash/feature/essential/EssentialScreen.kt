@@ -35,6 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import coil.compose.SubcomposeAsyncImage
 import com.google.accompanist.navigation.animation.composable
+import com.myStash.common.compose.activityViewModel
 import com.myStash.core.model.Item
 import com.myStash.core.model.Tag
 import com.myStash.design_system.animation.enterTransitionStart
@@ -60,7 +61,7 @@ fun NavGraphBuilder.essentialScreen(
 
 @Composable
 fun EssentialRoute(
-    viewModel: EssentialViewModel = hiltViewModel(),
+    viewModel: EssentialViewModel = activityViewModel(),
     showItemActivity: (Item?) -> Unit,
 ) {
 
@@ -71,6 +72,7 @@ fun EssentialRoute(
         itemList = itemList,
         tagTotalList = tagTotalList,
         showItemActivity = showItemActivity,
+        testItemAdd = viewModel::testItemAdd
     )
 }
 
@@ -79,6 +81,7 @@ fun EssentialScreen(
     itemList: List<Item>,
     tagTotalList: List<Tag>,
     showItemActivity: (Item?) -> Unit,
+    testItemAdd: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -119,6 +122,19 @@ fun EssentialScreen(
                 .size(40.dp)
                 .background(Color.Red)
                 .clickable { showItemActivity.invoke(null) }
+        )
+    }
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomStart
+    ) {
+        Text(
+            modifier = Modifier
+                .height(40.dp)
+                .background(Color.Red)
+                .clickable { testItemAdd.invoke() },
+            text = "test Item Add"
         )
     }
 }

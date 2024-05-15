@@ -4,13 +4,14 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.core.data.usecase.item.GetItemListUseCase
+import com.myStash.core.data.usecase.item.SaveItemUseCase
 import com.myStash.core.data.usecase.tag.GetTagListUseCase
+import com.myStash.core.model.Image
+import com.myStash.core.model.Item
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
@@ -23,6 +24,7 @@ import javax.inject.Inject
 class EssentialViewModel @Inject constructor(
     private val getItemListUseCase: GetItemListUseCase,
     private val getTagListUseCase: GetTagListUseCase,
+    private val saveItemUseCase: SaveItemUseCase,
 ) : ContainerHost<EssentialScreenState, EssentialSideEffect>, ViewModel() {
     override val container: Container<EssentialScreenState, EssentialSideEffect> =
         container(EssentialScreenState())
@@ -30,6 +32,9 @@ class EssentialViewModel @Inject constructor(
     init {
         fetch()
     }
+
+    var testImageList = listOf<Image>()
+    var testImageCnt = 0
 
     private val itemList = getItemListUseCase.itemList
         .stateIn(
@@ -57,6 +62,19 @@ class EssentialViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun testItemAdd() {
+        viewModelScope.launch {
+            val newItem = Item(
+//                tags = tags,
+//                brand = brand,
+//                type = type,
+                imagePath = testImageList[testImageCnt].uri.toString(),
+            )
+            saveItemUseCase.invoke(newItem)
+            testImageCnt++
         }
     }
 
