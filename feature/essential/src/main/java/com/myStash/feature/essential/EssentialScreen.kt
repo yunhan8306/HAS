@@ -23,6 +23,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -65,11 +68,14 @@ fun EssentialRoute(
 
     val itemList = viewModel.collectAsState().value.itemList
     val tagTotalList = viewModel.collectAsState().value.tagTotalList
+    val selectTagList = viewModel.collectAsState().value.selectTagList
 
     EssentialScreen(
         itemList = itemList,
         tagTotalList = tagTotalList,
+        selectTagList = selectTagList,
         showItemActivity = showItemActivity,
+        selectTag = viewModel::selectTag,
         testItemAdd = viewModel::testItemAdd,
         testTagAdd = viewModel::testTagAdd,
         deleteAllItem = viewModel::deleteAllItem,
@@ -81,7 +87,9 @@ fun EssentialRoute(
 fun EssentialScreen(
     itemList: List<Item>,
     tagTotalList: List<Tag>,
+    selectTagList: List<Tag>,
     showItemActivity: (Item?) -> Unit,
+    selectTag: (Tag) -> Unit,
     testItemAdd: () -> Unit,
     testTagAdd: () -> Unit,
     deleteAllItem: () -> Unit,
@@ -93,11 +101,54 @@ fun EssentialScreen(
             .background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.height(15.dp))
         Text(
             text = "Essential Screen",
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
         )
+        Spacer(modifier = Modifier.height(15.dp))
+        Text(
+            text = "Total Tag",
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(15.dp))
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 30.dp)
+                .background(Color.Blue),
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
+        ) {
+            items(
+                items = tagTotalList,
+                key = { it.name }
+            ) { tag ->
+
+                val isSelected by remember(selectTagList) {
+                    derivedStateOf {
+                        selectTagList.contains(tag)
+                    }
+                }
+
+                EssentialTagItem(
+                    name = tag.name,
+                    isSelected = isSelected,
+                    onClick = {
+                        selectTag.invoke(tag)
+                    }
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(15.dp))
+        Text(
+            text = "Select Tag",
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(15.dp))
 
         LazyRow(
             modifier = Modifier
@@ -106,16 +157,27 @@ fun EssentialScreen(
                 .background(Color.Blue),
             horizontalArrangement = Arrangement.spacedBy(20.dp),
         ) {
-            items(tagTotalList) { tag ->
+            items(
+                items = selectTagList,
+                key = { it.name }
+            ) { tag ->
+
                 EssentialTagItem(
                     name = tag.name,
-                    onClick = {
-
-                    }
+                    isSelected = false,
+                    onClick = {}
                 )
             }
         }
 
+
+        Spacer(modifier = Modifier.height(15.dp))
+        Text(
+            text = "Grid",
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(15.dp))
         LazyVerticalGrid(
             modifier = Modifier
                 .fillMaxWidth()
@@ -125,7 +187,10 @@ fun EssentialScreen(
             horizontalArrangement = Arrangement.spacedBy(20.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            items(itemList) { item ->
+            items(
+                items = itemList,
+                key = { it.id!! }
+            ) { item ->
                 EssentialItem(
                     itemUri = item.imagePath,
                     tagList = item.getTagList(tagTotalList),
@@ -224,15 +289,16 @@ fun EssentialItem(
 @Composable
 fun EssentialTagItem(
     name: String,
+    isSelected: Boolean,
     onClick: () -> Unit = {},
 ) {
-
     Box(
         modifier = Modifier
             .height(30.dp)
             .width(60.dp)
-            .background(Color.White)
-            .clickable { onClick.invoke() }
+            .background(if(isSelected)Color.White else Color.Yellow)
+            .clickable { onClick.invoke() },
+        contentAlignment = Alignment.Center
     ) {
         Text(text = name)
     }
