@@ -11,6 +11,8 @@ android {
 dependencies {
     implementation(projects.core.model)
     implementation(projects.core.designSystem)
+    implementation(projects.common.compose)
+    implementation(projects.common.util)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.compose.lifecycle.runtime)

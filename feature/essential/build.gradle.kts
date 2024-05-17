@@ -13,6 +13,7 @@ dependencies {
     implementation(projects.core.designSystem)
     implementation(projects.core.data)
     implementation(projects.common.compose)
+    implementation(projects.common.util)
     implementation(projects.feature.navigation)
 
     implementation(libs.androidx.core.ktx)

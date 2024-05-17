@@ -3,6 +3,7 @@ package com.myStash.feature.essential
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.myStash.common.util.offerOrRemove
 import com.myStash.core.data.usecase.item.DeleteItemUseCase
 import com.myStash.core.data.usecase.item.GetItemListUseCase
 import com.myStash.core.data.usecase.item.SaveItemUseCase
@@ -59,6 +60,8 @@ class EssentialViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
+    private val selectedTagList = mutableListOf<Tag>()
+
     private fun fetch() {
         intent {
             viewModelScope.launch {
@@ -71,6 +74,20 @@ class EssentialViewModel @Inject constructor(
                             tagTotalList = tagTotalList
                         )
                     }
+                }
+            }
+        }
+    }
+
+    fun selectTag(tag: Tag) {
+        intent {
+            viewModelScope.launch {
+                selectedTagList.offerOrRemove(tag) { it.name == tag.name }
+
+                reduce {
+                    state.copy(
+                        selectTagList = selectedTagList.toList()
+                    )
                 }
             }
         }
