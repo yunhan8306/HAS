@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -68,7 +70,10 @@ fun EssentialRoute(
         itemList = itemList,
         tagTotalList = tagTotalList,
         showItemActivity = showItemActivity,
-        testItemAdd = viewModel::testItemAdd
+        testItemAdd = viewModel::testItemAdd,
+        testTagAdd = viewModel::testTagAdd,
+        deleteAllItem = viewModel::deleteAllItem,
+        deleteAllTag = viewModel::deleteAllTag,
     )
 }
 
@@ -77,7 +82,10 @@ fun EssentialScreen(
     itemList: List<Item>,
     tagTotalList: List<Tag>,
     showItemActivity: (Item?) -> Unit,
-    testItemAdd: () -> Unit
+    testItemAdd: () -> Unit,
+    testTagAdd: () -> Unit,
+    deleteAllItem: () -> Unit,
+    deleteAllTag: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -90,6 +98,24 @@ fun EssentialScreen(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
         )
+
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 30.dp)
+                .background(Color.Blue),
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
+        ) {
+            items(tagTotalList) { tag ->
+                EssentialTagItem(
+                    name = tag.name,
+                    onClick = {
+
+                    }
+                )
+            }
+        }
+
         LazyVerticalGrid(
             modifier = Modifier
                 .fillMaxWidth()
@@ -125,13 +151,36 @@ fun EssentialScreen(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomStart
     ) {
-        Text(
-            modifier = Modifier
-                .height(40.dp)
-                .background(Color.Red)
-                .clickable { testItemAdd.invoke() },
-            text = "test Item Add"
-        )
+        Row {
+            Text(
+                modifier = Modifier
+                    .height(40.dp)
+                    .background(Color.Red)
+                    .clickable { testTagAdd.invoke() },
+                text = "test tag Add"
+            )
+            Text(
+                modifier = Modifier
+                    .height(40.dp)
+                    .background(Color.Red)
+                    .clickable { testItemAdd.invoke() },
+                text = "test Item Add"
+            )
+            Text(
+                modifier = Modifier
+                    .height(40.dp)
+                    .background(Color.Red)
+                    .clickable { deleteAllTag.invoke() },
+                text = "delete all Tag"
+            )
+            Text(
+                modifier = Modifier
+                    .height(40.dp)
+                    .background(Color.Red)
+                    .clickable { deleteAllItem.invoke() },
+                text = "delete all Item"
+            )
+        }
     }
 }
 
@@ -169,5 +218,22 @@ fun EssentialItem(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun EssentialTagItem(
+    name: String,
+    onClick: () -> Unit = {},
+) {
+
+    Box(
+        modifier = Modifier
+            .height(30.dp)
+            .width(60.dp)
+            .background(Color.White)
+            .clickable { onClick.invoke() }
+    ) {
+        Text(text = name)
     }
 }

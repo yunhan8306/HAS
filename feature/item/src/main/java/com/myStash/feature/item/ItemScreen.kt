@@ -11,6 +11,7 @@ import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -22,12 +23,15 @@ import com.myStash.common.compose.activityViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
+import org.orbitmvi.orbit.compose.collectAsState
 
 @Composable
 fun ItemScreen(
     viewModel: ItemViewModel = activityViewModel()
 ) {
     val tagInputState = viewModel.addTagState
+
+    val state by viewModel.collectAsState()
 
     LaunchedEffect(tagInputState) {
         viewModel.addTagStateFlow
