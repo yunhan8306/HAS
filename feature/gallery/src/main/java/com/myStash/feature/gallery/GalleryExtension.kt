@@ -12,7 +12,7 @@ import androidx.activity.result.contract.ActivityResultContract
 import com.myStash.core.model.Image
 
 fun ComponentActivity.launchGalleryTestActivity(
-    activityResultCallback: (ActivityResult) -> Unit = {}
+    activityResultCallback: (ActivityResult) -> Unit
 ) {
     val registerKey = "item"
 

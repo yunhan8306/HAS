@@ -1,78 +1,88 @@
 package com.myStash.feature.item
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.text2.BasicTextField2
-import androidx.compose.foundation.text2.input.rememberTextFieldState
-import androidx.compose.foundation.text2.input.textAsFlow
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.sp
-import com.myStash.common.compose.activityViewModel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.stateIn
-import org.orbitmvi.orbit.compose.collectAsState
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.dp
+import coil.compose.SubcomposeAsyncImage
+import com.myStash.design_system.ui.DevicePreviews
+import com.myStash.design_system.util.ShimmerLoadingAnimation
 
 @Composable
 fun ItemScreen(
-    viewModel: ItemViewModel = activityViewModel()
+    state: ItemScreenState,
+    tagInputState: TextFieldState,
+    saveItem: () -> Unit,
+    showGalleryActivity: () -> Unit
 ) {
-    val tagInputState = viewModel.addTagState
-
-    val state by viewModel.collectAsState()
-
-    LaunchedEffect(tagInputState) {
-        viewModel.addTagStateFlow
-
-    }
-
-    val textState = remember { mutableStateOf("") }
-
-    val userInput = remember { mutableStateOf("") }
-
-    // userInput의 변경을 감지하여 플로우를 생성
-    val userInputFlow = snapshotFlow { userInput.value }
-
-
-
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Blue)
-    ) {
-        Text(
-            "test",
-            fontSize = 50.sp,
-            color = Color.Black
-        )
-    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Gray)
+            .background(Color.White)
+            .padding(horizontal = 50.dp)
     ) {
-
-        BasicTextField2(state = tagInputState)
+        Box(
+            modifier = Modifier
+                .width(100.dp)
+                .height(50.dp)
+                .background(Color.Gray)
+                .clickable { showGalleryActivity.invoke() }
+        ) {
+            Text(text = "go to gallery")
+        }
+        Spacer(modifier = Modifier.height(20.dp))
+        Box(
+            modifier = Modifier.size(200.dp)
+        ) {
+            SubcomposeAsyncImage(
+                model = state.imageUri,
+                contentDescription = "gallery image",
+                modifier = Modifier.aspectRatio(1f),
+                contentScale = ContentScale.Crop,
+                loading = { ShimmerLoadingAnimation() },
+                error = { ShimmerLoadingAnimation() }
+            )
+        }
+        Spacer(modifier = Modifier.height(20.dp))
         ItemTextField(
             textState = tagInputState,
-            hintText = "힌트",
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Yellow),
+            hintText = "태그",
         )
+        Spacer(modifier = Modifier.height(20.dp))
+        Box(
+            modifier = Modifier
+                .width(100.dp)
+                .height(50.dp)
+                .background(Color.Gray)
+                .clickable { saveItem.invoke() }
+        ) {
+            Text(text = "save")
+        }
     }
+}
+
+@DevicePreviews
+@Composable
+fun ItemScreenPreview() {
+    ItemScreen(
+        state = ItemScreenState(),
+        tagInputState = TextFieldState(),
+        showGalleryActivity = {},
+        saveItem = {}
+    )
 }

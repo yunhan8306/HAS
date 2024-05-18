@@ -1,7 +1,7 @@
 package com.myStash.feature.gallery
 
 import androidx.lifecycle.ViewModel
-import com.myStash.common.util.offer
+import com.myStash.common.util.offerOrRemove
 import com.myStash.core.model.Image
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
@@ -32,7 +32,7 @@ class GalleryViewModel @Inject constructor(
 
     fun isSelected(image: Image) {
         intent {
-            _selectedList.offer(image) { it.name == image.name }
+            _selectedList.offerOrRemove(image) { it.name == image.name }
             reduce {
                 state.copy(
                     selectedImageList = _selectedList.toList()

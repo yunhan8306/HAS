@@ -19,4 +19,6 @@ data class ItemScreenState(
         )
 }
 
-sealed interface ItemSideEffect
+sealed interface ItemSideEffect {
+    object Finish: ItemSideEffect
+}

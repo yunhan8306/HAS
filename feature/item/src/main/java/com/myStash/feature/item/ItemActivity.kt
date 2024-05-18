@@ -3,32 +3,36 @@ package com.myStash.feature.item
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Text
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.sp
+import androidx.activity.result.ActivityResult
 import com.myStash.core.model.Item
 import com.myStash.design_system.animation.slideOut
+import com.myStash.feature.gallery.launchGalleryTestActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 @AndroidEntryPoint
 class ItemActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<ItemViewModel>()
+    private val selectedPhotoSharedFlow = MutableSharedFlow<String?>(replay = 1)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val item = intent.getParcelableExtra<Item?>("item")
 
-        viewModel.initFetch(item)
-
         setContent {
-            ItemScreen()
+            ItemRoute(
+                initItem = item,
+                addImageSharedFlow = selectedPhotoSharedFlow,
+                showGalleryActivity = { launchGalleryTestActivity(::galleryActivityCallback) },
+                finishActivity = ::finish
+            )
+        }
+    }
+
+    private fun galleryActivityCallback(activityCallback: ActivityResult) {
+        activityCallback.data?.getStringExtra("imageUri")?.let {
+            selectedPhotoSharedFlow.tryEmit(it)
         }
     }
 

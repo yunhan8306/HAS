@@ -12,15 +12,14 @@ import com.myStash.core.model.Item
 import com.myStash.core.model.Tag
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
@@ -39,9 +38,7 @@ class ItemViewModel @Inject constructor(
 
     val selectedTagList = mutableListOf<Tag>()
 
-
     val newTagList = mutableListOf<String>()
-
 
     val addTagState = TextFieldState()
 
@@ -154,6 +151,8 @@ class ItemViewModel @Inject constructor(
                 )
 
                 saveItemUseCase.invoke(newItem)
+
+                postSideEffect(ItemSideEffect.Finish)
             }
         }
     }

@@ -13,6 +13,7 @@ dependencies {
     implementation(projects.core.model)
     implementation(projects.core.data)
     implementation(projects.common.compose)
+    implementation(projects.feature.gallery)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.compose.lifecycle.runtime)
