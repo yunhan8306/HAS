@@ -23,19 +23,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.myStash.core.model.Image
+import com.myStash.design_system.ui.DevicePreviews
 import org.orbitmvi.orbit.compose.collectAsState
 
 @Composable
 fun GalleryScreen(
-    viewModel: GalleryViewModel = hiltViewModel(),
+    imageList: List<Image>,
+    selectedImageList: List<Image>,
+    isSelected: (Image) -> Unit,
     complete: () -> Unit,
 ) {
-
-    val state by viewModel.collectAsState()
-
-    val imageList by remember(state.imageList) {
-        derivedStateOf { state.imageList }
-    }
 
     Column(
         modifier = Modifier
@@ -64,9 +62,9 @@ fun GalleryScreen(
                 key = { it.uri }
             ) { image ->
 
-                val selectedNumber: Int? by remember(state.selectedImageList) {
+                val selectedNumber: Int? by remember(selectedImageList) {
                     derivedStateOf {
-                        val index = state.selectedImageList.indexOfFirst { it.uri == image.uri }
+                        val index = selectedImageList.indexOfFirst { it.uri == image.uri }
                         if(index != -1) index + 1 else null
                     }
                 }
@@ -74,9 +72,20 @@ fun GalleryScreen(
                 GalleryItem(
                     imageUri = image.uri,
                     selectedNumber = selectedNumber,
-                    onSelect = { viewModel.isSelected(image) }
+                    onSelect = { isSelected.invoke(image) }
                 )
             }
         }
     }
+}
+
+@DevicePreviews
+@Composable
+fun GalleryScreenPreview() {
+    GalleryScreen(
+        imageList = emptyList(),
+        selectedImageList = emptyList(),
+        isSelected = {},
+        complete = {},
+    )
 }

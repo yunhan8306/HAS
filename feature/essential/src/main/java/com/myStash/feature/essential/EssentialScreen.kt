@@ -41,6 +41,7 @@ import com.myStash.core.model.Item
 import com.myStash.core.model.Tag
 import com.myStash.design_system.animation.enterTransitionStart
 import com.myStash.design_system.animation.exitTransitionStart
+import com.myStash.design_system.ui.DevicePreviews
 import com.myStash.design_system.util.ShimmerLoadingAnimation
 import com.myStash.navigation.MainNavType
 import org.orbitmvi.orbit.compose.collectAsState
@@ -296,10 +297,26 @@ fun EssentialTagItem(
         modifier = Modifier
             .height(30.dp)
             .width(60.dp)
-            .background(if(isSelected)Color.White else Color.Yellow)
+            .background(if (isSelected) Color.White else Color.Yellow)
             .clickable { onClick.invoke() },
         contentAlignment = Alignment.Center
     ) {
         Text(text = name)
     }
+}
+
+@DevicePreviews
+@Composable
+fun EssentialScreenPreview() {
+    EssentialScreen(
+        itemList = emptyList(),
+        tagTotalList = emptyList(),
+        selectTagList = emptyList(),
+        showItemActivity = {},
+        selectTag = {},
+        testItemAdd = {},
+        testTagAdd = {},
+        deleteAllItem = {},
+        deleteAllTag = {},
+    )
 }

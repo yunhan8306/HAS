@@ -31,14 +31,14 @@ class GalleryActivity : ComponentActivity() {
             0
         )
 
-        lifecycleScope.launch {
-            getPhotoList(viewModel::setImage)
-        }
+        getPhotoList { imageList ->
+            setContent {
+                GalleryRoute(
+                    imageList = imageList,
+                    complete = ::complete
+                )
 
-        setContent {
-            GalleryScreen(
-                complete = ::complete
-            )
+            }
         }
     }
 
