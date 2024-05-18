@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.myStash.data_base.BaseDao
 import com.myStash.data_base.item.entity.ItemEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ItemDao : BaseDao<ItemEntity> {
@@ -21,5 +22,5 @@ interface ItemDao : BaseDao<ItemEntity> {
     override suspend fun delete(entity: ItemEntity): Int
 
     @Query("SELECT * FROM item")
-    suspend fun selectAll() : List<ItemEntity>
+    fun selectAll() : Flow<List<ItemEntity>>
 }

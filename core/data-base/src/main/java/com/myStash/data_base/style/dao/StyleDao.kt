@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.myStash.data_base.BaseDao
 import com.myStash.data_base.style.entity.StyleEntity
+import kotlinx.coroutines.flow.Flow
 
 
 @Dao
@@ -22,5 +23,5 @@ interface StyleDao : BaseDao<StyleEntity> {
     override suspend fun delete(entity: StyleEntity): Int
 
     @Query("SELECT * FROM style")
-    suspend fun selectAll() : List<StyleEntity>
+    fun selectAll() : Flow<List<StyleEntity>>
 }

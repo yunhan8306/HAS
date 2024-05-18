@@ -4,6 +4,8 @@ import com.myStash.core.model.Item
 import com.myStash.data_base.item.datasource.ItemDataSource
 import com.myStash.data_base.item.entity.ItemEntity.Companion.toItem
 import com.myStash.data_base.item.entity.ItemEntity.Companion.toItemEntity
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class ItemRepositoryImpl @Inject constructor(
@@ -15,6 +17,6 @@ class ItemRepositoryImpl @Inject constructor(
         itemDataSource.update(item.toItemEntity())
     override suspend fun delete(item: Item): Int =
         itemDataSource.delete(item.toItemEntity())
-    override suspend fun selectAll() : List<Item> =
-        itemDataSource.selectAll().map { it.toItem() }
+    override fun selectAll() : Flow<List<Item>> =
+        itemDataSource.selectAll().map { list -> list.map { it.toItem() } }
 }

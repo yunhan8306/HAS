@@ -2,6 +2,7 @@ package com.myStash.data_base.style.datasource
 
 import com.myStash.data_base.style.dao.StyleDao
 import com.myStash.data_base.style.entity.StyleEntity
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class StyleDataSourceImpl @Inject constructor(
@@ -16,7 +17,7 @@ class StyleDataSourceImpl @Inject constructor(
     override suspend fun delete(entity: StyleEntity): Int =
         styleDao.delete(entity)
 
-    override suspend fun selectAll(): List<StyleEntity> =
+    override fun selectAll(): Flow<List<StyleEntity>> =
         styleDao.selectAll()
 
 }

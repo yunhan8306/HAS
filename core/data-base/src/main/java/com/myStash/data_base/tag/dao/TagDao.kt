@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.myStash.data_base.BaseDao
 import com.myStash.data_base.tag.entity.TagEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TagDao: BaseDao<TagEntity> {
@@ -21,6 +22,9 @@ interface TagDao: BaseDao<TagEntity> {
     override suspend fun delete(entity: TagEntity): Int
 
     @Query("SELECT * FROM tag")
-    suspend fun selectAll() : List<TagEntity>
+    fun selectAll() : Flow<List<TagEntity>>
+
+    @Query("SELECT * FROM tag WHERE name = :name LIMIT 1")
+    fun getTag(name: String): TagEntity?
 
 }

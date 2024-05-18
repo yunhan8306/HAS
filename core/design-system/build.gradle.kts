@@ -21,4 +21,9 @@ dependencies {
     implementation(libs.androidx.material.compose)
     implementation(libs.coil)
     implementation(libs.system.ui.controller)
+    implementation(libs.androidx.compose.navigation)
+    implementation(libs.androidx.compose.hilt.navigation)
+    implementation(libs.navigation.animation)
+    implementation(libs.androidx.paging)
+    implementation(libs.androidx.paging.compose)
 }
