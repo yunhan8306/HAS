@@ -18,11 +18,8 @@ class ItemActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val item = intent.getParcelableExtra<Item?>("item")
-
         setContent {
             ItemRoute(
-                initItem = item,
                 addImageSharedFlow = selectedPhotoSharedFlow,
                 showGalleryActivity = { launchGalleryTestActivity(::galleryActivityCallback) },
                 finishActivity = ::finish

@@ -1,5 +1,6 @@
 package com.myStash.feature.essential
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,6 +14,7 @@ import com.myStash.core.data.usecase.tag.SaveTagUseCase
 import com.myStash.core.model.Image
 import com.myStash.core.model.Item
 import com.myStash.core.model.Tag
+import com.myStash.feature.gallery.getPhotoList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
@@ -28,6 +30,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EssentialViewModel @Inject constructor(
+    private val application: Application,
     private val getItemListUseCase: GetItemListUseCase,
     private val getTagListUseCase: GetTagListUseCase,
     private val saveItemUseCase: SaveItemUseCase,
@@ -75,6 +78,11 @@ class EssentialViewModel @Inject constructor(
                         )
                     }
                 }
+
+                getPhotoList(
+                    context = application,
+                    callback = { testImageList = it }
+                )
             }
         }
     }

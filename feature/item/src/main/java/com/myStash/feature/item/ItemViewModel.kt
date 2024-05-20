@@ -2,6 +2,7 @@ package com.myStash.feature.item
 
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.text2.input.textAsFlow
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.core.data.usecase.item.SaveItemUseCase
@@ -32,9 +33,14 @@ class ItemViewModel @Inject constructor(
 
     private val saveItemUseCase: SaveItemUseCase,
     private val saveTagUseCase: SaveTagUseCase,
+    private val stateHandle: SavedStateHandle,
 ): ContainerHost<ItemScreenState, ItemSideEffect>, ViewModel() {
     override val container: Container<ItemScreenState, ItemSideEffect> =
         container(ItemScreenState())
+
+    init {
+        fetch()
+    }
 
     val selectedTagList = mutableListOf<Tag>()
 
@@ -60,15 +66,19 @@ class ItemViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    fun initFetch(item: Item?) {
+    private fun fetch() {
         intent {
-            reduce {
-                state.copy(
-                    imageUri = item?.imagePath,
-                    type = "",
-                    brand = item?.getBrand(tagTotalList.value),
-                    tagList = item?.getTagList(tagTotalList.value) ?: emptyList(),
-                )
+            viewModelScope.launch {
+                val item = stateHandle.get<Item?>("item")
+
+                reduce {
+                    state.copy(
+                        imageUri = item?.imagePath,
+                        type = "",
+                        brand = item?.getBrand(tagTotalList.value),
+                        tagList = item?.getTagList(tagTotalList.value) ?: emptyList(),
+                    )
+                }
             }
         }
     }

@@ -5,8 +5,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.myStash.common.compose.activityViewModel
-import com.myStash.core.model.Item
 import kotlinx.coroutines.flow.SharedFlow
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -14,7 +12,6 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 @Composable
 fun ItemRoute(
     viewModel: ItemViewModel = hiltViewModel(),
-    initItem: Item?,
     addImageSharedFlow: SharedFlow<String?>,
     showGalleryActivity: () -> Unit,
     finishActivity: () -> Unit
@@ -29,10 +26,6 @@ fun ItemRoute(
             ItemSideEffect.Finish -> finishActivity.invoke()
             else -> Unit
         }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.initFetch(initItem)
     }
 
     LaunchedEffect(selectedPhoto) {
