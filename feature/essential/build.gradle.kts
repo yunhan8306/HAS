@@ -15,6 +15,7 @@ dependencies {
     implementation(projects.common.compose)
     implementation(projects.common.util)
     implementation(projects.feature.navigation)
+    implementation(projects.feature.gallery)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.compose.lifecycle.runtime)

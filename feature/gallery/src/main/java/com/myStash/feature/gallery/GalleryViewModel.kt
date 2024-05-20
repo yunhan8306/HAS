@@ -1,5 +1,7 @@
 package com.myStash.feature.gallery
 
+import android.app.Application
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.myStash.common.util.offerOrRemove
 import com.myStash.core.model.Image
@@ -14,16 +16,27 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GalleryViewModel @Inject constructor(
-
+    private val application: Application
 ): ContainerHost<GalleryScreenState, GallerySideEffect>, ViewModel() {
 
     override val container: Container<GalleryScreenState, GallerySideEffect> =
         container(GalleryScreenState())
 
+    init {
+        fetch()
+    }
+
     private val _selectedList = mutableListOf<Image>()
     val selectedList get() = _selectedList.toList()
 
-    fun initSetImage(images: List<Image>) {
+    private fun fetch() {
+        getPhotoList(
+            context = application,
+            callback = ::setGalleryImage
+        )
+    }
+
+    private fun setGalleryImage(images: List<Image>) {
         intent {
             reduce {
                 state.copy(imageList = images)

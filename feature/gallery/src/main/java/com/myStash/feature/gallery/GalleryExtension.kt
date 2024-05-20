@@ -36,7 +36,7 @@ fun ComponentActivity.launchGalleryTestActivity(
     }
 }
 
-fun ComponentActivity.getPhotoList(callback: (List<Image>) -> Unit) {
+fun getPhotoList(context: Context, callback: (List<Image>) -> Unit) {
     val projection = arrayOf(
         MediaStore.Images.Media._ID,
         MediaStore.Images.Media.DISPLAY_NAME,
@@ -45,7 +45,7 @@ fun ComponentActivity.getPhotoList(callback: (List<Image>) -> Unit) {
     val sortOrder = "${MediaStore.Images.Media.DATE_TAKEN} DESC"
     val images = mutableListOf<Image>()
 
-    contentResolver.query(
+    context.contentResolver.query(
         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
         projection,
         null,

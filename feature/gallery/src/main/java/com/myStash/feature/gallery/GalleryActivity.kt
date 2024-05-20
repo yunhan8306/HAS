@@ -31,14 +31,8 @@ class GalleryActivity : ComponentActivity() {
             0
         )
 
-        getPhotoList { imageList ->
-            setContent {
-                GalleryRoute(
-                    imageList = imageList,
-                    complete = ::complete
-                )
-
-            }
+        setContent {
+            GalleryRoute(complete = ::complete)
         }
     }
 

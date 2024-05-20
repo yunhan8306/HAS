@@ -26,8 +26,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navHostController = rememberAnimatedNavController()
 
-            getPhotoList { essentialViewModel.testImageList = it }
-
             Scaffold(
                 bottomBar = {
                     MainNavigation(navHostController)

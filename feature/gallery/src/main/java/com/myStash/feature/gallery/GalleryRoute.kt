@@ -36,7 +36,6 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 @Composable
 fun GalleryRoute(
     viewModel: GalleryViewModel = hiltViewModel(),
-    imageList: List<Image>,
     complete: () -> Unit,
 ) {
     val state by viewModel.collectAsState()
@@ -47,10 +46,6 @@ fun GalleryRoute(
         when(sideEffect) {
             is GallerySideEffect.Zoom -> zoomImage = sideEffect.image
         }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.initSetImage(imageList)
     }
 
     GalleryScreen(
