@@ -7,4 +7,6 @@ data class GalleryScreenState(
     val selectedImageList: List<Image> = emptyList()
 )
 
-sealed interface GallerySideEffect
+sealed interface GallerySideEffect {
+    data class Zoom(val image: Image): GallerySideEffect
+}

@@ -29,7 +29,7 @@ fun NoRippleTheme(content: @Composable () -> Unit) {
 }
 
 @SuppressLint("ModifierFactoryUnreferencedReceiver")
-fun Modifier.clickableNoRipple(onClick: () -> Unit): Modifier = composed {
+fun Modifier.clickableNoRipple(onClick: () -> Unit = {}): Modifier = composed {
     clickable(
         indication = null,
         interactionSource = remember { MutableInteractionSource() }) {

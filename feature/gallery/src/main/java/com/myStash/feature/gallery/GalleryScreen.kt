@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -22,16 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.myStash.core.model.Image
 import com.myStash.design_system.ui.DevicePreviews
-import org.orbitmvi.orbit.compose.collectAsState
 
 @Composable
 fun GalleryScreen(
     imageList: List<Image>,
     selectedImageList: List<Image>,
-    isSelected: (Image) -> Unit,
+    onEvent: (GalleryEvent) -> Unit,
     complete: () -> Unit,
 ) {
 
@@ -59,7 +55,7 @@ fun GalleryScreen(
         ) {
             items(
                 items = imageList,
-                key = { it.uri }
+                key = { image -> image.uri }
             ) { image ->
 
                 val selectedNumber: Int? by remember(selectedImageList) {
@@ -72,7 +68,8 @@ fun GalleryScreen(
                 GalleryItem(
                     imageUri = image.uri,
                     selectedNumber = selectedNumber,
-                    onSelect = { isSelected.invoke(image) }
+                    onClick = { onEvent.invoke(GalleryEvent.OnClick(image)) },
+                    zoom = { onEvent.invoke(GalleryEvent.Zoom(image)) }
                 )
             }
         }
@@ -85,7 +82,7 @@ fun GalleryScreenPreview() {
     GalleryScreen(
         imageList = emptyList(),
         selectedImageList = emptyList(),
-        isSelected = {},
+        onEvent = {},
         complete = {},
     )
 }

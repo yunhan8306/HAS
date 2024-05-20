@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
@@ -22,7 +23,7 @@ class GalleryViewModel @Inject constructor(
     private val _selectedList = mutableListOf<Image>()
     val selectedList get() = _selectedList.toList()
 
-    fun setImage(images: List<Image>) {
+    fun initSetImage(images: List<Image>) {
         intent {
             reduce {
                 state.copy(imageList = images)
@@ -30,7 +31,18 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
-    fun isSelected(image: Image) {
+    fun event(event: GalleryEvent) {
+        when (event) {
+            is GalleryEvent.OnClick -> {
+                selectImage(event.image)
+            }
+            is GalleryEvent.Zoom -> {
+                zoomImage(event.image)
+            }
+        }
+    }
+
+    private fun selectImage(image: Image) {
         intent {
             _selectedList.offerOrRemove(image) { it.name == image.name }
             reduce {
@@ -40,4 +52,15 @@ class GalleryViewModel @Inject constructor(
             }
         }
     }
+
+    private fun zoomImage(image: Image) {
+        intent {
+            postSideEffect(GallerySideEffect.Zoom(image))
+        }
+    }
+}
+
+sealed interface GalleryEvent {
+    data class OnClick(val image: Image): GalleryEvent
+    data class Zoom(val image: Image): GalleryEvent
 }

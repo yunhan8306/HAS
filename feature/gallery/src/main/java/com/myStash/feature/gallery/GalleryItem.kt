@@ -20,7 +20,8 @@ import com.myStash.design_system.util.ShimmerLoadingAnimation
 fun GalleryItem(
     imageUri: Uri,
     selectedNumber: Int?,
-    onSelect: () -> Unit,
+    onClick: () -> Unit,
+    zoom: () -> Unit
 ) {
     Box {
         SubcomposeAsyncImage(
@@ -28,19 +29,20 @@ fun GalleryItem(
             contentDescription = "gallery image",
             modifier = Modifier
                 .aspectRatio(1f)
-                .clickable { onSelect.invoke() },
+                .clickable { zoom.invoke() },
             contentScale = ContentScale.Crop,
             loading = { ShimmerLoadingAnimation() },
             error = { ShimmerLoadingAnimation() }
         )
 
-        selectedNumber?.let {
-            Box(
-                modifier = Modifier
-                    .size(30.dp)
-                    .background(Color.Yellow)
-            ) {
-                Text(it.toString())
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .background(if(selectedNumber == null) Color.White else Color.Red)
+                .clickable { onClick.invoke() }
+        ) {
+            selectedNumber?.let {
+                Text(selectedNumber.toString())
             }
         }
     }
