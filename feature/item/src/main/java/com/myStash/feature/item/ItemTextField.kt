@@ -28,7 +28,7 @@ import com.myStash.design_system.ui.DevicePreviews
 fun ItemTextField(
     modifier: Modifier = Modifier,
     fontSize: TextUnit = 17.sp,
-    textState: TextFieldState = TextFieldState(),
+    textState: TextFieldState,
     hintText: String = "",
 ) {
 
@@ -71,6 +71,7 @@ fun ItemTextField(
 @Composable
 fun ItemTextFieldPreView() {
     ItemTextField(
+        textState = TextFieldState(),
         hintText = "hint"
     )
 }

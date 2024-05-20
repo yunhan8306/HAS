@@ -23,11 +23,15 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,6 +54,7 @@ import com.myStash.design_system.animation.slideIn
 import com.myStash.design_system.ui.DevicePreviews
 import com.myStash.design_system.util.ShimmerLoadingAnimation
 import com.myStash.feature.item.ItemActivity
+import com.myStash.feature.item.ItemTextField
 import com.myStash.navigation.MainNavType
 import org.orbitmvi.orbit.compose.collectAsState
 
@@ -71,6 +76,7 @@ fun EssentialRoute(
     val itemList = viewModel.collectAsState().value.itemList
     val tagTotalList = viewModel.collectAsState().value.tagTotalList
     val selectTagList = viewModel.collectAsState().value.selectTagList
+    val searchTextState by remember { mutableStateOf(viewModel.searchTextState) }
 
     val activity = LocalContext.current as ComponentActivity
     val itemActivityLauncher = rememberLauncherForActivityResult(
@@ -79,6 +85,7 @@ fun EssentialRoute(
     )
 
     EssentialScreen(
+        searchTextState = searchTextState,
         itemList = itemList,
         tagTotalList = tagTotalList,
         selectTagList = selectTagList,
@@ -97,6 +104,7 @@ fun EssentialRoute(
 
 @Composable
 fun EssentialScreen(
+    searchTextState: TextFieldState,
     itemList: List<Item>,
     tagTotalList: List<Tag>,
     selectTagList: List<Tag>,
@@ -107,6 +115,13 @@ fun EssentialScreen(
     deleteAllItem: () -> Unit,
     deleteAllTag: () -> Unit,
 ) {
+
+    val tagScrollState = rememberLazyListState()
+
+    LaunchedEffect(tagTotalList) {
+        tagScrollState.scrollToItem(0)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -118,6 +133,11 @@ fun EssentialScreen(
             text = "Essential Screen",
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(15.dp))
+        ItemTextField(
+            textState = searchTextState,
+            hintText = "태그 검색",
         )
         Spacer(modifier = Modifier.height(15.dp))
         Text(
@@ -132,6 +152,7 @@ fun EssentialScreen(
                 .padding(horizontal = 30.dp)
                 .background(Color.Blue),
             horizontalArrangement = Arrangement.spacedBy(20.dp),
+            state = tagScrollState
         ) {
             items(
                 items = tagTotalList,
@@ -320,6 +341,7 @@ fun EssentialTagItem(
 @Composable
 fun EssentialScreenPreview() {
     EssentialScreen(
+        searchTextState = TextFieldState(),
         itemList = emptyList(),
         tagTotalList = emptyList(),
         selectTagList = emptyList(),

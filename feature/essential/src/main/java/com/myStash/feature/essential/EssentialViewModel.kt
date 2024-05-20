@@ -2,6 +2,8 @@ package com.myStash.feature.essential
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.foundation.text2.input.TextFieldState
+import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.common.util.offerOrRemove
@@ -11,14 +13,18 @@ import com.myStash.core.data.usecase.item.SaveItemUseCase
 import com.myStash.core.data.usecase.tag.DeleteTagUseCase
 import com.myStash.core.data.usecase.tag.GetTagListUseCase
 import com.myStash.core.data.usecase.tag.SaveTagUseCase
+import com.myStash.core.di.DefaultDispatcher
 import com.myStash.core.model.Image
 import com.myStash.core.model.Item
 import com.myStash.core.model.Tag
 import com.myStash.feature.gallery.getPhotoList
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
@@ -38,13 +44,29 @@ class EssentialViewModel @Inject constructor(
     private val saveTagUseCase: SaveTagUseCase,
     private val deleteTagUseCase: DeleteTagUseCase,
     private val deleteItemUseCase: DeleteItemUseCase,
+    // dispatcher
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ) : ContainerHost<EssentialScreenState, EssentialSideEffect>, ViewModel() {
     override val container: Container<EssentialScreenState, EssentialSideEffect> =
         container(EssentialScreenState())
 
     init {
         fetch()
+        collectSearchText()
+        setTestImage()
     }
+
+    val searchTextState = TextFieldState()
+    private val searchTagList = searchTextState
+        .textAsFlow()
+        .debounce(500)
+        .mapLatest { search ->
+            tagTotalList.value.filter { it.name.contains(search) }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000L),
+            initialValue = emptyList()
+        )
 
     var testImageList = listOf<Image>()
     var testImageCnt = 0
@@ -78,11 +100,25 @@ class EssentialViewModel @Inject constructor(
                         )
                     }
                 }
+            }
+        }
+    }
 
-                getPhotoList(
-                    context = application,
-                    callback = { testImageList = it }
-                )
+    private fun setTestImage() {
+        getPhotoList(
+            context = application,
+            callback = { testImageList = it }
+        )
+    }
+
+    private fun collectSearchText() {
+        intent {
+            viewModelScope.launch {
+                searchTagList.collectLatest {
+                    reduce {
+                        state.copy(tagTotalList = it.toList())
+                    }
+                }
             }
         }
     }
