@@ -63,6 +63,7 @@ dependencies {
     implementation(projects.feature.item)
     implementation(projects.feature.essential)
     implementation(projects.common.compose)
+    implementation(projects.common.util)
     implementation(projects.core.data)
     implementation(projects.core.model)
     implementation(projects.core.di)

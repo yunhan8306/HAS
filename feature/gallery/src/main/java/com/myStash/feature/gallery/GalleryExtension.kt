@@ -1,40 +1,9 @@
 package com.myStash.feature.gallery
 
-import android.app.Activity
 import android.content.ContentUris
 import android.content.Context
-import android.content.Intent
 import android.provider.MediaStore
-import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContract
 import com.myStash.core.model.Image
-
-fun ComponentActivity.launchGalleryTestActivity(
-    activityResultCallback: (ActivityResult) -> Unit
-) {
-    val registerKey = "item"
-
-    val contract = object : ActivityResultContract<Intent, ActivityResult>() {
-        override fun createIntent(context: Context, input: Intent) = input
-        override fun parseResult(resultCode: Int, intent: Intent?) = ActivityResult(resultCode, intent)
-    }
-
-    val launcher by lazy {
-        activityResultRegistry.register(registerKey, contract) { activityResult ->
-            Log.d("qwe123", "activityResult - $activityResult")
-            if (activityResult.resultCode == Activity.RESULT_OK) {
-                activityResultCallback.invoke(activityResult)
-            }
-        }
-    }
-
-    Intent(this, GalleryActivity::class.java).apply {
-        launcher.launch(this)
-        startActivity(this)
-    }
-}
 
 fun getPhotoList(context: Context, callback: (List<Image>) -> Unit) {
     val projection = arrayOf(

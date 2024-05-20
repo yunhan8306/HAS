@@ -19,7 +19,6 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.myStash.common.compose.activityViewModel
-import com.myStash.core.model.Item
 import com.myStash.core.model.Tag
 import com.myStash.design_system.animation.enterTransitionStart
 import com.myStash.design_system.animation.exitTransitionStart
@@ -30,13 +29,12 @@ import org.orbitmvi.orbit.compose.collectAsState
 @Composable
 fun MainNavHost(
     navHostController: NavHostController,
-    showItemActivity: (Item?) -> Unit
 ) {
     AnimatedNavHost(
         navController = navHostController,
         startDestination = MainNavType.ESSENTIAL.name
     ) {
-        essentialScreen(showItemActivity)
+        essentialScreen()
         testScreen(MainNavType.TEST2.name)
         testScreen(MainNavType.TEST3.name)
         testScreen(MainNavType.TEST4.name)

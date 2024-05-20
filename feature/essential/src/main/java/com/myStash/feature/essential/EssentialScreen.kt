@@ -1,5 +1,8 @@
 package com.myStash.feature.essential
 
+import android.content.Intent
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,56 +34,64 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import coil.compose.SubcomposeAsyncImage
 import com.google.accompanist.navigation.animation.composable
-import com.myStash.common.compose.activityViewModel
+import com.myStash.common.util.CommonActivityResultContract
 import com.myStash.core.model.Item
 import com.myStash.core.model.Tag
 import com.myStash.design_system.animation.enterTransitionStart
 import com.myStash.design_system.animation.exitTransitionStart
+import com.myStash.design_system.animation.slideIn
 import com.myStash.design_system.ui.DevicePreviews
 import com.myStash.design_system.util.ShimmerLoadingAnimation
+import com.myStash.feature.item.ItemActivity
 import com.myStash.navigation.MainNavType
 import org.orbitmvi.orbit.compose.collectAsState
 
-fun NavGraphBuilder.essentialScreen(
-    showItemActivity: (Item?) -> Unit
-) {
-
+fun NavGraphBuilder.essentialScreen() {
     composable(
         route = MainNavType.ESSENTIAL.name,
         enterTransition = { enterTransitionStart },
         exitTransition = { exitTransitionStart }
     ) {
-        EssentialRoute(
-            showItemActivity = showItemActivity,
-        )
+        EssentialRoute()
     }
 }
 
 @Composable
 fun EssentialRoute(
-    viewModel: EssentialViewModel = activityViewModel(),
-    showItemActivity: (Item?) -> Unit,
+    viewModel: EssentialViewModel = hiltViewModel(),
 ) {
 
     val itemList = viewModel.collectAsState().value.itemList
     val tagTotalList = viewModel.collectAsState().value.tagTotalList
     val selectTagList = viewModel.collectAsState().value.selectTagList
 
+    val activity = LocalContext.current as ComponentActivity
+    val itemActivityLauncher = rememberLauncherForActivityResult(
+        contract = CommonActivityResultContract(),
+        onResult = {}
+    )
+
     EssentialScreen(
         itemList = itemList,
         tagTotalList = tagTotalList,
         selectTagList = selectTagList,
-        showItemActivity = showItemActivity,
         selectTag = viewModel::selectTag,
         testItemAdd = viewModel::testItemAdd,
         testTagAdd = viewModel::testTagAdd,
         deleteAllItem = viewModel::deleteAllItem,
         deleteAllTag = viewModel::deleteAllTag,
+        showItemActivity = { item ->
+            val intent = Intent(activity.apply { slideIn() }, ItemActivity::class.java)
+                .putExtra("item", item)
+            itemActivityLauncher.launch(intent)
+        },
     )
 }
 

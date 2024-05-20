@@ -1,25 +1,34 @@
 package com.myStash.feature.item
 
+import android.content.Intent
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.coroutines.flow.SharedFlow
+import com.myStash.common.util.CommonActivityResultContract
+import com.myStash.design_system.animation.slideIn
+import com.myStash.feature.gallery.GalleryActivity
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 fun ItemRoute(
     viewModel: ItemViewModel = hiltViewModel(),
-    addImageSharedFlow: SharedFlow<String?>,
-    showGalleryActivity: () -> Unit,
     finishActivity: () -> Unit
 ) {
 
     val state by viewModel.collectAsState()
     val tagInputState = viewModel.addTagState
-    val selectedPhoto by addImageSharedFlow.collectAsStateWithLifecycle(initialValue = null)
+    val activity = LocalContext.current as ComponentActivity
+
+    val galleryActivityLauncher = rememberLauncherForActivityResult(
+        contract = CommonActivityResultContract(),
+        onResult = { intent ->
+            intent?.getStringExtra("imageUri")?.let { viewModel.addImage(it) }
+        }
+    )
 
     viewModel.collectSideEffect { sideEffect ->
         when(sideEffect) {
@@ -28,14 +37,13 @@ fun ItemRoute(
         }
     }
 
-    LaunchedEffect(selectedPhoto) {
-        selectedPhoto?.let { viewModel.addImage(it) }
-    }
-
     ItemScreen(
         state = state,
         tagInputState = tagInputState,
         saveItem = viewModel::saveItem,
-        showGalleryActivity = showGalleryActivity
+        showGalleryActivity = {
+            val intent = Intent(activity.apply { slideIn() }, GalleryActivity::class.java)
+            galleryActivityLauncher.launch(intent)
+        }
     )
 }
