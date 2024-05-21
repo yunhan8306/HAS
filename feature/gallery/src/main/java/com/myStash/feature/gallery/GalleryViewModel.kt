@@ -1,11 +1,14 @@
 package com.myStash.feature.gallery
 
-import android.app.Application
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.myStash.common.util.offerOrRemove
+import com.myStash.core.di.IoDispatcher
 import com.myStash.core.model.Image
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -16,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GalleryViewModel @Inject constructor(
-    private val application: Application
+    private val imageRepository: ImageRepository,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ): ContainerHost<GalleryScreenState, GallerySideEffect>, ViewModel() {
 
     override val container: Container<GalleryScreenState, GallerySideEffect> =
@@ -24,16 +28,28 @@ class GalleryViewModel @Inject constructor(
 
     init {
         fetch()
+        initGalleryImages()
     }
 
     private val _selectedList = mutableListOf<Image>()
     val selectedList get() = _selectedList.toList()
 
     private fun fetch() {
-        getPhotoList(
-            context = application,
-            callback = ::setGalleryImage
-        )
+        intent {
+            viewModelScope.launch {
+                imageRepository.imagesStateFlow.collectLatest {
+                    reduce {
+                        state.copy(imageList = it)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun initGalleryImages() {
+        viewModelScope.launch(ioDispatcher) {
+            imageRepository.init()
+        }
     }
 
     private fun setGalleryImage(images: List<Image>) {
@@ -70,6 +86,11 @@ class GalleryViewModel @Inject constructor(
         intent {
             postSideEffect(GallerySideEffect.Zoom(image))
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        imageRepository.cleanup()
     }
 }
 

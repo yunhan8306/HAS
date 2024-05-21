@@ -14,16 +14,17 @@ import com.myStash.core.data.usecase.tag.DeleteTagUseCase
 import com.myStash.core.data.usecase.tag.GetTagListUseCase
 import com.myStash.core.data.usecase.tag.SaveTagUseCase
 import com.myStash.core.di.DefaultDispatcher
-import com.myStash.core.model.Image
+import com.myStash.core.di.IoDispatcher
 import com.myStash.core.model.Item
 import com.myStash.core.model.Tag
-import com.myStash.feature.gallery.getPhotoList
+import com.myStash.feature.gallery.ImageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -44,8 +45,11 @@ class EssentialViewModel @Inject constructor(
     private val saveTagUseCase: SaveTagUseCase,
     private val deleteTagUseCase: DeleteTagUseCase,
     private val deleteItemUseCase: DeleteItemUseCase,
+    // image
+    private val imageRepository: ImageRepository,
     // dispatcher
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ContainerHost<EssentialScreenState, EssentialSideEffect>, ViewModel() {
     override val container: Container<EssentialScreenState, EssentialSideEffect> =
         container(EssentialScreenState())
@@ -53,13 +57,13 @@ class EssentialViewModel @Inject constructor(
     init {
         fetch()
         collectSearchText()
-        setTestImage()
     }
 
     val searchTextState = TextFieldState()
     private val searchTagList = searchTextState
         .textAsFlow()
         .debounce(500)
+        .flowOn(defaultDispatcher)
         .mapLatest { search ->
             tagTotalList.value.filter { it.name.contains(search) }
         }.stateIn(
@@ -68,7 +72,6 @@ class EssentialViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    var testImageList = listOf<Image>()
     var testImageCnt = 0
 
     private val itemList = getItemListUseCase.itemList
@@ -104,13 +107,6 @@ class EssentialViewModel @Inject constructor(
         }
     }
 
-    private fun setTestImage() {
-        getPhotoList(
-            context = application,
-            callback = { testImageList = it }
-        )
-    }
-
     private fun collectSearchText() {
         intent {
             viewModelScope.launch {
@@ -137,16 +133,24 @@ class EssentialViewModel @Inject constructor(
         }
     }
 
+    private fun initGalleryImages() {
+        viewModelScope.launch(ioDispatcher) {
+            imageRepository.init()
+        }
+    }
+
     fun testItemAdd() {
         viewModelScope.launch {
-            val newItem = Item(
-//                tags = tags,
-//                brand = brand,
-//                type = type,
-                imagePath = testImageList[testImageCnt].uri.toString(),
-            )
-            saveItemUseCase.invoke(newItem)
-            testImageCnt++
+            imageRepository.imagesStateFlow.collectLatest {
+                val newItem = Item(
+    //                tags = tags,
+    //                brand = brand,
+    //                type = type,
+                    imagePath = it[testImageCnt].uri.toString()
+                )
+                val result = saveItemUseCase.invoke(newItem)
+                testImageCnt++
+            }
         }
     }
 
@@ -179,6 +183,11 @@ class EssentialViewModel @Inject constructor(
 
     fun onClick() {
         Log.d("qwe123", "click")
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        imageRepository.cleanup()
     }
 
 }
