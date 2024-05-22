@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.myStash.core.model"
+    namespace = "com.myStash.android.core.model"
 }
 
 dependencies {

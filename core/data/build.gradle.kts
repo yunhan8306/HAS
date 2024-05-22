@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.myStash.core.data"
+    namespace = "com.myStash.android.core.data"
 }
 
 

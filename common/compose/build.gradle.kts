@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.myStash.common.compose"
+    namespace = "com.myStash.android.common.compose"
 }
 
 dependencies {

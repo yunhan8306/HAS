@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.myStash.core.data_base"
+    namespace = "com.myStash.android.core.data_base"
 }
 
 dependencies {

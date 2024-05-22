@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.myStash.feature.gallery"
+    namespace = "com.myStash.android.feature.gallery"
 }
 
 dependencies {

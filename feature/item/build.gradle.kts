@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.myStash.feature.item"
+    namespace = "com.myStash.android.feature.item"
 }
 
 dependencies {

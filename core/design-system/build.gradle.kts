@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.myStash.core.design_system"
+    namespace = "com.myStash.android.core.design_system"
 }
 
 dependencies {

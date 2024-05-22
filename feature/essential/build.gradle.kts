@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.myStash.feature.essential"
+    namespace = "com.myStash.android.feature.essential"
 }
 
 dependencies {

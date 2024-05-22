@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.myStash.feature.navigation"
+    namespace = "com.myStash.android.feature.navigation"
 }
 
 dependencies {
