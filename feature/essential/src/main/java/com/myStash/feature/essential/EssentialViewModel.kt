@@ -57,6 +57,7 @@ class EssentialViewModel @Inject constructor(
     init {
         fetch()
         collectSearchText()
+        initGalleryImages()
     }
 
     val searchTextState = TextFieldState()
@@ -142,6 +143,7 @@ class EssentialViewModel @Inject constructor(
     fun testItemAdd() {
         viewModelScope.launch {
             imageRepository.imagesStateFlow.collectLatest {
+                Log.d("qwe123", "list - $it")
                 val newItem = Item(
     //                tags = tags,
     //                brand = brand,
