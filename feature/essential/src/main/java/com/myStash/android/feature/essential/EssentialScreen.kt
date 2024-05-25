@@ -34,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -45,9 +46,12 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import coil.compose.SubcomposeAsyncImage
@@ -134,37 +138,71 @@ fun EssentialScreen(
 ) {
 
     val tagScrollState = rememberLazyListState()
+    var testTagToggle by remember { mutableStateOf(false) }
 
-    val scroll = rememberScrollState()
-
-    var testToggle by remember {
-        mutableStateOf(true)
-    }
+    val scrollState = rememberScrollState()
+    var searchPositionY by remember { mutableFloatStateOf(0f) }
 
     LaunchedEffect(tagTotalList) {
         tagScrollState.scrollToItem(0)
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .zIndex(1f)
+    ) {
+        if(scrollState.value - searchPositionY > 0) {
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp)
+                .background(Color.White),
+                contentAlignment = Alignment.Center
+            ) {
+                SearchTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    textState = searchTextState,
+                )
+            }
+        }
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .verticalScroll(scroll),
+            .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "FSSE",
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(16.dp),
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(16.dp))
-        SearchTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            textState = searchTextState,
-        )
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(60.dp)
+            .background(Color.White)
+            .onGloballyPositioned { coordinates ->
+                if (searchPositionY.toInt() == 0) {
+                    searchPositionY = coordinates.positionInRoot().y
+                }
+            },
+            contentAlignment = Alignment.Center
+        ) {
+            SearchTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                textState = searchTextState,
+            )
+        }
         Spacer(modifier = Modifier.height(18.dp))
         LazyRow(
             modifier = Modifier
@@ -197,11 +235,11 @@ fun EssentialScreen(
             text = "Total Tag",
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { testToggle = !testToggle },
+                .clickable { testTagToggle = !testTagToggle },
             textAlign = TextAlign.Center
         )
         LazyColumn(
-            modifier = Modifier.height(if(testToggle) 50.dp else 200.dp)
+            modifier = Modifier.height(if(testTagToggle) 50.dp else 200.dp)
         ) {
             items(10) {
                 Box(
