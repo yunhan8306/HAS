@@ -17,6 +17,7 @@ import com.myStash.android.core.di.DefaultDispatcher
 import com.myStash.android.core.di.IoDispatcher
 import com.myStash.android.core.model.Item
 import com.myStash.android.core.model.Tag
+import com.myStash.android.core.model.Type
 import com.myStash.android.feature.gallery.ImageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -34,6 +35,7 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
+import com.myStash.android.core.model.testTypeTotalList
 
 @HiltViewModel
 class EssentialViewModel @Inject constructor(
@@ -91,6 +93,8 @@ class EssentialViewModel @Inject constructor(
 
     private val selectedTagList = mutableListOf<Tag>()
 
+    val typeTotalList = testTypeTotalList
+
     private fun fetch() {
         intent {
             viewModelScope.launch {
@@ -100,7 +104,8 @@ class EssentialViewModel @Inject constructor(
                     reduce {
                         state.copy(
                             itemList = itemList,
-                            tagTotalList = tagTotalList
+                            tagTotalList = tagTotalList,
+                            typeTotalList = typeTotalList
                         )
                     }
                 }
@@ -128,6 +133,18 @@ class EssentialViewModel @Inject constructor(
                 reduce {
                     state.copy(
                         selectTagList = selectedTagList.toList()
+                    )
+                }
+            }
+        }
+    }
+
+    fun selectType(type: Type) {
+        intent {
+            viewModelScope.launch {
+                reduce {
+                    state.copy(
+                        selectedType = type
                     )
                 }
             }

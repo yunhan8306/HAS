@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,7 +18,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -42,7 +40,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -54,13 +55,15 @@ import com.google.accompanist.navigation.animation.composable
 import com.myStash.android.common.util.CommonActivityResultContract
 import com.myStash.android.core.model.Item
 import com.myStash.android.core.model.Tag
+import com.myStash.android.core.model.Type
+import com.myStash.android.core.model.testTypeTotalList
 import com.myStash.android.design_system.animation.enterTransitionStart
 import com.myStash.android.design_system.animation.exitTransitionStart
 import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.SearchTextField
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 import com.myStash.android.feature.item.ItemActivity
-import com.myStash.android.feature.item.ItemTextField
 import com.myStash.android.navigation.MainNavType
 import org.orbitmvi.orbit.compose.collectAsState
 
@@ -82,6 +85,8 @@ fun EssentialRoute(
     val itemList = viewModel.collectAsState().value.itemList
     val tagTotalList = viewModel.collectAsState().value.tagTotalList
     val selectTagList = viewModel.collectAsState().value.selectTagList
+    val typeTotalList = viewModel.typeTotalList
+    val selectedType = viewModel.collectAsState().value.selectedType
     val searchTextState by remember { mutableStateOf(viewModel.searchTextState) }
 
     val activity = LocalContext.current as ComponentActivity
@@ -92,6 +97,9 @@ fun EssentialRoute(
 
     EssentialScreen(
         searchTextState = searchTextState,
+        typeTotalList = typeTotalList,
+        selectedType = selectedType,
+        onSelectType = viewModel::selectType,
         itemList = itemList,
         tagTotalList = tagTotalList,
         selectTagList = selectTagList,
@@ -111,6 +119,9 @@ fun EssentialRoute(
 @Composable
 fun EssentialScreen(
     searchTextState: TextFieldState,
+    typeTotalList: List<Type>,
+    selectedType: Type,
+    onSelectType: (Type) -> Unit,
     itemList: List<Item>,
     tagTotalList: List<Tag>,
     selectTagList: List<Tag>,
@@ -141,17 +152,46 @@ fun EssentialScreen(
             .verticalScroll(scroll),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Essential Screen",
+            text = "FSSE",
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(15.dp))
-        ItemTextField(
+        Spacer(modifier = Modifier.height(16.dp))
+        SearchTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
             textState = searchTextState,
-            hintText = "태그 검색",
         )
+        Spacer(modifier = Modifier.height(18.dp))
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(34.dp)
+                .drawBehind {
+                    drawLine(
+                        color = Color.Gray,
+                        start = Offset(x = 0f, y = size.height),
+                        end = Offset(x = size.width, y = size.height),
+                        strokeWidth = 1.dp.toPx(),
+                        cap = StrokeCap.Square
+                    )
+                }
+            ,
+        ) {
+            items(
+                items = typeTotalList,
+                key = { type -> type.name}
+            ) { type ->
+                TypeItem(
+                    name = type.name,
+                    isSelected = selectedType.id == type.id,
+                    onClick = { onSelectType.invoke(type) }
+                )
+            }
+        }
         Spacer(modifier = Modifier.height(15.dp))
         Text(
             text = "Total Tag",
@@ -371,6 +411,9 @@ fun EssentialTagItem(
 fun EssentialScreenPreview() {
     EssentialScreen(
         searchTextState = TextFieldState(),
+        typeTotalList = testTypeTotalList,
+        selectedType = Type(id = 0),
+        onSelectType = {},
         itemList = emptyList(),
         tagTotalList = emptyList(),
         selectTagList = emptyList(),
