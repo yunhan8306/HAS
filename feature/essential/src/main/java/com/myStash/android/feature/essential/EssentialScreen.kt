@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -60,12 +61,14 @@ import com.myStash.android.common.util.CommonActivityResultContract
 import com.myStash.android.core.model.Item
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
+import com.myStash.android.core.model.testTagList
 import com.myStash.android.core.model.testTypeTotalList
 import com.myStash.android.design_system.animation.enterTransitionStart
 import com.myStash.android.design_system.animation.exitTransitionStart
 import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.SearchTextField
+import com.myStash.android.design_system.ui.TagFlowItem
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 import com.myStash.android.feature.item.ItemActivity
 import com.myStash.android.navigation.MainNavType
@@ -143,10 +146,13 @@ fun EssentialScreen(
     val scrollState = rememberScrollState()
     var searchPositionY by remember { mutableFloatStateOf(0f) }
 
+    var flowToggle by remember { mutableStateOf(false) }
+
     LaunchedEffect(tagTotalList) {
         tagScrollState.scrollToItem(0)
     }
 
+    // Fix Search
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -173,7 +179,8 @@ fun EssentialScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .verticalScroll(scrollState),
+            .verticalScroll(scrollState)
+            .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(16.dp))
@@ -185,6 +192,7 @@ fun EssentialScreen(
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(16.dp))
+        // Search
         Box(modifier = Modifier
             .fillMaxWidth()
             .height(60.dp)
@@ -197,13 +205,12 @@ fun EssentialScreen(
             contentAlignment = Alignment.Center
         ) {
             SearchTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                modifier = Modifier.fillMaxWidth(),
                 textState = searchTextState,
             )
         }
         Spacer(modifier = Modifier.height(18.dp))
+        // Type
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
@@ -227,6 +234,39 @@ fun EssentialScreen(
                     name = type.name,
                     isSelected = selectedType.id == type.id,
                     onClick = { onSelectType.invoke(type) }
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(15.dp))
+        // tag
+        Text(text = "FlowRowTest")
+        Spacer(modifier = Modifier.height(15.dp))
+        FlowRow(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            testTagList.forEachIndexed { index, tag ->
+                var isSelected by remember { mutableStateOf(false) }
+
+                if(index < 4 || flowToggle) {
+                    TagFlowItem(
+                        name = tag.name,
+                        isSelected = isSelected,
+                        onClick = { isSelected = !isSelected }
+                    )
+                }
+
+            }
+            if(!flowToggle) {
+                TagFlowItem(
+                    name = "+${testTagList.size - 4}",
+                    isSelected = false,
+                    onClick = { flowToggle = !flowToggle }
+                )
+            } else {
+                TagFlowItem(
+                    name = "접기",
+                    isSelected = true,
+                    onClick = { flowToggle = !flowToggle }
                 )
             }
         }
@@ -453,7 +493,7 @@ fun EssentialScreenPreview() {
         selectedType = Type(id = 0),
         onSelectType = {},
         itemList = emptyList(),
-        tagTotalList = emptyList(),
+        tagTotalList = testTagList,
         selectTagList = emptyList(),
         showItemActivity = {},
         selectTag = {},

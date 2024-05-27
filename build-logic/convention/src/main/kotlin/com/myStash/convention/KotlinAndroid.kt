@@ -51,6 +51,7 @@ private fun Project.configureKotlin() {
                 "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
                 "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
                 "-opt-in=kotlinx.coroutines.FlowPreview",
+                "-opt-in=androidx.compose.foundation.layout.ExperimentalLayoutApi",
             )
         }
     }
