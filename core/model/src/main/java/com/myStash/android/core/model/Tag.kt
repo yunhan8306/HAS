@@ -4,7 +4,11 @@ data class Tag(
     val id: Long? = null,
     val name: String,
     val isBrand: Boolean = false
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        return name == (other as Tag).name
+    }
+}
 
 val testTagList = listOf(
     Tag(name = "고프코어"),

@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -239,19 +238,21 @@ fun EssentialScreen(
         }
         Spacer(modifier = Modifier.height(15.dp))
         // tag
-        Text(text = "FlowRowTest")
-        Spacer(modifier = Modifier.height(15.dp))
         FlowRow(
             modifier = Modifier.fillMaxWidth()
         ) {
             testTagList.forEachIndexed { index, tag ->
-                var isSelected by remember { mutableStateOf(false) }
+                val isSelected by remember(selectTagList) {
+                    derivedStateOf {
+                        selectTagList.contains(tag)
+                    }
+                }
 
                 if(index < 4 || flowToggle) {
                     TagFlowItem(
                         name = tag.name,
                         isSelected = isSelected,
-                        onClick = { isSelected = !isSelected }
+                        onClick = { selectTag.invoke(tag) }
                     )
                 }
 
@@ -270,97 +271,12 @@ fun EssentialScreen(
                 )
             }
         }
-        Spacer(modifier = Modifier.height(15.dp))
-        Text(
-            text = "Total Tag",
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { testTagToggle = !testTagToggle },
-            textAlign = TextAlign.Center
-        )
-        LazyColumn(
-            modifier = Modifier.height(if(testTagToggle) 50.dp else 200.dp)
-        ) {
-            items(10) {
-                Box(
-                    modifier = Modifier
-                        .size(20.dp)
-                        .background(if (it % 2 == 1) Color.Blue else Color.Black)
-                )
-            }
-        }
-        Spacer(modifier = Modifier.height(15.dp))
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 30.dp)
-                .background(Color.Blue),
-            horizontalArrangement = Arrangement.spacedBy(20.dp),
-            state = tagScrollState
-        ) {
-            items(
-                items = tagTotalList,
-                key = { it.name }
-            ) { tag ->
-
-                val isSelected by remember(selectTagList) {
-                    derivedStateOf {
-                        selectTagList.contains(tag)
-                    }
-                }
-
-                EssentialTagItem(
-                    name = tag.name,
-                    isSelected = isSelected,
-                    onClick = {
-                        selectTag.invoke(tag)
-                    }
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(15.dp))
-        Text(
-            text = "Select Tag",
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
-        )
-        Spacer(modifier = Modifier.height(15.dp))
-
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 30.dp)
-                .background(Color.Blue),
-            horizontalArrangement = Arrangement.spacedBy(20.dp),
-        ) {
-            items(
-                items = selectTagList,
-                key = { it.name }
-            ) { tag ->
-
-                EssentialTagItem(
-                    name = tag.name,
-                    isSelected = false,
-                    onClick = {}
-                )
-            }
-        }
-
-
-        Spacer(modifier = Modifier.height(15.dp))
-        Text(
-            text = "Grid",
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
-        )
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(30.dp))
+        // grid
         LazyVerticalGrid(
             modifier = Modifier
-//                .height(600.dp)
                 .heightIn(max = 4000.dp)
                 .fillMaxWidth()
-                .padding(horizontal = 30.dp)
                 .background(Color.Green)
             ,
             columns = GridCells.Fixed(2),
@@ -446,7 +362,7 @@ fun EssentialItem(
         SubcomposeAsyncImage(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(1f)
+                .aspectRatio(3f / 4f)
                 .clip(RoundedCornerShape(12.dp)),
             loading = { ShimmerLoadingAnimation() },
             error = { ShimmerLoadingAnimation() },
