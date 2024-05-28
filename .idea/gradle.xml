@@ -36,6 +36,7 @@
             <option value="$PROJECT_DIR$/feature" />
             <option value="$PROJECT_DIR$/feature/essential" />
             <option value="$PROJECT_DIR$/feature/gallery" />
+            <option value="$PROJECT_DIR$/feature/gender" />
             <option value="$PROJECT_DIR$/feature/item" />
             <option value="$PROJECT_DIR$/feature/navigation" />
           </set>

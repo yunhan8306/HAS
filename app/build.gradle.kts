@@ -62,6 +62,7 @@ dependencies {
     implementation(projects.feature.gallery)
     implementation(projects.feature.item)
     implementation(projects.feature.essential)
+    implementation(projects.feature.gender)
     implementation(projects.common.compose)
     implementation(projects.common.util)
     implementation(projects.core.data)

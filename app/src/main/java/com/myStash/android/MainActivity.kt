@@ -9,6 +9,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.myStash.android.feature.gender.GenderRoute
 import com.myStash.android.navigation.MainNavigation
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,6 +34,8 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
+
+            GenderRoute()
 
 //            Box(
 //                modifier = Modifier
