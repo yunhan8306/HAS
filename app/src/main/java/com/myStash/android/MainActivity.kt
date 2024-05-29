@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            GenderRoute()
+//            GenderRoute()
 
 //            Box(
 //                modifier = Modifier
