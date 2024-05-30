@@ -60,8 +60,8 @@ import com.myStash.android.common.util.CommonActivityResultContract
 import com.myStash.android.core.model.Item
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
+import com.myStash.android.core.model.testManTypeTotalList
 import com.myStash.android.core.model.testTagList
-import com.myStash.android.core.model.testTypeTotalList
 import com.myStash.android.design_system.animation.enterTransitionStart
 import com.myStash.android.design_system.animation.exitTransitionStart
 import com.myStash.android.design_system.animation.slideIn
@@ -91,7 +91,7 @@ fun EssentialRoute(
     val itemList = viewModel.collectAsState().value.itemList
     val tagTotalList = viewModel.collectAsState().value.tagTotalList
     val selectTagList = viewModel.collectAsState().value.selectTagList
-    val typeTotalList = viewModel.typeTotalList
+    val typeTotalList = viewModel.collectAsState().value.typeTotalList
     val selectedType = viewModel.collectAsState().value.selectedType
     val searchTextState by remember { mutableStateOf(viewModel.searchTextState) }
 
@@ -405,7 +405,7 @@ fun EssentialTagItem(
 fun EssentialScreenPreview() {
     EssentialScreen(
         searchTextState = TextFieldState(),
-        typeTotalList = testTypeTotalList,
+        typeTotalList = testManTypeTotalList,
         selectedType = Type(id = 0),
         onSelectType = {},
         itemList = emptyList(),

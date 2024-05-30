@@ -18,6 +18,7 @@ dependencies {
     implementation(projects.feature.navigation)
     implementation(projects.feature.gallery)
     implementation(projects.feature.item)
+    implementation(projects.feature.gender)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.compose.lifecycle.runtime)

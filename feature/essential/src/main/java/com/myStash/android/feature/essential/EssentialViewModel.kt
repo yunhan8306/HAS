@@ -7,6 +7,7 @@ import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.common.util.offerOrRemove
+import com.myStash.android.core.data.usecase.gender.GetSelectedGenderUseCase
 import com.myStash.android.core.data.usecase.item.DeleteItemUseCase
 import com.myStash.android.core.data.usecase.item.GetItemListUseCase
 import com.myStash.android.core.data.usecase.item.SaveItemUseCase
@@ -18,7 +19,11 @@ import com.myStash.android.core.di.IoDispatcher
 import com.myStash.android.core.model.Item
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
+import com.myStash.android.core.model.testManTypeTotalList
+import com.myStash.android.core.model.testWomanTypeTotalList
 import com.myStash.android.feature.gallery.ImageRepository
+import com.myStash.android.feature.gender.GenderType
+import com.myStash.android.feature.gender.getGenderType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
@@ -35,7 +40,6 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
-import com.myStash.android.core.model.testTypeTotalList
 
 @HiltViewModel
 class EssentialViewModel @Inject constructor(
@@ -49,6 +53,8 @@ class EssentialViewModel @Inject constructor(
     private val deleteItemUseCase: DeleteItemUseCase,
     // image
     private val imageRepository: ImageRepository,
+    // gender
+    private val getSelectedGenderUseCase: GetSelectedGenderUseCase,
     // dispatcher
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
@@ -93,14 +99,25 @@ class EssentialViewModel @Inject constructor(
 
     private val selectedTagList = mutableListOf<Tag>()
 
-    val typeTotalList = testTypeTotalList
+    private val typeTotalList = getSelectedGenderUseCase.gender
+        .mapLatest {
+            when(it.getGenderType()) {
+                GenderType.MAN -> testManTypeTotalList
+                GenderType.WOMAN -> testWomanTypeTotalList
+                else -> emptyList()
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000L),
+            initialValue = emptyList()
+        )
 
     private fun fetch() {
         intent {
             viewModelScope.launch {
-                combine(itemList, tagTotalList) { itemList, tagTotalList ->
-                    Pair(itemList, tagTotalList)
-                }.collectLatest { (itemList, tagTotalList) ->
+                combine(typeTotalList, itemList, tagTotalList) { typeTotalList, itemList, tagTotalList ->
+                    Triple(typeTotalList, itemList, tagTotalList)
+                }.collectLatest { (typeTotalList, itemList, tagTotalList) ->
                     reduce {
                         state.copy(
                             itemList = itemList,
