@@ -1,22 +1,63 @@
 package com.myStash.android.feature.gender
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import androidx.lifecycle.viewModelScope
+import com.myStash.android.core.data.usecase.gender.GetSelectedGenderUseCase
+import com.myStash.android.core.data.usecase.gender.SaveGenderUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import org.orbitmvi.orbit.Container
+import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
+import org.orbitmvi.orbit.syntax.simple.reduce
+import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
+@HiltViewModel
 class GenderViewModel @Inject constructor(
+    private val saveGenderUseCase: SaveGenderUseCase,
+    private val getSelectedGenderUseCase: GetSelectedGenderUseCase,
+): ViewModel(), ContainerHost<GenderScreenState, GenderSideEffect> {
 
-): ViewModel() {
+    override val container: Container<GenderScreenState, GenderSideEffect> =
+        container(GenderScreenState.Init)
 
-    private val _selectedGender = MutableStateFlow(GenderType.WOMEN)
-    val selectedGender = _selectedGender.asStateFlow()
+    init {
+        fetch()
+    }
+    private fun fetch() {
+        intent {
+            viewModelScope.launch {
+                val saveGenderType = getSelectedGenderUseCase.gender.first().getGenderType()
+                reduce {
+                    state.copy(
+                        gender = saveGenderType
+                    )
+                }
+            }
+        }
+    }
 
     fun selectGender(genderType: GenderType) {
-        _selectedGender.value = genderType
+        intent {
+            viewModelScope.launch {
+                reduce {
+                    state.copy(
+                        gender = genderType
+                    )
+                }
+            }
+        }
     }
-}
 
-enum class GenderType {
-    MEN, WOMEN
+    fun saveGender() {
+        intent {
+            viewModelScope.launch {
+                saveGenderUseCase.invoke(state.gender.name)
+                postSideEffect(GenderSideEffect.Finish)
+            }
+        }
+    }
 }

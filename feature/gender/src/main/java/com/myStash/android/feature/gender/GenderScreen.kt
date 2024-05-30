@@ -28,36 +28,42 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun GenderScreen(
     selectGenderType: GenderType,
-    selectGender: (GenderType) -> Unit
+    selectGender: (GenderType) -> Unit,
+    saveGender: () -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(Color.White),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            modifier = Modifier.fillMaxWidth(),
             text = "성별을 선택해 주세요",
             fontSize = 20.sp,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(30.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
+        Row {
             GenderItem(
                 name = "여성",
-                isSelected = selectGenderType == GenderType.WOMEN,
-                onClick = { selectGender.invoke(GenderType.WOMEN) }
+                isSelected = selectGenderType == GenderType.WOMAN,
+                onClick = { selectGender.invoke(GenderType.WOMAN) }
             )
             Spacer(modifier = Modifier.width(16.dp))
             GenderItem(
                 name = "남성",
-                isSelected = selectGenderType == GenderType.MEN,
-                onClick = { selectGender.invoke(GenderType.MEN) }
+                isSelected = selectGenderType == GenderType.MAN,
+                onClick = { selectGender.invoke(GenderType.MAN) }
             )
+        }
+        Box(
+            modifier = Modifier
+                .size(50.dp)
+                .clickable { saveGender.invoke() },
+            contentAlignment = Alignment.Center
+        ) {
+            Text("save")
         }
         Spacer(modifier = Modifier.weight(1f))
     }

@@ -10,6 +10,7 @@ android {
 
 dependencies {
     implementation(projects.core.dataBase)
+    implementation(projects.core.dataStore)
     implementation(projects.core.model)
 
     implementation(libs.coroutine.core)

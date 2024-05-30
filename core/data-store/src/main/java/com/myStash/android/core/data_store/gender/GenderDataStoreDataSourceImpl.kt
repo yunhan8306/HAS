@@ -15,10 +15,12 @@ class GenderDataStoreDataSourceImpl @Inject constructor(
     companion object {
         private val PREFERENCE_SELECTED_GENDER = stringPreferencesKey("selected_gender")
     }
+
     override suspend fun selectGender(gender: String) {
         dataStore.edit { preferences ->
             preferences[PREFERENCE_SELECTED_GENDER] = gender
         }
     }
-    override val selectedGender: Flow<String> = dataStore.data.map { it[PREFERENCE_SELECTED_GENDER] ?: "" }
+
+    override val selectedGender: Flow<String> = dataStore.data.map { it[PREFERENCE_SELECTED_GENDER] ?: "UNSELECTED" }
 }
