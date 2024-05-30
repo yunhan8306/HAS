@@ -13,7 +13,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface DataSourceModule {
+interface DataBaseDataSourceModule {
 
     @Binds
     fun bindsItemDataSource(

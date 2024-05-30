@@ -9,6 +9,7 @@ android {
 
 dependencies {
     implementation(projects.core.dataBase)
+    implementation(projects.core.dataStore)
     implementation(projects.core.data)
 
     implementation(libs.androidx.room)

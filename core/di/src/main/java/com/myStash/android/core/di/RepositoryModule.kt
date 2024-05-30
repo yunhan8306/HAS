@@ -1,5 +1,7 @@
 package com.myStash.android.core.di
 
+import com.myStash.android.core.data.repository.gender.GenderRepository
+import com.myStash.android.core.data.repository.gender.GenderRepositoryImpl
 import com.myStash.android.core.data.repository.item.ItemRepository
 import com.myStash.android.core.data.repository.item.ItemRepositoryImpl
 import com.myStash.android.core.data.repository.style.StyleRepository
@@ -29,4 +31,9 @@ interface RepositoryModule {
     fun bindsTagRepository(
         tagRepository: TagRepositoryImpl
     ): TagRepository
+
+    @Binds
+    fun bindsGenderRepository(
+        genderRepository: GenderRepositoryImpl
+    ): GenderRepository
 }
