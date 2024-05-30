@@ -18,7 +18,7 @@ enum class MainNavType(
         activeIcon = R.drawable.btn_btm_bar_message_on,
         inactiveIcon = R.drawable.btn_btm_bar_message_off
     ),
-    TEST4(
+    MY_PAGE(
         activeIcon = R.drawable.btn_btm_bar_my_page_on,
         inactiveIcon = R.drawable.btn_btm_bar_my_page_off
     )

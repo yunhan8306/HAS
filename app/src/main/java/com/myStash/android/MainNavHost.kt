@@ -23,6 +23,7 @@ import com.myStash.android.core.model.Tag
 import com.myStash.android.design_system.animation.enterTransitionStart
 import com.myStash.android.design_system.animation.exitTransitionStart
 import com.myStash.android.feature.essential.essentialScreen
+import com.myStash.android.feature.myPage.myPageScreen
 import com.myStash.android.navigation.MainNavType
 import org.orbitmvi.orbit.compose.collectAsState
 
@@ -37,7 +38,7 @@ fun MainNavHost(
         essentialScreen()
         testScreen(MainNavType.TEST2.name)
         testScreen(MainNavType.TEST3.name)
-        testScreen(MainNavType.TEST4.name)
+        myPageScreen()
     }
 }
 
