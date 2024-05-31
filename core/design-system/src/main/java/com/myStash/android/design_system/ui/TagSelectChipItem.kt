@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TagFlowItem(
+fun TagSelectChipItem(
     name: String,
     isSelected: Boolean,
     onClick: () -> Unit
@@ -41,8 +41,8 @@ fun TagFlowItem(
 
 @DevicePreviews
 @Composable
-fun TagFlowItemPreview() {
-    TagFlowItem(
+fun TagSelectChipItemPreview() {
+    TagSelectChipItem(
         name = "test",
         isSelected = true,
         onClick = {}

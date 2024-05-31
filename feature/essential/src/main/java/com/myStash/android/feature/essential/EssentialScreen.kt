@@ -67,9 +67,10 @@ import com.myStash.android.design_system.animation.exitTransitionStart
 import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.SearchTextField
-import com.myStash.android.design_system.ui.TagFlowItem
+import com.myStash.android.design_system.ui.TagSelectChipItem
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 import com.myStash.android.feature.item.ItemActivity
+import com.myStash.android.feature.search.SearchScreen
 import com.myStash.android.navigation.MainNavType
 import org.orbitmvi.orbit.compose.collectAsState
 
@@ -101,6 +102,8 @@ fun EssentialRoute(
         onResult = {}
     )
 
+    var testSearchFlag by remember { mutableStateOf(false) }
+
     EssentialScreen(
         searchTextState = searchTextState,
         typeTotalList = typeTotalList,
@@ -109,6 +112,7 @@ fun EssentialRoute(
         itemList = itemList,
         tagTotalList = tagTotalList,
         selectTagList = selectTagList,
+        search = { testSearchFlag = true },
         selectTag = viewModel::selectTag,
         testItemAdd = viewModel::testItemAdd,
         testTagAdd = viewModel::testTagAdd,
@@ -120,6 +124,16 @@ fun EssentialRoute(
             itemActivityLauncher.launch(intent)
         },
     )
+
+    if(testSearchFlag) {
+        SearchScreen(
+            searchTextState = searchTextState,
+            selectTagList = selectTagList,
+            tagList = tagTotalList,
+            select = viewModel::selectTag,
+            onBack = { testSearchFlag = false },
+        )
+    }
 }
 
 @Composable
@@ -131,6 +145,7 @@ fun EssentialScreen(
     itemList: List<Item>,
     tagTotalList: List<Tag>,
     selectTagList: List<Tag>,
+    search: () -> Unit,
     showItemActivity: (Item?) -> Unit,
     selectTag: (Tag) -> Unit,
     testItemAdd: () -> Unit,
@@ -187,7 +202,8 @@ fun EssentialScreen(
             text = "FSSE",
             modifier = Modifier
                 .fillMaxWidth()
-                .height(16.dp),
+                .height(16.dp)
+                .clickable { search.invoke() },
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -249,7 +265,7 @@ fun EssentialScreen(
                 }
 
                 if(index < 4 || flowToggle) {
-                    TagFlowItem(
+                    TagSelectChipItem(
                         name = tag.name,
                         isSelected = isSelected,
                         onClick = { selectTag.invoke(tag) }
@@ -258,13 +274,13 @@ fun EssentialScreen(
 
             }
             if(!flowToggle) {
-                TagFlowItem(
+                TagSelectChipItem(
                     name = "+${testTagList.size - 4}",
                     isSelected = false,
                     onClick = { flowToggle = !flowToggle }
                 )
             } else {
-                TagFlowItem(
+                TagSelectChipItem(
                     name = "접기",
                     isSelected = true,
                     onClick = { flowToggle = !flowToggle }
@@ -411,6 +427,7 @@ fun EssentialScreenPreview() {
         itemList = emptyList(),
         tagTotalList = testTagList,
         selectTagList = emptyList(),
+        search = {},
         showItemActivity = {},
         selectTag = {},
         testItemAdd = {},

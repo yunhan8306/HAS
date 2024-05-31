@@ -20,6 +20,7 @@ import com.myStash.android.core.model.Item
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.testManTypeTotalList
+import com.myStash.android.core.model.testTagList
 import com.myStash.android.core.model.testWomanTypeTotalList
 import com.myStash.android.feature.gallery.ImageRepository
 import com.myStash.android.feature.gender.GenderType
@@ -74,7 +75,7 @@ class EssentialViewModel @Inject constructor(
         .debounce(500)
         .flowOn(defaultDispatcher)
         .mapLatest { search ->
-            tagTotalList.value.filter { it.name.contains(search) }
+            testTagList.filter { it.name.contains(search) }
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),
