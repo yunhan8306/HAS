@@ -11,6 +11,9 @@ data class Tag(
 }
 
 val testTagList = listOf(
+    Tag(name = "nike"),
+    Tag(name = "needles"),
+    Tag(name = "namacheko"),
     Tag(name = "고프코어"),
     Tag(name = "나이키"),
     Tag(name = "미니멀"),

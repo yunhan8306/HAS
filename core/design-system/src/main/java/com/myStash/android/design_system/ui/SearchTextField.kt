@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text2.BasicTextField2
 import androidx.compose.foundation.text2.input.TextFieldState
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,7 +40,14 @@ fun SearchTextField(
                 modifier = Modifier.padding(start = 12.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
-                innerTextField()
+                if(textState.text.isEmpty()) {
+                    Text(
+                        text = "원하는 태그를 검색해 보세요",
+                        color = Color(0xFFA4A4A4)
+                    )
+                } else {
+                    innerTextField()
+                }
             }
         },
     )
