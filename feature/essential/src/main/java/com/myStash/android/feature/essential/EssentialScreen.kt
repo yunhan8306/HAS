@@ -66,6 +66,7 @@ import com.myStash.android.design_system.animation.enterTransitionStart
 import com.myStash.android.design_system.animation.exitTransitionStart
 import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.SearchText
 import com.myStash.android.design_system.ui.SearchTextField
 import com.myStash.android.design_system.ui.TagSelectChipItem
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
@@ -158,7 +159,6 @@ fun EssentialScreen(
     var testTagToggle by remember { mutableStateOf(false) }
 
     val scrollState = rememberScrollState()
-    var searchPositionY by remember { mutableFloatStateOf(0f) }
 
     var flowToggle by remember { mutableStateOf(false) }
 
@@ -167,28 +167,6 @@ fun EssentialScreen(
     }
 
     // Fix Search
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .zIndex(1f)
-    ) {
-        if(scrollState.value - searchPositionY > 0) {
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(60.dp)
-                .background(Color.White),
-                contentAlignment = Alignment.Center
-            ) {
-                SearchTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    textState = searchTextState,
-                )
-            }
-        }
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -199,31 +177,18 @@ fun EssentialScreen(
     ) {
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "FSSE",
+            text = "HAS",
             modifier = Modifier
                 .fillMaxWidth()
-                .height(16.dp)
-                .clickable { search.invoke() },
+                .height(16.dp),
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(16.dp))
         // Search
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .height(60.dp)
-            .background(Color.White)
-            .onGloballyPositioned { coordinates ->
-                if (searchPositionY.toInt() == 0) {
-                    searchPositionY = coordinates.positionInRoot().y
-                }
-            },
-            contentAlignment = Alignment.Center
-        ) {
-            SearchTextField(
-                modifier = Modifier.fillMaxWidth(),
-                textState = searchTextState,
-            )
-        }
+        SearchText(
+            textState = searchTextState,
+            onClick = search
+        )
         Spacer(modifier = Modifier.height(18.dp))
         // Type
         LazyRow(

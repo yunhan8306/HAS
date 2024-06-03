@@ -56,9 +56,12 @@ fun SearchScreen(
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(modifier = Modifier.size(50.dp)) {
-                Text("Back")
-            }
+            Box(
+                modifier = Modifier
+                    .size(20.dp)
+                    .background(Color.Black)
+                    .clickable { onBack.invoke() }
+            )
             Spacer(modifier = Modifier.width(10.dp))
             SearchTextField(
                 modifier = Modifier.weight(1f),
@@ -131,7 +134,7 @@ fun SearchScreen(
 @Composable
 fun SearchScreenPreview() {
     SearchScreen(
-        searchTextState = TextFieldState("원하는 태그를 검색해 보세요"),
+        searchTextState = TextFieldState(),
         selectTagList = emptyList(),
         tagList = testTagList,
         select = {},

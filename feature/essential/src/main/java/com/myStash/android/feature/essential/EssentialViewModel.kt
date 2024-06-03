@@ -179,6 +179,8 @@ class EssentialViewModel @Inject constructor(
         viewModelScope.launch {
             imageRepository.imagesStateFlow.collectLatest {
                 Log.d("qwe123", "list - $it")
+                if(it.isEmpty()) return@collectLatest
+
                 val newItem = Item(
     //                tags = tags,
     //                brand = brand,
