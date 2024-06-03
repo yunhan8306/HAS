@@ -2,7 +2,8 @@ package com.myStash.android.core.model
 
 class Type(
     val id: Long? = null,
-    val name: String = ""
+    val name: String = "",
+    val isRemove: Boolean = false
 )
 
 val testManTypeTotalList = listOf(

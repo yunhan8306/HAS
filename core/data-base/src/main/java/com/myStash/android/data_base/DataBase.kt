@@ -7,18 +7,21 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.myStash.android.data_base.converter.LongTypeListConverter
 import com.myStash.android.data_base.item.dao.ItemDao
-import com.myStash.android.data_base.style.dao.StyleDao
-import com.myStash.android.data_base.tag.dao.TagDao
 import com.myStash.android.data_base.item.entity.ItemEntity
+import com.myStash.android.data_base.style.dao.StyleDao
 import com.myStash.android.data_base.style.entity.StyleEntity
+import com.myStash.android.data_base.tag.dao.TagDao
 import com.myStash.android.data_base.tag.entity.TagEntity
+import com.myStash.android.data_base.type.dao.TypeDao
+import com.myStash.android.data_base.type.entity.TypeEntity
 import com.squareup.moshi.Moshi
 
 @Database(
     entities = [
         ItemEntity::class,
         StyleEntity::class,
-        TagEntity::class
+        TagEntity::class,
+        TypeEntity::class
     ],
     version = 1
 )
@@ -31,6 +34,7 @@ abstract class DataBase : RoomDatabase() {
 
     abstract fun TagDao() : TagDao
 
+    abstract fun TypeDao() : TypeDao
 
     companion object {
         private const val DATA_BASE_NAME = "myStashDataBase"

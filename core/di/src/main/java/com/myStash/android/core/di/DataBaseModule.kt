@@ -5,6 +5,7 @@ import com.myStash.android.data_base.DataBase
 import com.myStash.android.data_base.item.dao.ItemDao
 import com.myStash.android.data_base.style.dao.StyleDao
 import com.myStash.android.data_base.tag.dao.TagDao
+import com.myStash.android.data_base.type.dao.TypeDao
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -41,4 +42,9 @@ class DaoModule {
     fun providesTagDao(
         dataBase: DataBase
     ) : TagDao = dataBase.TagDao()
+
+    @Provides
+    fun providesTypeDao(
+        dataBase: DataBase
+    ) : TypeDao = dataBase.TypeDao()
 }
