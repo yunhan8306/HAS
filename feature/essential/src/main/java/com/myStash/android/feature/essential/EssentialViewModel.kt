@@ -220,13 +220,8 @@ class EssentialViewModel @Inject constructor(
         }
     }
 
-    fun onClick() {
-        Log.d("qwe123", "click")
-    }
-
     override fun onCleared() {
         super.onCleared()
         imageRepository.cleanup()
     }
-
 }

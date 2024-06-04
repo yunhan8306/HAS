@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 fun SearchText(
     modifier: Modifier = Modifier,
     textState: TextFieldState,
+    hint: String = "원하는 태그를 검색해 보세요",
     onClick: () -> Unit
 ) {
     Box(modifier = modifier
@@ -40,7 +41,7 @@ fun SearchText(
         ) {
             Text(
                 modifier = Modifier.padding(start = 5.dp),
-                text = if(textState.text.isEmpty()) "원하는 태그를 검색해 보세요" else textState.text.toString(),
+                text = if(textState.text.isEmpty()) hint else textState.text.toString(),
                 color = if(textState.text.isEmpty()) Color(0xFFA4A4A4) else Color.Black,
                 fontSize = 17.sp,
             )

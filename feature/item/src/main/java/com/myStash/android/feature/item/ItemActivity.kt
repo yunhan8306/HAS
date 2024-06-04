@@ -13,7 +13,7 @@ class ItemActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            ItemRoute(
+            ItemEssentialRoute(
                 finishActivity = ::finish
             )
         }

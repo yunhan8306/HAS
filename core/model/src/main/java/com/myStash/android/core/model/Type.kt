@@ -4,7 +4,11 @@ class Type(
     val id: Long? = null,
     val name: String = "",
     val isRemove: Boolean = false
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        return id == (other as Type?)?.id
+    }
+}
 
 val testManTypeTotalList = listOf(
     Type(id = 0,name = "전체"),

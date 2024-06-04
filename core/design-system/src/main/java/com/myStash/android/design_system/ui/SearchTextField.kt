@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 fun SearchTextField(
     modifier: Modifier = Modifier,
     textState: TextFieldState,
+    hint: String = "원하는 태그를 검색해 보세요",
 ) {
     BasicTextField2(
         modifier = modifier
@@ -42,7 +43,7 @@ fun SearchTextField(
             ) {
                 if(textState.text.isEmpty()) {
                     Text(
-                        text = "원하는 태그를 검색해 보세요",
+                        text = hint,
                         color = Color(0xFFA4A4A4)
                     )
                 } else {

@@ -12,9 +12,11 @@ dependencies {
     implementation(projects.core.designSystem)
     implementation(projects.core.model)
     implementation(projects.core.data)
+    implementation(projects.core.di)
     implementation(projects.common.compose)
     implementation(projects.common.util)
     implementation(projects.feature.gallery)
+    implementation(projects.feature.search)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.compose.lifecycle.runtime)
