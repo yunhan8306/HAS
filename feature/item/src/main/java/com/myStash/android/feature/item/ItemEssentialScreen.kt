@@ -13,10 +13,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
@@ -42,81 +45,90 @@ fun ItemEssentialScreen(
     selectTag: (Tag) -> Unit,
     search: () -> Unit,
     saveItem: () -> Unit,
-    showGalleryActivity: () -> Unit
+    showGalleryActivity: () -> Unit,
+    onBack: () -> Unit,
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(horizontal = 12.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .width(100.dp)
-                .height(50.dp)
-                .background(Color.Gray)
-                .clickable { showGalleryActivity.invoke() }
-        ) {
-            Text(text = "go to gallery")
-        }
-        Spacer(modifier = Modifier.height(20.dp))
-        Box(
-            modifier = Modifier.size(200.dp)
-        ) {
-            SubcomposeAsyncImage(
-                model = imageUri,
-                contentDescription = "gallery image",
-                modifier = Modifier.aspectRatio(1f),
-                contentScale = ContentScale.Crop,
-                loading = { ShimmerLoadingAnimation() },
-                error = { ShimmerLoadingAnimation() }
-            )
-        }
-        Spacer(modifier = Modifier.height(20.dp))
-        Text(text = "카테고리")
-        Spacer(modifier = Modifier.height(20.dp))
-        FlowRow(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            typeTotalList.forEach { type ->
-                TypeChipItem(
-                    name = type.name,
-                    isSelected = type.name == selectedType?.name,
-                    onClick = { selectType.invoke(type) }
-                )
-            }
-        }
-
-        Text(text = "태그")
-        Spacer(modifier = Modifier.height(20.dp))
-
-        SearchText(
-            modifier = Modifier.fillMaxWidth(),
-            textState = tagInputState,
-            hint = "브랜드, 분위기, 계절, 컬러",
-            onClick = search
+        ItemHeader(
+            onClick = onBack
         )
-        Spacer(modifier = Modifier.height(20.dp))
-        FlowRow(
-            modifier = Modifier.fillMaxWidth()
+        Box(
+            modifier = Modifier.fillMaxWidth().height(40.dp).background(Color.Red),
+            contentAlignment = Alignment.Center
         ) {
-            selectedTagList.forEach { tag ->
-                TagDeleteChipItem(
-                    name = tag.name,
-                    onClick = { selectTag.invoke(tag) }
+            Text(text = "탭 선택 공간")
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .padding(horizontal = 12.dp)
+        ) {
+            Spacer(modifier = Modifier.height(20.dp))
+            Box(
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .clickable { showGalleryActivity.invoke() }
+            ) {
+                SubcomposeAsyncImage(
+                    model = imageUri,
+                    contentDescription = "gallery image",
+                    modifier = Modifier.aspectRatio(1f),
+                    contentScale = ContentScale.Crop,
+                    loading = { ShimmerLoadingAnimation() },
+                    error = { ShimmerLoadingAnimation() }
                 )
             }
-        }
-        Spacer(modifier = Modifier.height(20.dp))
-        Box(
-            modifier = Modifier
-                .width(100.dp)
-                .height(50.dp)
-                .background(Color.Gray)
-                .clickable { saveItem.invoke() }
-        ) {
-            Text(text = "save")
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(text = "카테고리")
+            Spacer(modifier = Modifier.height(20.dp))
+            FlowRow(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                typeTotalList.forEach { type ->
+                    TypeChipItem(
+                        name = type.name,
+                        isSelected = type.name == selectedType?.name,
+                        onClick = { selectType.invoke(type) }
+                    )
+                }
+            }
+
+            Text(text = "태그")
+            Spacer(modifier = Modifier.height(20.dp))
+
+            SearchText(
+                modifier = Modifier.fillMaxWidth(),
+                textState = tagInputState,
+                hint = "브랜드, 분위기, 계절, 컬러",
+                onClick = search
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            FlowRow(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                selectedTagList.forEach { tag ->
+                    TagDeleteChipItem(
+                        name = tag.name,
+                        onClick = { selectTag.invoke(tag) }
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+            Box(
+                modifier = Modifier
+                    .width(100.dp)
+                    .height(50.dp)
+                    .background(Color.Gray)
+                    .clickable { saveItem.invoke() }
+            ) {
+                Text(text = "save")
+            }
         }
     }
 }
@@ -135,5 +147,6 @@ fun ItemEssentialScreenPreview() {
         search = {},
         showGalleryActivity = {},
         saveItem = {},
+        onBack = {}
     )
 }

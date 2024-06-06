@@ -55,7 +55,8 @@ fun ItemEssentialRoute(
         showGalleryActivity = {
             val intent = Intent(activity.apply { slideIn() }, GalleryActivity::class.java)
             galleryActivityLauncher.launch(intent)
-        }
+        },
+        onBack = finishActivity
     )
 
     if(showSearchScreen) {
