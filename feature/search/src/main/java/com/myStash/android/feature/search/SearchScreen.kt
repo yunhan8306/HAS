@@ -68,9 +68,9 @@ fun SearchScreen(
                 textState = searchTextState,
             )
         }
-        Spacer(modifier = Modifier.width(10.dp))
+        Spacer(modifier = Modifier.height(10.dp))
         Text("적용된 태그")
-        Spacer(modifier = Modifier.width(10.dp))
+        Spacer(modifier = Modifier.height(10.dp))
         LazyRow(
             modifier = Modifier.height(40.dp)
         ) {
@@ -81,15 +81,16 @@ fun SearchScreen(
                 )
             }
         }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(10.dp)
-                .background(Color.Gray)
-        )
-        Spacer(modifier = Modifier.width(10.dp))
-        Text("사용한 태그")
         if(searchTextState.text.isEmpty()) {
+            Text("사용한 태그")
+            Spacer(modifier = Modifier.height(10.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(10.dp)
+                    .background(Color.Gray)
+            )
+            Spacer(modifier = Modifier.height(10.dp))
             FlowRow(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -110,6 +111,15 @@ fun SearchScreen(
                 }
             }
         } else {
+            Text("검색 결과")
+            Spacer(modifier = Modifier.height(10.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(10.dp)
+                    .background(Color.Gray)
+            )
+            Spacer(modifier = Modifier.height(10.dp))
             LazyColumn {
                 items(tagList) { tag ->
                     val isSelected by remember(selectTagList) {
@@ -117,8 +127,7 @@ fun SearchScreen(
                             selectTagList.contains(tag)
                         }
                     }
-
-                    TagSelectChipItem(
+                    SearchResultItem(
                         name = tag.name,
                         isSelected = isSelected,
                         onClick = { select.invoke(tag) }
