@@ -46,9 +46,7 @@ fun NavGraphBuilder.testScreen(
     route: String
 ) {
     composable(
-        route = route,
-        enterTransition = { enterTransitionStart },
-        exitTransition = { exitTransitionStart }
+        route = route
     ) { TestRoute(route = route) }
 }
 

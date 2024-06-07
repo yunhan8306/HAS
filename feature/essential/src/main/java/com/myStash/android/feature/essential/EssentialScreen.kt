@@ -77,9 +77,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 
 fun NavGraphBuilder.essentialScreen() {
     composable(
-        route = MainNavType.ESSENTIAL.name,
-        enterTransition = { enterTransitionStart },
-        exitTransition = { exitTransitionStart }
+        route = MainNavType.ESSENTIAL.name
     ) {
         EssentialRoute()
     }

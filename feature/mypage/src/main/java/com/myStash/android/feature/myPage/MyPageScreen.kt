@@ -25,9 +25,7 @@ import com.myStash.android.navigation.MainNavType
 
 fun NavGraphBuilder.myPageScreen() {
     composable(
-        route = MainNavType.MY_PAGE.name,
-        enterTransition = { enterTransitionStart },
-        exitTransition = { exitTransitionStart }
+        route = MainNavType.MY_PAGE.name
     ) {
         MyPageRoute()
     }
