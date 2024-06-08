@@ -20,9 +20,8 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.myStash.android.common.compose.activityViewModel
 import com.myStash.android.core.model.Tag
-import com.myStash.android.design_system.animation.enterTransitionStart
-import com.myStash.android.design_system.animation.exitTransitionStart
 import com.myStash.android.feature.essential.essentialScreen
+import com.myStash.android.feature.feed.feedScreen
 import com.myStash.android.feature.myPage.myPageScreen
 import com.myStash.android.navigation.MainNavType
 import org.orbitmvi.orbit.compose.collectAsState
@@ -37,7 +36,7 @@ fun MainNavHost(
     ) {
         essentialScreen()
         testScreen(MainNavType.TEST2.name)
-        testScreen(MainNavType.TEST3.name)
+        feedScreen()
         myPageScreen()
     }
 }
