@@ -29,12 +29,11 @@ import com.myStash.android.design_system.ui.DevicePreviews
 
 @Composable
 fun FeedCalender(
-
+    calenderDataList: List<CalenderData>
 ) {
     Column(
         modifier = Modifier
             .width(328.dp)
-            .height(336.dp)
             .padding(horizontal = 16.dp)
             .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 12.dp))
     ) {
@@ -59,19 +58,25 @@ fun FeedCalender(
 
         LazyVerticalGrid(
             modifier = Modifier.fillMaxWidth(),
-            columns = GridCells.Fixed(7),
-            horizontalArrangement = Arrangement.spacedBy(1.dp),
-            verticalArrangement = Arrangement.spacedBy(1.dp)
+            columns = GridCells.Fixed(7)
         ) {
-            items(dayOfWeekList) {
-                FeedCalenderDayOfWeekItem(it)
+            items(calenderDataList) { calenderData ->
+                when(calenderData) {
+                    is CalenderData.DayOfWeek -> FeedCalenderDayOfWeekItem(dayOfWeek = calenderData.name)
+                    is CalenderData.Spacer -> FeedCalenderSpacerItem()
+                    is CalenderData.Day -> FeedCalenderDayItem(calenderData.day)
+                    is CalenderData.RecodedDay -> Unit
+                }
             }
-            items(spacerList) {
-                FeedCalenderSpacerItem()
-            }
-            items(dayList) {
-                FeedCalenderDayItem(it)
-            }
+//            items(dayOfWeekList) {
+//                FeedCalenderDayOfWeekItem(it)
+//            }
+//            items(spacerList) {
+//                FeedCalenderSpacerItem()
+//            }
+//            items(dayList) {
+//                FeedCalenderDayItem(it.toString())
+//            }
         }
     }
 }
@@ -106,14 +111,14 @@ fun FeedCalenderSpacerItem() {
 
 @Composable
 fun FeedCalenderDayItem(
-    day: Int,
+    day: String,
 ) {
     Box(
         modifier = Modifier.size(44.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = day.toString(),
+            text = day,
             style = TextStyle(
                 fontSize = 12.sp,
                 lineHeight = 12.sp,
@@ -128,7 +133,7 @@ fun FeedCalenderDayItem(
 @DevicePreviews
 @Composable
 fun FeedCalenderPreview() {
-    FeedCalender()
+//    FeedCalender()
 }
 
 
