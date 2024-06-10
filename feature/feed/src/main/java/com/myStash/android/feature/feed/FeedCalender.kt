@@ -1,11 +1,13 @@
 package com.myStash.android.feature.feed
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,21 +21,25 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.SubcomposeAsyncImage
 import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 
 @Composable
 fun FeedCalender(
-    calenderDataList: List<CalenderData>
+    calenderDataList: List<CalenderData>,
+    onClick: (CalenderData) -> Unit
 ) {
     Column(
         modifier = Modifier
-            .width(328.dp)
             .padding(horizontal = 16.dp)
             .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 12.dp))
     ) {
@@ -64,8 +70,15 @@ fun FeedCalender(
                 when(calenderData) {
                     is CalenderData.DayOfWeek -> FeedCalenderDayOfWeekItem(dayOfWeek = calenderData.name)
                     is CalenderData.Spacer -> FeedCalenderSpacerItem()
-                    is CalenderData.Day -> FeedCalenderDayItem(calenderData.day)
-                    is CalenderData.RecodedDay -> Unit
+                    is CalenderData.Day -> FeedCalenderDayItem(
+                        day = calenderData.day,
+                        onClick = {onClick.invoke(calenderData)}
+                    )
+                    is CalenderData.RecodedDay -> FeedCalenderRecordDayItem(
+                        day = calenderData.day,
+                        imageUri = calenderData.imageUri,
+                        onClick = { onClick.invoke(calenderData) }
+                    )
                 }
             }
 //            items(dayOfWeekList) {
@@ -112,11 +125,53 @@ fun FeedCalenderSpacerItem() {
 @Composable
 fun FeedCalenderDayItem(
     day: String,
+    onClick: () -> Unit,
 ) {
     Box(
-        modifier = Modifier.size(44.dp),
+        modifier = Modifier
+            .size(44.dp)
+            .clickable { onClick.invoke() },
         contentAlignment = Alignment.Center
     ) {
+        Text(
+            text = day,
+            style = TextStyle(
+                fontSize = 12.sp,
+                lineHeight = 12.sp,
+                fontWeight = FontWeight(500),
+                color = Color(0xFF909090),
+                textAlign = TextAlign.Center,
+            )
+        )
+    }
+}
+
+@Composable
+fun FeedCalenderRecordDayItem(
+    day: String,
+    imageUri: String,
+    onClick: () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .size(44.dp)
+            .clickable { onClick.invoke() },
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .size(36.dp)
+                .clip(RoundedCornerShape(18.dp))
+        ) {
+            SubcomposeAsyncImage(
+                model = imageUri,
+                contentDescription = "feed image",
+                modifier = Modifier.aspectRatio(1f),
+                contentScale = ContentScale.Crop,
+                loading = { ShimmerLoadingAnimation() },
+                error = { ShimmerLoadingAnimation() }
+            )
+        }
         Text(
             text = day,
             style = TextStyle(
