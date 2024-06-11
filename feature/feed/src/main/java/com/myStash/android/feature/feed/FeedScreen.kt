@@ -14,6 +14,7 @@ import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
 import com.myStash.android.navigation.MainNavType
 import org.orbitmvi.orbit.compose.collectAsState
+import java.time.LocalDate
 
 fun NavGraphBuilder.feedScreen() {
     composable(
@@ -28,12 +29,14 @@ fun FeedRoute(
     viewModel: FeedViewModel = hiltViewModel()
 ) {
 
-    val currentDate = viewModel.collectAsState().value.currentDate
+    val currentDate = viewModel.collectAsState().value.calenderDate
     val calenderDataList = viewModel.collectAsState().value.calenderDataList
+    val selectDate = viewModel.collectAsState().value.selectDate
 
     FeedScreen(
         year = currentDate.year,
         month = currentDate.monthValue,
+        selectDate = selectDate,
         calenderDataList = calenderDataList,
         onClickAgoCalender = viewModel::onClickAgoCalender,
         onClickNextCalender = viewModel::onClickNextCalender,
@@ -45,10 +48,11 @@ fun FeedRoute(
 fun FeedScreen(
     year: Int,
     month: Int,
+    selectDate: LocalDate,
     calenderDataList: List<CalenderData>,
     onClickAgoCalender: () -> Unit,
     onClickNextCalender: () -> Unit,
-    onClickDay: (CalenderData) -> Unit,
+    onClickDay: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -66,6 +70,7 @@ fun FeedScreen(
             FeedCalender(
                 year = year,
                 month = month,
+                selectDate = selectDate,
                 calenderDataList = calenderDataList,
                 onClickAgoCalender = onClickAgoCalender,
                 onClickNextCalender = onClickNextCalender,

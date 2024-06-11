@@ -9,6 +9,7 @@ import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import java.time.LocalDate
 import java.time.YearMonth
 import javax.inject.Inject
 
@@ -20,12 +21,13 @@ class FeedViewModel @Inject constructor(
         container(FeedScreenState())
 
     init {
-        test()
+        fetch()
     }
-    fun test() {
+
+    private fun fetch() {
         intent {
             viewModelScope.launch {
-                val date = state.currentDate
+                val date = state.calenderDate
                 reduce {
                     state.copy(
                         calenderDataList = setCalender(date.year, date.monthValue)
@@ -38,11 +40,11 @@ class FeedViewModel @Inject constructor(
     fun onClickAgoCalender() {
         intent {
             viewModelScope.launch {
-                val date = state.currentDate.minusMonths(1)
+                val date = state.calenderDate.minusMonths(1)
 
                 reduce {
                     state.copy(
-                        currentDate = date,
+                        calenderDate = date,
                         calenderDataList = setCalender(date.year, date.monthValue)
                     )
                 }
@@ -52,11 +54,11 @@ class FeedViewModel @Inject constructor(
     fun onClickNextCalender() {
         intent {
             viewModelScope.launch {
-                val date = state.currentDate.plusMonths(1)
+                val date = state.calenderDate.plusMonths(1)
 
                 reduce {
                     state.copy(
-                        currentDate = date,
+                        calenderDate = date,
                         calenderDataList = setCalender(date.year, date.monthValue)
                     )
                 }
@@ -64,8 +66,18 @@ class FeedViewModel @Inject constructor(
         }
     }
 
-    fun onClickDay(day: CalenderData) {
+    fun onClickDay(day: String) {
+        intent {
+            viewModelScope.launch {
+                val date = state.calenderDate
 
+                reduce {
+                    state.copy(
+                        selectDate = LocalDate.of(date.year, date.monthValue, day.toInt())
+                    )
+                }
+            }
+        }
     }
 }
 

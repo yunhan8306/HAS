@@ -11,13 +11,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,10 +39,11 @@ import java.time.LocalDate
 fun FeedCalender(
     year: Int,
     month: Int,
+    selectDate: LocalDate,
     calenderDataList: List<CalenderData>,
     onClickAgoCalender: () -> Unit,
     onClickNextCalender: () -> Unit,
-    onClickDay: (CalenderData) -> Unit,
+    onClickDay: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -86,26 +89,26 @@ fun FeedCalender(
                 when(calenderData) {
                     is CalenderData.DayOfWeek -> FeedCalenderDayOfWeekItem(dayOfWeek = calenderData.name)
                     is CalenderData.Spacer -> FeedCalenderSpacerItem()
-                    is CalenderData.Day -> FeedCalenderDayItem(
-                        day = calenderData.day,
-                        onClick = { onClickDay.invoke(calenderData) }
-                    )
+                    is CalenderData.Day -> {
+                        val isSelect by remember(selectDate, year, month) {
+                            derivedStateOf {
+                                year == selectDate.year && month == selectDate.monthValue && calenderData.day == selectDate.dayOfMonth.toString()
+                            }
+                        }
+
+                        FeedCalenderDayItem(
+                            day = calenderData.day,
+                            isSelect = isSelect,
+                            onClick = onClickDay
+                        )
+                    }
                     is CalenderData.RecodedDay -> FeedCalenderRecordDayItem(
                         day = calenderData.day,
                         imageUri = calenderData.imageUri,
-                        onClick = { onClickDay.invoke(calenderData) }
+                        onClick = onClickDay
                     )
                 }
             }
-//            items(dayOfWeekList) {
-//                FeedCalenderDayOfWeekItem(it)
-//            }
-//            items(spacerList) {
-//                FeedCalenderSpacerItem()
-//            }
-//            items(dayList) {
-//                FeedCalenderDayItem(it.toString())
-//            }
         }
     }
 }
@@ -141,24 +144,33 @@ fun FeedCalenderSpacerItem() {
 @Composable
 fun FeedCalenderDayItem(
     day: String,
-    onClick: () -> Unit,
+    isSelect: Boolean,
+    onClick: (String) -> Unit,
 ) {
     Box(
         modifier = Modifier
             .size(44.dp)
-            .clickable { onClick.invoke() },
+            .clickable { onClick.invoke(day) },
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = day,
-            style = TextStyle(
-                fontSize = 12.sp,
-                lineHeight = 12.sp,
-                fontWeight = FontWeight(500),
-                color = Color(0xFF909090),
-                textAlign = TextAlign.Center,
+        Box(
+            modifier = Modifier
+                .size(36.dp)
+                .clip(RoundedCornerShape(18.dp))
+                .background(if(isSelect) Color(0xFFE4F562) else Color.White),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = day,
+                style = TextStyle(
+                    fontSize = 12.sp,
+                    lineHeight = 12.sp,
+                    fontWeight = FontWeight(500),
+                    color = Color(0xFF909090),
+                    textAlign = TextAlign.Center,
+                )
             )
-        )
+        }
     }
 }
 
@@ -166,12 +178,12 @@ fun FeedCalenderDayItem(
 fun FeedCalenderRecordDayItem(
     day: String,
     imageUri: String,
-    onClick: () -> Unit,
+    onClick: (String) -> Unit,
 ) {
     Box(
         modifier = Modifier
             .size(44.dp)
-            .clickable { onClick.invoke() },
+            .clickable { onClick.invoke(day) },
         contentAlignment = Alignment.Center
     ) {
         Box(
@@ -207,6 +219,7 @@ fun FeedCalenderPreview() {
     FeedCalender(
         year = LocalDate.now().year,
         month = LocalDate.now().monthValue,
+        selectDate = LocalDate.now(),
         calenderDataList = setCalender(LocalDate.now().year, LocalDate.now().monthValue),
         onClickAgoCalender = {},
         onClickNextCalender = {},
