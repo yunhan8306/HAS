@@ -1,13 +1,9 @@
 package com.myStash.android.feature.feed
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,16 +28,27 @@ fun FeedRoute(
     viewModel: FeedViewModel = hiltViewModel()
 ) {
 
+    val currentDate = viewModel.collectAsState().value.currentDate
     val calenderDataList = viewModel.collectAsState().value.calenderDataList
 
     FeedScreen(
-        calenderDataList = calenderDataList
+        year = currentDate.year,
+        month = currentDate.monthValue,
+        calenderDataList = calenderDataList,
+        onClickAgoCalender = viewModel::onClickAgoCalender,
+        onClickNextCalender = viewModel::onClickNextCalender,
+        onClickDay = viewModel::onClickDay,
     )
 }
 
 @Composable
 fun FeedScreen(
-    calenderDataList: List<CalenderData>
+    year: Int,
+    month: Int,
+    calenderDataList: List<CalenderData>,
+    onClickAgoCalender: () -> Unit,
+    onClickNextCalender: () -> Unit,
+    onClickDay: (CalenderData) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -57,7 +64,12 @@ fun FeedScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             FeedCalender(
-                calenderDataList = calenderDataList
+                year = year,
+                month = month,
+                calenderDataList = calenderDataList,
+                onClickAgoCalender = onClickAgoCalender,
+                onClickNextCalender = onClickNextCalender,
+                onClickDay = onClickDay,
             )
         }
     }

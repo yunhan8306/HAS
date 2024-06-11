@@ -2,7 +2,6 @@ package com.myStash.android.feature.feed
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,11 +31,16 @@ import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
+import java.time.LocalDate
 
 @Composable
 fun FeedCalender(
+    year: Int,
+    month: Int,
     calenderDataList: List<CalenderData>,
-    onClick: (CalenderData) -> Unit
+    onClickAgoCalender: () -> Unit,
+    onClickNextCalender: () -> Unit,
+    onClickDay: (CalenderData) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -49,9 +53,15 @@ fun FeedCalender(
                 .height(52.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Box(
+                modifier = Modifier
+                    .size(20.dp)
+                    .background(Color.Black)
+                    .clickable { onClickAgoCalender.invoke() }
+            )
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = "2024.05",
+                text = "$year.$month",
                 style = TextStyle(
                     fontSize = 16.sp,
                     lineHeight = 16.sp,
@@ -60,6 +70,12 @@ fun FeedCalender(
                 )
             )
             Spacer(modifier = Modifier.weight(1f))
+            Box(
+                modifier = Modifier
+                    .size(20.dp)
+                    .background(Color.Black)
+                    .clickable { onClickNextCalender.invoke() }
+            )
         }
 
         LazyVerticalGrid(
@@ -72,12 +88,12 @@ fun FeedCalender(
                     is CalenderData.Spacer -> FeedCalenderSpacerItem()
                     is CalenderData.Day -> FeedCalenderDayItem(
                         day = calenderData.day,
-                        onClick = {onClick.invoke(calenderData)}
+                        onClick = { onClickDay.invoke(calenderData) }
                     )
                     is CalenderData.RecodedDay -> FeedCalenderRecordDayItem(
                         day = calenderData.day,
                         imageUri = calenderData.imageUri,
-                        onClick = { onClick.invoke(calenderData) }
+                        onClick = { onClickDay.invoke(calenderData) }
                     )
                 }
             }
@@ -188,7 +204,14 @@ fun FeedCalenderRecordDayItem(
 @DevicePreviews
 @Composable
 fun FeedCalenderPreview() {
-//    FeedCalender()
+    FeedCalender(
+        year = LocalDate.now().year,
+        month = LocalDate.now().monthValue,
+        calenderDataList = setCalender(LocalDate.now().year, LocalDate.now().monthValue),
+        onClickAgoCalender = {},
+        onClickNextCalender = {},
+        onClickDay = {},
+    )
 }
 
 
