@@ -24,7 +24,7 @@ import com.squareup.moshi.Moshi
         TagEntity::class,
         TypeEntity::class
     ],
-    version = 2
+    version = 1
 )
 @TypeConverters(value = [LongTypeListConverter::class, StringTypeListConverter::class])
 abstract class DataBase : RoomDatabase() {

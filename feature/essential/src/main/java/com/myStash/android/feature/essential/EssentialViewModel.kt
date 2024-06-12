@@ -185,7 +185,8 @@ class EssentialViewModel @Inject constructor(
     //                tags = tags,
     //                brand = brand,
     //                type = type,
-                    imagePath = it[testImageCnt].uri.toString()
+                    imagePath = it[testImageCnt].uri.toString(),
+                    type = 1
                 )
                 val result = saveItemUseCase.invoke(newItem)
                 testImageCnt++

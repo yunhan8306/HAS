@@ -176,7 +176,7 @@ class ItemEssentialViewModel @Inject constructor(
                 val saveItem = Item(
                     imagePath = state.imageUri,
                     tags = selectedTagList.map { it.id!! },
-//                    type = state.selectedType,
+                    type = state.selectedType?.id!!,
                 )
 
                 saveItemUseCase.invoke(saveItem)

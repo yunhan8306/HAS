@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class Item(
     val id: Long? = null,
     val tags: List<Long> = emptyList(),
-    val type: String? = null,
+    val type: Long,
     val imagePath: String? = null,
     val createTime: Long = System.currentTimeMillis(),
     val isRemove: Boolean = false

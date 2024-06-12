@@ -15,7 +15,7 @@ data class ItemEntity(
     val tags: List<Long> = emptyList(),
 
     @ColumnInfo(name = "type")
-    val type: String? = null,
+    val type: Long,
 
     @ColumnInfo(name = "imagePath")
     val imagePath: String? = null,
