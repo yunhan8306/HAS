@@ -11,23 +11,14 @@ data class ItemEntity(
     @ColumnInfo(name = "pk")
     val id: Long? = null,
 
-    @ColumnInfo(name = "name")
-    val name: String,
-
     @ColumnInfo(name = "tags")
     val tags: List<Long> = emptyList(),
-
-    @ColumnInfo(name = "brand")
-    val brand: Long? = null,
 
     @ColumnInfo(name = "type")
     val type: String? = null,
 
     @ColumnInfo(name = "imagePath")
     val imagePath: String? = null,
-
-    @ColumnInfo(name = "memo")
-    val memo: String,
 
     @ColumnInfo(name = "createAt")
     val createTime: Long = System.currentTimeMillis(),
@@ -38,24 +29,18 @@ data class ItemEntity(
     companion object {
         fun ItemEntity.toItem() = Item(
             id = id,
-            name = name,
             tags = tags,
-            brand = brand,
             type = type,
             imagePath = imagePath,
-            memo = memo,
             createTime = createTime,
             isRemove = isRemove,
         )
 
         fun Item.toItemEntity() = ItemEntity(
             id = id,
-            name = name,
             tags = tags,
-            brand = brand,
             type = type,
             imagePath = imagePath,
-            memo = memo,
             createTime = createTime,
             isRemove = isRemove,
         )

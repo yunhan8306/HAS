@@ -13,16 +13,21 @@ data class TagEntity(
 
     @ColumnInfo(name = "name")
     val name: String,
+
+    @ColumnInfo(name = "isRemove")
+    val isRemove: Boolean
 ) {
     companion object {
         fun TagEntity.toTag(): Tag = Tag(
             id = id,
-            name = name
+            name = name,
+            isRemove = isRemove
         )
 
         fun Tag.toEntity(): TagEntity = TagEntity(
             id = id,
-            name = name
+            name = name,
+            isRemove = isRemove
         )
     }
 }

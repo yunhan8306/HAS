@@ -12,28 +12,28 @@ data class StyleEntity(
     val id: Long? = null,
 
     @ColumnInfo(name = "imagePath")
-    val imagePath: String? = null,
+    val imagePaths: List<String> = emptyList(),
 
     @ColumnInfo(name = "items")
     val items: List<Long> = emptyList(),
 
-    @ColumnInfo(name = "memo")
-    val memo: String
+    @ColumnInfo(name = "createAt")
+    val createTime: Long = System.currentTimeMillis(),
 
 ) {
     companion object {
         fun StyleEntity.toStyle() = Style(
             id = id,
-            imagePath = imagePath,
+            imagePaths = imagePaths,
             items = items,
-            memo = memo,
+            createTime = createTime
         )
 
         fun Style.toStyleEntity() = StyleEntity(
             id = id,
-            imagePath = imagePath,
+            imagePaths = imagePaths,
             items = items,
-            memo = memo,
+            createTime = createTime
         )
     }
 }
