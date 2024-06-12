@@ -20,20 +20,24 @@ data class StyleEntity(
     @ColumnInfo(name = "createAt")
     val createTime: Long = System.currentTimeMillis(),
 
+    @ColumnInfo(name = "isRemove")
+    val isRemove: Boolean = false
 ) {
     companion object {
         fun StyleEntity.toStyle() = Style(
             id = id,
             imagePaths = imagePaths,
             items = items,
-            createTime = createTime
+            createTime = createTime,
+            isRemove = isRemove
         )
 
         fun Style.toStyleEntity() = StyleEntity(
             id = id,
             imagePaths = imagePaths,
             items = items,
-            createTime = createTime
+            createTime = createTime,
+            isRemove = isRemove
         )
     }
 }

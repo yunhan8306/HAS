@@ -5,4 +5,5 @@ data class Style(
     val imagePaths: List<String> = emptyList(),
     val items: List<Long> = emptyList(),
     val createTime: Long = System.currentTimeMillis(),
+    val isRemove: Boolean = false
 )

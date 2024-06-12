@@ -3,10 +3,11 @@ package com.myStash.android.core.model
 class Type(
     val id: Long? = null,
     val name: String = "",
+    val createTime: Long = System.currentTimeMillis(),
     val isRemove: Boolean = false
 ) {
     override fun equals(other: Any?): Boolean {
-        return id == (other as Type?)?.id
+        return name == (other as Type?)?.name
     }
 }
 

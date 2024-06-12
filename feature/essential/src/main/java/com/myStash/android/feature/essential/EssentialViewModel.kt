@@ -196,8 +196,7 @@ class EssentialViewModel @Inject constructor(
     fun testTagAdd() {
         viewModelScope.launch {
             val newTag = Tag(
-                name = "태그 ${tagTotalList.value.size + 1}",
-                isBrand = false
+                name = "태그 ${tagTotalList.value.size + 1}"
             )
             Log.d("qwe123", "newTag - $newTag")
             val result = saveTagUseCase.invoke(newTag)

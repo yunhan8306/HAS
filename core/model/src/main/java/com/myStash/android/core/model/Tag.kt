@@ -3,6 +3,7 @@ package com.myStash.android.core.model
 data class Tag(
     val id: Long? = null,
     val name: String,
+    val createTime: Long = System.currentTimeMillis(),
     val isRemove: Boolean = false
 ) {
     override fun equals(other: Any?): Boolean {
