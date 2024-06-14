@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,7 +23,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
@@ -57,18 +62,26 @@ fun ItemEssentialScreen(
             onClick = onBack
         )
         Box(
-            modifier = Modifier.fillMaxWidth().height(40.dp).background(Color.Red),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(40.dp)
+                .background(Color.Red),
             contentAlignment = Alignment.Center
         ) {
             Text(text = "탭 선택 공간")
         }
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .weight(1f)
                 .background(Color.White)
                 .padding(horizontal = 12.dp)
+                .padding(top = 24.dp)
         ) {
-            Spacer(modifier = Modifier.height(20.dp))
+            ItemContentTitle(
+                modifier = Modifier.padding(bottom = 16.dp),
+                text = "사진"
+            )
             Box(
                 modifier = Modifier
                     .size(100.dp)
@@ -84,9 +97,11 @@ fun ItemEssentialScreen(
                     error = { ShimmerLoadingAnimation() }
                 )
             }
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(text = "카테고리")
-            Spacer(modifier = Modifier.height(20.dp))
+            ItemContentTitle(
+                modifier = Modifier.padding(top = 36.dp, bottom = 16.dp),
+                text = "카테고리"
+            )
+
             FlowRow(
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -99,8 +114,24 @@ fun ItemEssentialScreen(
                 }
             }
 
-            Text(text = "태그")
-            Spacer(modifier = Modifier.height(20.dp))
+            Row(
+                modifier = Modifier.padding(top = 32.dp, bottom = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ItemContentTitle(
+                    modifier = Modifier.padding(end = 5.dp),
+                    text = "태그"
+                )
+                Text(
+                    text = "(최대 30개)",
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        lineHeight = 12.sp,
+                        fontWeight = FontWeight(500),
+                        color = Color(0xFF505050),
+                    )
+                )
+            }
 
             SearchText(
                 modifier = Modifier.fillMaxWidth(),
@@ -119,15 +150,33 @@ fun ItemEssentialScreen(
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.weight(1f))
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 12.dp),
+            contentAlignment = Alignment.Center
+        ) {
             Box(
                 modifier = Modifier
-                    .width(100.dp)
-                    .height(50.dp)
-                    .background(Color.Gray)
-                    .clickable { saveItem.invoke() }
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .background(color = Color(0xFF202020), shape = RoundedCornerShape(size = 10.dp))
+                    .clickable { saveItem.invoke() },
+                contentAlignment = Alignment.Center
             ) {
-                Text(text = "save")
+                Text(
+                    text = "등록하기",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        lineHeight = 16.sp,
+                        fontWeight = FontWeight(700),
+                        color = Color(0xFFE4F562),
+                        textAlign = TextAlign.Center,
+                    )
+                )
             }
         }
     }
