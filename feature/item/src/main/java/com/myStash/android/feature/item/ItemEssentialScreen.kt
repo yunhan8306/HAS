@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.material.Text
@@ -51,6 +50,7 @@ fun ItemEssentialScreen(
     search: () -> Unit,
     saveItem: () -> Unit,
     showGalleryActivity: () -> Unit,
+    test: () -> Unit = {},
     onBack: () -> Unit,
 ) {
     Column(
@@ -148,6 +148,24 @@ fun ItemEssentialScreen(
                         name = tag.name,
                         onClick = { selectTag.invoke(tag) }
                     )
+                }
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+            ItemSelectRow {
+                Row(
+                    modifier = Modifier.padding(start = 12.dp, end = 8.dp).clickable { test.invoke() }
+                ) {
+                    Text(
+                        text = "카테고리 선택",
+                        style = TextStyle(
+                            fontSize = 15.sp,
+                            lineHeight = 15.sp,
+                            fontWeight = FontWeight(500),
+                            color = Color(0xFFA4A4A4),
+                        )
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Box(modifier = Modifier.size(24.dp).background(Color.Black))
                 }
             }
             Spacer(modifier = Modifier.weight(1f))

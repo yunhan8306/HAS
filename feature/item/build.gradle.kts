@@ -23,6 +23,7 @@ dependencies {
     implementation(libs.androidx.compose.lifecycle.viewmodel)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.material3.android)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.ui.tooling.preview)

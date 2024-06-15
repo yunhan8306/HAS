@@ -3,6 +3,7 @@ package com.myStash.android.feature.item
 import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.foundation.text2.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,7 +12,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myStash.android.common.util.CommonActivityResultContract
-import com.myStash.android.core.model.testTagList
 import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.feature.gallery.GalleryActivity
 import com.myStash.android.feature.search.SearchScreen
@@ -42,6 +42,10 @@ fun ItemEssentialRoute(
         }
     }
 
+    var test by remember {
+        mutableStateOf(false)
+    }
+
     ItemEssentialScreen(
         imageUri = state.imageUri,
         tagInputState = viewModel.searchTextState,
@@ -56,6 +60,9 @@ fun ItemEssentialRoute(
             val intent = Intent(activity.apply { slideIn() }, GalleryActivity::class.java)
             galleryActivityLauncher.launch(intent)
         },
+        test = {
+            test = true
+        },
         onBack = finishActivity
     )
 
@@ -66,6 +73,15 @@ fun ItemEssentialRoute(
             tagList = state.searchTagList,
             select = viewModel::selectTag,
             onBack = { showSearchScreen = false },
+        )
+    }
+
+    val qq = rememberTextFieldState()
+    if(test) {
+        SearchBottomSheet(
+            state = qq,
+            deleteInput = {},
+            onDismissRequest = { test = false},
         )
     }
 }
