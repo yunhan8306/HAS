@@ -48,6 +48,7 @@ fun ItemEssentialRoute(
 
     ItemEssentialScreen(
         imageUri = state.imageUri,
+        typeInputState = viewModel.typeTextState,
         tagInputState = viewModel.searchTextState,
         selectedType = state.selectedType,
         typeTotalList = state.typeTotalList,
