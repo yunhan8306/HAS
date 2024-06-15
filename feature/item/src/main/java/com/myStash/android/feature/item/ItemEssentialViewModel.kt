@@ -16,6 +16,7 @@ import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.testManTypeTotalList
 import com.myStash.android.core.model.testTagList
+import com.myStash.android.core.model.testWomanTypeTotalList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
@@ -91,7 +92,7 @@ class ItemEssentialViewModel @Inject constructor(
                     reduce {
                         state.copy(
                             tagTotalList = it,
-                            typeTotalList = testManTypeTotalList,
+                            typeTotalList = testWomanTypeTotalList,
                             searchTagList = it
                         )
                     }
