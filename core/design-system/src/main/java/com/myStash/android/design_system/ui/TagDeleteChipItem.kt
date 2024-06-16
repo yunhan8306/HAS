@@ -1,7 +1,6 @@
 package com.myStash.android.design_system.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -24,17 +23,12 @@ fun TagDeleteChipItem(
     onClick: () -> Unit
 ) {
     Box(
-        modifier = Modifier.padding(5.dp)
+        modifier = Modifier.padding(end = 6.dp)
     ) {
         Box(
             modifier = Modifier
-                .clip(RoundedCornerShape(10.dp))
-                .background(Color(0xFFBFD320))
-                .border(
-                    width = 1.dp,
-                    color = Color(0xFF95A70F),
-                    shape = RoundedCornerShape(10.dp)
-                )
+                .padding(start = 12.dp, top = 7.dp, end = 8.dp, bottom = 7.dp)
+                .background(color = Color(0xFFE4F562), shape = RoundedCornerShape(size = 15.dp))
                 .clickable { onClick.invoke() },
             contentAlignment = Alignment.Center
         ) {
