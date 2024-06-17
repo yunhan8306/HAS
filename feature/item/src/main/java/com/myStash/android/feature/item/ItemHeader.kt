@@ -22,6 +22,7 @@ import com.myStash.android.design_system.ui.DevicePreviews
 
 @Composable
 fun ItemHeader(
+    text: String = "등록하기",
     onClick: () -> Unit
 ) {
     Box(
@@ -41,7 +42,7 @@ fun ItemHeader(
         )
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "등록하기",
+            text = text,
             style = TextStyle(
                 fontSize = 16.sp,
                 lineHeight = 16.sp,

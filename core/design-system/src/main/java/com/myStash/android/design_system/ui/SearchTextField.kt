@@ -27,9 +27,10 @@ fun SearchTextField(
 ) {
     BasicTextField2(
         modifier = modifier
-            .height(40.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .background(Color(0xFFF5F5F5)),
+//            .height(40.dp)
+//            .clip(RoundedCornerShape(10.dp))
+//            .background(Color(0xFFF5F5F5))
+        ,
         state = textState,
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
         textStyle = TextStyle(

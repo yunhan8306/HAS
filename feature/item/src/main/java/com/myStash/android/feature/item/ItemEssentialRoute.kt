@@ -4,6 +4,9 @@ import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.text2.input.rememberTextFieldState
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,6 +21,7 @@ import com.myStash.android.feature.search.SearchScreen
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ItemEssentialRoute(
     viewModel: ItemEssentialViewModel = hiltViewModel(),
@@ -45,6 +49,8 @@ fun ItemEssentialRoute(
     var test by remember {
         mutableStateOf(false)
     }
+
+    val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Expanded, skipHalfExpanded = true)
 
     ItemEssentialScreen(
         imageUri = state.imageUri,
@@ -78,11 +84,19 @@ fun ItemEssentialRoute(
     }
 
     val qq = rememberTextFieldState()
+
     if(test) {
-        SearchBottomSheet(
-            state = qq,
-            deleteInput = {},
-            onDismissRequest = { test = false},
+//        SearchBottomSheet(
+//            state = qq,
+//            deleteInput = {},
+//            onDismissRequest = { test = false },
+//        )
+        TagSearchBottomSheet(
+            searchTextState = viewModel.searchTextState,
+            selectTagList = state.selectedTagList,
+            tagList = state.searchTagList,
+            select = viewModel::selectTag,
+            onBack = { test = false },
         )
     }
 }
