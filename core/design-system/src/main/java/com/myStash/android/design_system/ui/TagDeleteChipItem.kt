@@ -28,7 +28,7 @@ fun TagDeleteChipItem(
     onClick: () -> Unit
 ) {
     Box(
-        modifier = Modifier.padding(end = 6.dp)
+        modifier = Modifier.padding(4.dp)
     ) {
         Box(
             modifier = Modifier
