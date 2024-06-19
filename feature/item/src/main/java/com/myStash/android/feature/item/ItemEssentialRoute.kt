@@ -17,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.myStash.android.common.util.CommonActivityResultContract
 import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.feature.gallery.GalleryActivity
+import com.myStash.android.feature.search.EssentialTagSearchScreen
 import com.myStash.android.feature.search.SearchScreen
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -74,7 +75,15 @@ fun ItemEssentialRoute(
     )
 
     if(showSearchScreen) {
-        SearchScreen(
+//        SearchScreen(
+//            searchTextState = viewModel.searchTextState,
+//            selectTagList = state.selectedTagList,
+//            tagList = state.searchTagList,
+//            select = viewModel::selectTag,
+//            onBack = { showSearchScreen = false },
+//        )
+
+        EssentialTagSearchScreen(
             searchTextState = viewModel.searchTextState,
             selectTagList = state.selectedTagList,
             tagList = state.searchTagList,
