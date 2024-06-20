@@ -36,6 +36,7 @@ import com.myStash.android.design_system.ui.TagSelectChipItem
 @Composable
 fun EssentialTagSearchScreen(
     searchTextState: TextFieldState,
+    searchText: String,
     selectTagList: List<Tag>,
     tagList: List<Tag>,
     select: (Tag) -> Unit,
@@ -143,6 +144,7 @@ fun EssentialTagSearchScreen(
                             }
                             SearchResultItem(
                                 name = tag.name,
+                                searchText = searchText,
                                 isSelected = isSelected,
                                 onClick = { select.invoke(tag) }
                             )

@@ -85,6 +85,7 @@ fun ItemEssentialRoute(
 
         EssentialTagSearchScreen(
             searchTextState = viewModel.searchTextState,
+            searchText = viewModel.searchTextState.text.toString(),
             selectTagList = state.selectedTagList,
             tagList = state.searchTagList,
             select = viewModel::selectTag,
@@ -102,6 +103,7 @@ fun ItemEssentialRoute(
 //        )
         TagSearchBottomSheet(
             searchTextState = viewModel.searchTextState,
+            searchText = viewModel.searchTextState.text.toString(),
             selectTagList = state.selectedTagList,
             tagList = state.searchTagList,
             select = viewModel::selectTag,
