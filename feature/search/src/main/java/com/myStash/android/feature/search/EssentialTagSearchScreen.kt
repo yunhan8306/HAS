@@ -32,6 +32,7 @@ import com.myStash.android.core.model.Tag
 import com.myStash.android.design_system.ui.SearchTextField2
 import com.myStash.android.design_system.ui.TagDeleteChipItem
 import com.myStash.android.design_system.ui.TagSelectChipItem
+import com.myStash.android.design_system.ui.theme.clickableNoRipple
 
 @Composable
 fun EssentialTagSearchScreen(
@@ -46,7 +47,7 @@ fun EssentialTagSearchScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color.White)
-            .clickable { },
+            .clickableNoRipple(),
     ) {
         Row(
             modifier = Modifier

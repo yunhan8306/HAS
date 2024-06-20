@@ -54,3 +54,11 @@ fun highlightTextBuilder(fullText: String, highlightText: String, highlightColor
         }
     }
 }
+
+fun CharSequence.removeBlank(): String {
+    return replace(Regex("\\s+"), "")
+}
+
+fun CharSequence.checkBlank(): Boolean {
+    return contains(Regex("\\s"))
+}
