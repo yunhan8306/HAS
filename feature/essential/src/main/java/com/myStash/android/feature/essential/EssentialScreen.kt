@@ -34,7 +34,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,12 +45,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import coil.compose.SubcomposeAsyncImage
@@ -62,12 +58,10 @@ import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.testManTypeTotalList
 import com.myStash.android.core.model.testTagList
-import com.myStash.android.design_system.animation.enterTransitionStart
-import com.myStash.android.design_system.animation.exitTransitionStart
 import com.myStash.android.design_system.animation.slideIn
+import com.myStash.android.design_system.ui.ConfirmDialog
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.SearchText
-import com.myStash.android.design_system.ui.SearchTextField
 import com.myStash.android.design_system.ui.TagSelectChipItem
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 import com.myStash.android.feature.item.ItemActivity
@@ -103,6 +97,8 @@ fun EssentialRoute(
 
     var testSearchFlag by remember { mutableStateOf(false) }
 
+    var testConfirm by remember { mutableStateOf(false) }
+
     EssentialScreen(
         searchTextState = searchTextState,
         typeTotalList = typeTotalList,
@@ -115,6 +111,7 @@ fun EssentialRoute(
         selectTag = viewModel::selectTag,
         testItemAdd = viewModel::testItemAdd,
         testTagAdd = viewModel::testTagAdd,
+        testConfirm = { testConfirm = true},
         deleteAllItem = viewModel::deleteAllItem,
         deleteAllTag = viewModel::deleteAllTag,
         showItemActivity = { item ->
@@ -133,6 +130,16 @@ fun EssentialRoute(
             onBack = { testSearchFlag = false },
         )
     }
+
+    ConfirmDialog(
+        isShow = testConfirm,
+        title = "title",
+        content = "content",
+        confirmText = "confirm",
+        dismissText = "닫기",
+        onConfirm = { testConfirm = false },
+        onDismiss = { testConfirm = false }
+    )
 }
 
 @Composable
@@ -149,6 +156,7 @@ fun EssentialScreen(
     selectTag: (Tag) -> Unit,
     testItemAdd: () -> Unit,
     testTagAdd: () -> Unit,
+    testConfirm: () -> Unit,
     deleteAllItem: () -> Unit,
     deleteAllTag: () -> Unit,
 ) {
@@ -320,6 +328,13 @@ fun EssentialScreen(
                     .clickable { deleteAllItem.invoke() },
                 text = "delete all Item"
             )
+            Text(
+                modifier = Modifier
+                    .height(40.dp)
+                    .background(Color.Red)
+                    .clickable { testConfirm.invoke() },
+                text = "confirm"
+            )
         }
     }
 }
@@ -395,6 +410,7 @@ fun EssentialScreenPreview() {
         selectTag = {},
         testItemAdd = {},
         testTagAdd = {},
+        testConfirm = {},
         deleteAllItem = {},
         deleteAllTag = {},
     )
