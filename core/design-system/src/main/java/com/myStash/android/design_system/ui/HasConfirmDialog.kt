@@ -24,7 +24,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
 @Composable
-fun ConfirmDialog(
+fun HasConfirmDialog(
     isShow: Boolean,
     title: String,
     content: String,
@@ -53,27 +53,18 @@ fun ConfirmDialog(
                     .padding(start = 16.dp, top = 20.dp, end = 16.dp, bottom = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
+                HasText(
                     modifier = Modifier.padding(bottom = 12.dp),
                     text = title,
-                    style = TextStyle(
-                        fontSize = 15.sp,
-                        lineHeight = 22.5.sp,
-                        fontWeight = FontWeight(500),
-                        color = Color(0xFF202020),
-                        textAlign = TextAlign.Center,
-                    )
+                    textAlign = TextAlign.Center
                 )
-                Text(
+                HasText(
                     modifier = Modifier.padding(bottom = 20.dp),
                     text = content,
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        lineHeight = 21.sp,
-                        fontWeight = FontWeight(500),
-                        color = Color(0xFF505050),
-                        textAlign = TextAlign.Center,
-                    )
+                    color = Color(0xFF505050),
+                    fontSize = 14.dp,
+                    textAlign = TextAlign.Center,
+                    lineHeight = 21.dp
                 )
                 Box(
                     modifier = Modifier
@@ -86,31 +77,23 @@ fun ConfirmDialog(
                         .clickable { onConfirm.invoke() },
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
+                    HasText(
                         text = confirmText,
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            lineHeight = 16.sp,
-                            fontWeight = FontWeight(700),
-                            color = Color(0xFFE4F562),
-                            textAlign = TextAlign.Center,
-                        )
+                        color = Color(0xFFE4F562),
+                        fontSize = 16.dp,
+                        fontWeight = HasFontWeight.Bold,
                     )
                 }
-                dismissText?.let {
+                dismissText?.let { dismissText ->
                     Box(
                         modifier = Modifier.padding(top = 12.dp),
                     ) {
-                        Text(
+                        HasText(
                             modifier = Modifier.clickable { onDismiss.invoke() },
-                            text = it,
-                            style = TextStyle(
-                                fontSize = 14.sp,
-                                lineHeight = 20.sp,
-                                fontWeight = FontWeight(500),
-                                color = Color(0xFF909090),
-                                textAlign = TextAlign.Center,
-                            )
+                            text = dismissText,
+                            color = Color(0xFF909090),
+                            fontSize = 14.dp,
+                            fontWeight = HasFontWeight.Medium,
                         )
                     }
                 }
@@ -123,7 +106,7 @@ fun ConfirmDialog(
 @DevicePreviews
 @Composable
 fun ConfirmDialogPreview() {
-    ConfirmDialog(
+    HasConfirmDialog(
         isShow = true,
         title = "title",
         content = "content",

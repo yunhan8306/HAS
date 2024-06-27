@@ -59,7 +59,7 @@ import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.testManTypeTotalList
 import com.myStash.android.core.model.testTagList
 import com.myStash.android.design_system.animation.slideIn
-import com.myStash.android.design_system.ui.ConfirmDialog
+import com.myStash.android.design_system.ui.HasConfirmDialog
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.SearchText
 import com.myStash.android.design_system.ui.TagSelectChipItem
@@ -131,7 +131,7 @@ fun EssentialRoute(
         )
     }
 
-    ConfirmDialog(
+    HasConfirmDialog(
         isShow = testConfirm,
         title = "title",
         content = "content",
