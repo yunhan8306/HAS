@@ -9,7 +9,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -18,12 +17,13 @@ fun HasText(
     modifier: Modifier = Modifier,
     color: Color = Color(0xFF202020),
     fontSize: Dp = 15.dp,
-    fontWeight: HasFontWeight = HasFontWeight.Thin,
+    fontWeight: HasFontWeight = HasFontWeight.Medium,
     textAlign: TextAlign = TextAlign.Start,
-    lineHeight: TextUnit = TextUnit.Unspecified,
+    lineHeight: Dp = 22.dp,
     maxLines: Int = Int.MAX_VALUE,
 ) {
     val fontSizeSp = with(LocalDensity.current) { fontSize.toSp() }
+    val lineHeightSp = with(LocalDensity.current) { lineHeight.toSp() }
 
     Text(
         text = text,
@@ -37,7 +37,7 @@ fun HasText(
                 HasFontWeight.Bold -> FontWeight.Bold
             },
             textAlign = textAlign,
-            lineHeight = lineHeight,
+            lineHeight = lineHeightSp,
         ),
         maxLines = maxLines,
     )
