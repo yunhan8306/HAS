@@ -66,24 +66,10 @@ fun HasConfirmDialog(
                     textAlign = TextAlign.Center,
                     lineHeight = 21.dp
                 )
-                Box(
-                    modifier = Modifier
-                        .width(296.dp)
-                        .height(48.dp)
-                        .background(
-                            color = Color(0xFF202020),
-                            shape = RoundedCornerShape(size = 10.dp)
-                        )
-                        .clickable { onConfirm.invoke() },
-                    contentAlignment = Alignment.Center
-                ) {
-                    HasText(
-                        text = confirmText,
-                        color = Color(0xFFE4F562),
-                        fontSize = 16.dp,
-                        fontWeight = HasFontWeight.Bold,
-                    )
-                }
+                HasButton(
+                    text = confirmText,
+                    onClick = onConfirm
+                )
                 dismissText?.let { dismissText ->
                     Box(
                         modifier = Modifier.padding(top = 12.dp),
