@@ -2,25 +2,49 @@ package com.myStash.android.design_system.ui
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun HasText(
     text: String,
-    fontSize: TextUnit,
+    modifier: Modifier = Modifier,
+    color: Color = Color(0xFF202020),
+    fontSize: Dp = 15.dp,
+    fontWeight: HasFontWeight = HasFontWeight.Thin,
+    textAlign: TextAlign = TextAlign.Start,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    maxLines: Int = Int.MAX_VALUE,
 ) {
+    val fontSizeSp = with(LocalDensity.current) { fontSize.toSp() }
+
     Text(
         text = text,
+        modifier = modifier,
         style = TextStyle(
-            fontSize = fontSize,
-            lineHeight = 22.sp,
-            fontWeight = FontWeight(500),
-            color = Color(0xFF202020),
-            textAlign = TextAlign.Center,
-        )
+            color = color,
+            fontSize = fontSizeSp,
+            fontWeight = when (fontWeight) {
+                HasFontWeight.Thin -> FontWeight.Normal
+                HasFontWeight.Medium -> FontWeight.Medium
+                HasFontWeight.Bold -> FontWeight.Bold
+            },
+            textAlign = textAlign,
+            lineHeight = lineHeight,
+        ),
+        maxLines = maxLines,
     )
+}
+
+sealed interface HasFontWeight {
+    object Thin : HasFontWeight
+    object Medium : HasFontWeight
+    object Bold : HasFontWeight
 }
