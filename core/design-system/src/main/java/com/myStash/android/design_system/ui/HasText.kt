@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -19,10 +20,12 @@ fun HasText(
     fontSize: Dp = 15.dp,
     fontWeight: HasFontWeight = HasFontWeight.Medium,
     textAlign: TextAlign = TextAlign.Start,
-    lineHeight: Dp = 22.dp,
+    letterSpacing: Dp = 0.dp,
+    lineHeight: Dp = 0.dp,
     maxLines: Int = Int.MAX_VALUE,
 ) {
     val fontSizeSp = with(LocalDensity.current) { fontSize.toSp() }
+    val letterSpacingSp = with(LocalDensity.current) { letterSpacing.toSp() }
     val lineHeightSp = with(LocalDensity.current) { lineHeight.toSp() }
 
     Text(
@@ -36,8 +39,10 @@ fun HasText(
                 HasFontWeight.Medium -> FontWeight.Medium
                 HasFontWeight.Bold -> FontWeight.Bold
             },
+            letterSpacing = letterSpacingSp,
             textAlign = textAlign,
             lineHeight = lineHeightSp,
+            platformStyle = PlatformTextStyle(includeFontPadding = false)
         ),
         maxLines = maxLines,
     )

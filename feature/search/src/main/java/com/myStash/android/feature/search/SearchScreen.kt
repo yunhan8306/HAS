@@ -31,7 +31,7 @@ import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.testTagList
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.SearchTextField
-import com.myStash.android.design_system.ui.TagDeleteChipItem
+import com.myStash.android.design_system.ui.tag.TagDeleteChipItem
 import com.myStash.android.design_system.ui.TagSelectChipItem
 
 @Composable

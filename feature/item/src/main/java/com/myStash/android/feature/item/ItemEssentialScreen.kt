@@ -48,7 +48,7 @@ import com.myStash.android.core.model.testTagList
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.HasHeader
 import com.myStash.android.design_system.ui.SearchText
-import com.myStash.android.design_system.ui.TagDeleteChipItem
+import com.myStash.android.design_system.ui.tag.TagDeleteChipItem
 import com.myStash.android.design_system.ui.type.TypeChipItem
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 

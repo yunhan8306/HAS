@@ -9,6 +9,8 @@ android {
 }
 
 dependencies {
+    implementation(projects.common.resource)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.compose.lifecycle.runtime)
     implementation(libs.androidx.compose.lifecycle.viewmodel)

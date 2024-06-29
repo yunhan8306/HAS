@@ -1,5 +1,6 @@
 package com.myStash.android.design_system.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -11,8 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.myStash.android.common.resource.R
 import com.myStash.android.design_system.ui.TextConstant.HAS_TEXT_EMPTY
 
 @Composable
@@ -31,11 +34,12 @@ fun HasHeader(
             .zIndex(1f),
         contentAlignment = Alignment.CenterStart
     ) {
-        Box(
+        Image(
             modifier = Modifier
                 .size(24.dp)
-                .background(Color.Black)
-                .clickable { onBack.invoke() }
+                .clickable { onBack.invoke() },
+            painter = painterResource(id = R.drawable.btn_back),
+            contentDescription = "back",
         )
         Box(
             modifier = Modifier.fillMaxWidth(),
@@ -45,7 +49,6 @@ fun HasHeader(
                 text = text,
                 fontSize = 16.dp,
                 fontWeight = HasFontWeight.Bold,
-
             )
             centerContent.invoke()
         }
@@ -64,6 +67,7 @@ fun HasHeader(
 @Composable
 fun ItemHeaderPreview() {
     HasHeader(
+        text = "등록하기",
         onBack = {}
     )
 }
