@@ -1,4 +1,4 @@
-package com.myStash.android.feature.item
+package com.myStash.android.design_system.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,23 +7,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.TextConstant.HAS_TEXT_EMPTY
 
 @Composable
-fun ItemHeader(
-    text: String = "등록하기",
-    onClick: () -> Unit
+fun HasHeader(
+    text: String = HAS_TEXT_EMPTY,
+    centerContent: @Composable () -> Unit = {},
+    endContent: @Composable () -> Unit = {},
+    onBack: () -> Unit = {},
 ) {
     Box(
         modifier = Modifier
@@ -38,26 +35,35 @@ fun ItemHeader(
             modifier = Modifier
                 .size(24.dp)
                 .background(Color.Black)
-                .clickable { onClick.invoke() }
+                .clickable { onBack.invoke() }
         )
-        Text(
+        Box(
             modifier = Modifier.fillMaxWidth(),
-            text = text,
-            style = TextStyle(
-                fontSize = 16.sp,
-                lineHeight = 16.sp,
-                fontWeight = FontWeight(700),
-                color = Color(0xFF000000),
-                textAlign = TextAlign.Center,
+            contentAlignment = Alignment.Center
+        ) {
+            HasText(
+                text = text,
+                fontSize = 16.dp,
+                fontWeight = HasFontWeight.Bold,
+
             )
-        )
+            centerContent.invoke()
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onBack.invoke() },
+            contentAlignment = Alignment.CenterEnd
+        ) {
+            endContent.invoke()
+        }
     }
 }
 
 @DevicePreviews
 @Composable
 fun ItemHeaderPreview() {
-    ItemHeader(
-        onClick = {}
+    HasHeader(
+        onBack = {}
     )
 }

@@ -48,3 +48,7 @@ sealed interface HasFontWeight {
     object Medium : HasFontWeight
     object Bold : HasFontWeight
 }
+
+object TextConstant {
+    const val HAS_TEXT_EMPTY = ""
+}

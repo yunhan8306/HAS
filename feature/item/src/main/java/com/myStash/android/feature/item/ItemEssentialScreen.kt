@@ -46,6 +46,7 @@ import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.testManTypeTotalList
 import com.myStash.android.core.model.testTagList
 import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.HasHeader
 import com.myStash.android.design_system.ui.SearchText
 import com.myStash.android.design_system.ui.TagDeleteChipItem
 import com.myStash.android.design_system.ui.type.TypeChipItem
@@ -73,8 +74,9 @@ fun ItemEssentialScreen(
             .fillMaxSize()
             .background(Color.White)
     ) {
-        ItemHeader(
-            onClick = onBack
+        HasHeader(
+            text = "등록하기",
+            onBack = onBack
         )
         Box(
             modifier = Modifier
