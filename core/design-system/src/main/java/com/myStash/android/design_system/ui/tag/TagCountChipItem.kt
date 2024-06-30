@@ -3,7 +3,9 @@ package com.myStash.android.design_system.ui.tag
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,6 +22,7 @@ import com.myStash.android.design_system.ui.HasText
 fun TagCountChipItem(
     name: String,
     cnt: String,
+    isSelected: Boolean,
     onClick: () -> Unit
 ) {
     Box(
@@ -28,7 +31,10 @@ fun TagCountChipItem(
         Box(
             modifier = Modifier
                 .height(28.dp)
-                .background(color = Color(0xFFE4F562), shape = RoundedCornerShape(size = 15.dp))
+                .background(
+                    color = if (isSelected) Color(0xFFE4F562) else Color(0xFFE8E8E8),
+                    shape = RoundedCornerShape(size = 15.dp)
+                )
                 .padding(start = 12.dp, end = 8.dp)
                 .clickable { onClick.invoke() },
             contentAlignment = Alignment.Center
@@ -55,9 +61,18 @@ fun TagCountChipItem(
 @DevicePreviews
 @Composable
 fun TagCountChipItemPreview() {
-    TagCountChipItem(
-        name = "ABCD",
-        cnt = "+999",
-        onClick = {}
-    )
+    Row {
+        TagCountChipItem(
+            name = "ABCD",
+            cnt = "+999",
+            isSelected = true,
+            onClick = {}
+        )
+        TagCountChipItem(
+            name = "ABCD",
+            cnt = "+999",
+            isSelected = false,
+            onClick = {}
+        )
+    }
 }

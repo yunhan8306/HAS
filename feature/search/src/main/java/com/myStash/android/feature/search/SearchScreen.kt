@@ -32,7 +32,7 @@ import com.myStash.android.core.model.testTagList
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.SearchTextField
 import com.myStash.android.design_system.ui.tag.TagDeleteChipItem
-import com.myStash.android.design_system.ui.TagSelectChipItem
+import com.myStash.android.design_system.ui.tag.TagChipItem
 
 @Composable
 fun SearchScreen(
@@ -103,7 +103,7 @@ fun SearchScreen(
                         }
                     }
 
-                    TagSelectChipItem(
+                    TagChipItem(
                         name = tag.name,
                         isSelected = isSelected,
                         onClick = { select.invoke(tag) }

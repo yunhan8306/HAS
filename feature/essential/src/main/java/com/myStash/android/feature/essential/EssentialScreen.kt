@@ -62,7 +62,7 @@ import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.design_system.ui.HasConfirmDialog
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.SearchText
-import com.myStash.android.design_system.ui.TagSelectChipItem
+import com.myStash.android.design_system.ui.tag.TagChipItem
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 import com.myStash.android.feature.item.ItemActivity
 import com.myStash.android.feature.search.SearchScreen
@@ -236,7 +236,7 @@ fun EssentialScreen(
                 }
 
                 if(index < 4 || flowToggle) {
-                    TagSelectChipItem(
+                    TagChipItem(
                         name = tag.name,
                         isSelected = isSelected,
                         onClick = { selectTag.invoke(tag) }
@@ -245,13 +245,13 @@ fun EssentialScreen(
 
             }
             if(!flowToggle) {
-                TagSelectChipItem(
+                TagChipItem(
                     name = "+${testTagList.size - 4}",
                     isSelected = false,
                     onClick = { flowToggle = !flowToggle }
                 )
             } else {
-                TagSelectChipItem(
+                TagChipItem(
                     name = "접기",
                     isSelected = true,
                     onClick = { flowToggle = !flowToggle }
