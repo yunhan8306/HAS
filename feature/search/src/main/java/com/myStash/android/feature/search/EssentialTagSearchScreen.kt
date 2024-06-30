@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.myStash.android.core.model.Tag
 import com.myStash.android.design_system.ui.SearchTextField2
+import com.myStash.android.design_system.ui.tag.TagSearchItem
 import com.myStash.android.design_system.ui.tag.TagDeleteChipItem
 import com.myStash.android.design_system.ui.tag.TagChipItem
 
@@ -141,7 +142,7 @@ fun EssentialTagSearchScreen(
                                     selectTagList.contains(tag)
                                 }
                             }
-                            SearchResultItem(
+                            TagSearchItem(
                                 name = tag.name,
                                 isSelected = isSelected,
                                 onClick = { select.invoke(tag) }

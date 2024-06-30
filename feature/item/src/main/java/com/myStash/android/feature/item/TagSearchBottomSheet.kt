@@ -34,7 +34,7 @@ import com.myStash.android.design_system.ui.HasHeader
 import com.myStash.android.design_system.ui.SearchTextField
 import com.myStash.android.design_system.ui.tag.TagDeleteChipItem
 import com.myStash.android.design_system.ui.tag.TagChipItem
-import com.myStash.android.feature.search.SearchResultItem
+import com.myStash.android.design_system.ui.tag.TagSearchItem
 
 @Composable
 fun TagSearchBottomSheet(
@@ -148,7 +148,7 @@ fun TagSearchBottomSheet(
                                 selectTagList.contains(tag)
                             }
                         }
-                        SearchResultItem(
+                        TagSearchItem(
                             name = tag.name,
                             isSelected = isSelected,
                             onClick = { select.invoke(tag) }
