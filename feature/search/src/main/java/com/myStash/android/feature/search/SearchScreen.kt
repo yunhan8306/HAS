@@ -38,6 +38,7 @@ import com.myStash.android.design_system.ui.tag.TagChipItem
 @Composable
 fun SearchScreen(
     searchTextState: TextFieldState,
+    searchText: String,
     selectTagList: List<Tag>,
     tagList: List<Tag>,
     select: (Tag) -> Unit,
@@ -130,6 +131,7 @@ fun SearchScreen(
                     }
                     TagSearchItem(
                         name = tag.name,
+                        searchText = searchText,
                         isSelected = isSelected,
                         onClick = { select.invoke(tag) }
                     )
@@ -144,7 +146,8 @@ fun SearchScreen(
 @Composable
 fun SearchScreenPreview() {
     SearchScreen(
-        searchTextState = TextFieldState(),
+        searchTextState = TextFieldState("n"),
+        searchText = "n",
         selectTagList = emptyList(),
         tagList = testTagList,
         select = {},

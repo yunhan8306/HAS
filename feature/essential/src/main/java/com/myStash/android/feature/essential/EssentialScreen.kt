@@ -125,6 +125,7 @@ fun EssentialRoute(
     if(testSearchFlag) {
         SearchScreen(
             searchTextState = searchTextState,
+            searchText = searchTextState.text.toString(),
             selectTagList = selectTagList,
             tagList = tagTotalList,
             select = viewModel::selectTag,

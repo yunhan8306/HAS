@@ -39,6 +39,7 @@ import com.myStash.android.design_system.ui.tag.TagSearchItem
 @Composable
 fun TagSearchBottomSheet(
     searchTextState: TextFieldState,
+    searchText: String,
     selectTagList: List<Tag>,
     tagList: List<Tag>,
     select: (Tag) -> Unit,
@@ -150,6 +151,7 @@ fun TagSearchBottomSheet(
                         }
                         TagSearchItem(
                             name = tag.name,
+                            searchText = searchText,
                             isSelected = isSelected,
                             onClick = { select.invoke(tag) }
                         )
@@ -167,7 +169,8 @@ fun TagSearchBottomSheet(
 @Composable
 fun TagSearchBottomSheetPreview() {
     TagSearchBottomSheet(
-        searchTextState = TextFieldState(),
+        searchTextState = TextFieldState("abcd"),
+        searchText = "bc",
         selectTagList = emptyList(),
         tagList = testTagList,
         select = {},

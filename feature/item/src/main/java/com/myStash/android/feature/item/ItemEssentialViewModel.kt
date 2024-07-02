@@ -2,11 +2,15 @@ package com.myStash.android.feature.item
 
 import android.util.Log
 import androidx.compose.foundation.text2.input.TextFieldState
+import androidx.compose.foundation.text2.input.clearText
+import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.foundation.text2.input.setTextAndSelectAll
 import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.common.util.offerOrRemove
+import com.myStash.android.common.util.removeBlank
 import com.myStash.android.core.data.usecase.item.SaveItemUseCase
 import com.myStash.android.core.data.usecase.tag.CheckAvailableTagUseCase
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
@@ -23,7 +27,9 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
@@ -64,11 +70,9 @@ class ItemEssentialViewModel @Inject constructor(
 
     private val searchTagList = searchTextState
         .textAsFlow()
-        .debounce(500L)
         .flowOn(defaultDispatcher)
-        .mapLatest { search ->
-            testTagList.filter { it.name.contains(search) }
-        }
+        .onEach { text -> searchTextState.setTextAndPlaceCursorAtEnd(text.removeBlank()) }
+        .map { search -> testTagList.filter { it.name.contains(search) } }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),
