@@ -10,6 +10,7 @@ android {
 
 dependencies {
     implementation(projects.common.resource)
+    implementation(projects.common.util)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.compose.lifecycle.runtime)

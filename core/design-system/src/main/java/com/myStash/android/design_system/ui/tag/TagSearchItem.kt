@@ -20,12 +20,14 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.myStash.android.common.resource.R
+import com.myStash.android.common.util.highlightTextBuilder
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.HasFontWeight
 import com.myStash.android.design_system.ui.HasText
 
 @Composable
 fun TagSearchItem(
+    searchText: String = "",
     name: String,
     cnt: String = "",
     isSelected: Boolean,
@@ -51,7 +53,10 @@ fun TagSearchItem(
     ) {
         HasText(
             modifier = Modifier.padding(end = 6.dp),
-            text = name,
+            text = highlightTextBuilder(
+                fullText = name,
+                highlightText = searchText,
+            ),
             fontSize = 14.dp
         )
         if(isSelected) {
@@ -76,12 +81,14 @@ fun TagSearchItem(
 fun TagSearchItemPreview() {
     Column {
         TagSearchItem(
+            searchText = "B",
             name = "ABCD",
             cnt = "+999",
             isSelected = true,
             onClick = {}
         )
         TagSearchItem(
+            searchText = "C",
             name = "ABCD",
             cnt = "+999",
             isSelected = false,
