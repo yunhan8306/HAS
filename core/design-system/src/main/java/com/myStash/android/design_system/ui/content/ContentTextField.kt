@@ -85,7 +85,7 @@ fun ContentTextField(
                             modifier = Modifier
                                 .size(24.dp)
                                 .clickable { delete.invoke() },
-                            contentAlignment =Alignment.Center
+                            contentAlignment = Alignment.Center
                         ) {
                             Image(
                                 modifier = Modifier.size(16.dp),
