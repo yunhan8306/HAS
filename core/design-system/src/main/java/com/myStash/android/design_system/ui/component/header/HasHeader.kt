@@ -1,4 +1,4 @@
-package com.myStash.android.design_system.ui
+package com.myStash.android.design_system.ui.component.header
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,7 +16,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.myStash.android.common.resource.R
-import com.myStash.android.design_system.ui.TextConstant.HAS_TEXT_EMPTY
+import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.component.text.HasFontWeight
+import com.myStash.android.design_system.ui.component.text.HasText
+import com.myStash.android.design_system.ui.component.text.TextConstant.HAS_TEXT_EMPTY
 
 @Composable
 fun HasHeader(

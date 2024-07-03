@@ -1,10 +1,8 @@
-package com.myStash.android.design_system.ui.tag
+package com.myStash.android.design_system.ui.component.type
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -15,31 +13,29 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.myStash.android.design_system.ui.DevicePreviews
-import com.myStash.android.design_system.ui.HasText
 
 @Composable
-fun TagChipItem(
+fun TypeChipItem(
     name: String,
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
     Box(
-        modifier = Modifier.padding(4.dp)
+        modifier = Modifier.padding(5.dp)
     ) {
         Box(
             modifier = Modifier
-                .height(28.dp)
+                .clip(RoundedCornerShape(10.dp))
                 .background(
-                    color = if (isSelected) Color(0xFFE4F562) else Color(0xFFE8E8E8),
-                    shape = RoundedCornerShape(size = 15.dp)
+                    if(isSelected) Color(0xFF202020) else Color(0xFFF1F1F1)
                 )
-                .padding(horizontal = 12.dp)
                 .clickable { onClick.invoke() },
             contentAlignment = Alignment.Center
         ) {
-            HasText(
+            Text(
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
                 text = name,
-                fontSize = 14.dp,
+                color = if(isSelected) Color(0xFFF1F1F1) else Color(0xFF707070)
             )
         }
     }
@@ -47,17 +43,10 @@ fun TagChipItem(
 
 @DevicePreviews
 @Composable
-fun TagSelectChipItemPreview() {
-    Row {
-        TagChipItem(
-            name = "test",
-            isSelected = true,
-            onClick = {}
-        )
-        TagChipItem(
-            name = "test",
-            isSelected = false,
-            onClick = {}
-        )
-    }
+fun TypeChipItemPreview() {
+    TypeChipItem(
+        name = "test",
+        isSelected = false,
+        onClick = {}
+    )
 }

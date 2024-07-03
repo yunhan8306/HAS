@@ -30,9 +30,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.myStash.android.core.model.Tag
 import com.myStash.android.design_system.ui.SearchTextField2
-import com.myStash.android.design_system.ui.tag.TagChipItem
-import com.myStash.android.design_system.ui.tag.TagDeleteChipItem
-import com.myStash.android.design_system.ui.tag.TagSearchItem
+import com.myStash.android.design_system.ui.component.tag.TagChipItem
+import com.myStash.android.design_system.ui.component.tag.TagDeleteChipItem
+import com.myStash.android.design_system.ui.component.tag.TagSearchItem
 import com.myStash.android.design_system.ui.theme.clickableNoRipple
 
 @Composable

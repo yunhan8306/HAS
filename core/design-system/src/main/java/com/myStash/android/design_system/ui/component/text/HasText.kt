@@ -1,4 +1,4 @@
-package com.myStash.android.design_system.ui
+package com.myStash.android.design_system.ui.component.text
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable

@@ -1,4 +1,4 @@
-package com.myStash.android.design_system.ui.tag
+package com.myStash.android.design_system.ui.component.tag
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.dp
 import com.myStash.android.common.resource.R
 import com.myStash.android.common.util.highlightTextBuilder
 import com.myStash.android.design_system.ui.DevicePreviews
-import com.myStash.android.design_system.ui.HasFontWeight
-import com.myStash.android.design_system.ui.HasText
+import com.myStash.android.design_system.ui.component.text.HasFontWeight
+import com.myStash.android.design_system.ui.component.text.HasText
 
 @Composable
 fun TagSearchItem(

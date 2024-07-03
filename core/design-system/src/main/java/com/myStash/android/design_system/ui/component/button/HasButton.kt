@@ -1,4 +1,4 @@
-package com.myStash.android.design_system.ui
+package com.myStash.android.design_system.ui.component.button
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,6 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.component.text.HasFontWeight
+import com.myStash.android.design_system.ui.component.text.HasText
 
 @Composable
 fun HasButton(

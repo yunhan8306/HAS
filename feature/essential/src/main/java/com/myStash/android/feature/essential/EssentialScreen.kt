@@ -59,11 +59,11 @@ import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.testManTypeTotalList
 import com.myStash.android.core.model.testTagList
 import com.myStash.android.design_system.animation.slideIn
-import com.myStash.android.design_system.ui.HasConfirmDialog
+import com.myStash.android.design_system.ui.component.dialog.HasConfirmDialog
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.SearchText
-import com.myStash.android.design_system.ui.tag.TagChipItem
-import com.myStash.android.design_system.ui.tag.TagMoreChipItem
+import com.myStash.android.design_system.ui.component.tag.TagChipItem
+import com.myStash.android.design_system.ui.component.tag.TagMoreChipItem
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 import com.myStash.android.feature.item.ItemActivity
 import com.myStash.android.feature.search.SearchScreen

@@ -1,4 +1,4 @@
-package com.myStash.android.design_system.ui.content
+package com.myStash.android.design_system.ui.component.content
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,7 +28,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.myStash.android.common.resource.R
 import com.myStash.android.design_system.ui.DevicePreviews
-import com.myStash.android.design_system.ui.HasText
+import com.myStash.android.design_system.ui.component.text.HasText
 
 @Composable
 fun ContentTextField(

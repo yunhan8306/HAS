@@ -30,11 +30,11 @@ import androidx.compose.ui.unit.dp
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.testTagList
 import com.myStash.android.design_system.ui.DevicePreviews
-import com.myStash.android.design_system.ui.HasHeader
+import com.myStash.android.design_system.ui.component.header.HasHeader
 import com.myStash.android.design_system.ui.SearchTextField
-import com.myStash.android.design_system.ui.tag.TagDeleteChipItem
-import com.myStash.android.design_system.ui.tag.TagChipItem
-import com.myStash.android.design_system.ui.tag.TagSearchItem
+import com.myStash.android.design_system.ui.component.tag.TagDeleteChipItem
+import com.myStash.android.design_system.ui.component.tag.TagChipItem
+import com.myStash.android.design_system.ui.component.tag.TagSearchItem
 
 @Composable
 fun TagSearchBottomSheet(
