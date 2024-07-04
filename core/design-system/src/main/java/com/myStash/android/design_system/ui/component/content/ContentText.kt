@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.myStash.android.common.resource.R
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.component.text.HasText
+import com.myStash.android.design_system.util.clickableRipple
 
 @Composable
 fun ContentText(
@@ -38,8 +39,8 @@ fun ContentText(
             .fillMaxWidth()
             .height(44.dp)
             .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 10.dp))
-            .padding(start = 12.dp, end = 8.dp)
-            .clickable { onClick.invoke() },
+            .clickableRipple(onClick = onClick)
+            .padding(start = 12.dp, end = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         HasText(

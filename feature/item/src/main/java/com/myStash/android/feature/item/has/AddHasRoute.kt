@@ -57,8 +57,6 @@ fun AddHasRoute(
 
     AddHasScreen(
         imageUri = state.imageUri,
-        typeInputState = viewModel.typeTextState,
-        tagInputState = viewModel.searchTextState,
         selectedType = state.selectedType,
         typeTotalList = state.typeTotalList,
         selectType = viewModel::selectType,
@@ -69,9 +67,6 @@ fun AddHasRoute(
         showGalleryActivity = {
             val intent = Intent(activity.apply { slideIn() }, GalleryActivity::class.java)
             galleryActivityLauncher.launch(intent)
-        },
-        test = {
-            test = true
         },
         onBack = finishActivity
     )

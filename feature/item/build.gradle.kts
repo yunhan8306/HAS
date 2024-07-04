@@ -13,6 +13,7 @@ dependencies {
     implementation(projects.core.model)
     implementation(projects.core.data)
     implementation(projects.core.di)
+    implementation(projects.common.resource)
     implementation(projects.common.compose)
     implementation(projects.common.util)
     implementation(projects.feature.gallery)

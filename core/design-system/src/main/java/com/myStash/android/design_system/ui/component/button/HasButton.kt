@@ -18,12 +18,13 @@ import com.myStash.android.design_system.ui.component.text.HasText
 
 @Composable
 fun HasButton(
+    modifier: Modifier = Modifier,
     text: String,
     isComplete: Boolean = true,
     onClick: () -> Unit,
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(48.dp)
             .background(
