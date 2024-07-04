@@ -19,7 +19,7 @@ import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.component.text.HasText
 
 @Composable
-fun PhotoItem(
+fun UnselectPhotoItem(
     onClick: () -> Unit
 ) {
     Box(
@@ -33,7 +33,7 @@ fun PhotoItem(
             Image(
                 modifier = Modifier.size(32.dp),
                 painter = painterResource(id = R.drawable.img_photo),
-                contentDescription = "photo"
+                contentDescription = "unselect photo"
             )
             HasText(
                 modifier = Modifier.padding(top = 8.dp),
@@ -48,7 +48,7 @@ fun PhotoItem(
 @DevicePreviews
 @Composable
 fun PhotoItemPreview() {
-    PhotoItem(
+    UnselectPhotoItem(
         onClick = {}
     )
 }

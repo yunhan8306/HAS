@@ -1,4 +1,4 @@
-package com.myStash.android.feature.item
+package com.myStash.android.feature.item.has
 
 import android.content.Intent
 import androidx.activity.ComponentActivity
@@ -17,14 +17,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.myStash.android.common.util.CommonActivityResultContract
 import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.feature.gallery.GalleryActivity
+import com.myStash.android.feature.item.EssentialItemSideEffect
+import com.myStash.android.feature.item.ItemEssentialViewModel
+import com.myStash.android.feature.item.TagSearchBottomSheet
 import com.myStash.android.feature.search.EssentialTagSearchScreen
-import com.myStash.android.feature.search.SearchScreen
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ItemEssentialRoute(
+fun AddHasRoute(
     viewModel: ItemEssentialViewModel = hiltViewModel(),
     finishActivity: () -> Unit
 ) {
@@ -53,7 +55,7 @@ fun ItemEssentialRoute(
 
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Expanded, skipHalfExpanded = true)
 
-    ItemEssentialScreen(
+    AddHasScreen(
         imageUri = state.imageUri,
         typeInputState = viewModel.typeTextState,
         tagInputState = viewModel.searchTextState,

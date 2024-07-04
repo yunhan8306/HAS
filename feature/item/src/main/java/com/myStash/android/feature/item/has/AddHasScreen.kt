@@ -1,4 +1,4 @@
-package com.myStash.android.feature.item
+package com.myStash.android.feature.item.has
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -48,13 +48,17 @@ import com.myStash.android.core.model.testTagList
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.component.header.HasHeader
 import com.myStash.android.design_system.ui.SearchText
+import com.myStash.android.design_system.ui.component.photo.SelectPhotoItem
+import com.myStash.android.design_system.ui.component.photo.UnselectPhotoItem
 import com.myStash.android.design_system.ui.component.tag.TagDeleteChipItem
 import com.myStash.android.design_system.ui.component.type.TypeChipItem
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
+import com.myStash.android.feature.item.ItemContentTitle
+import com.myStash.android.feature.item.ItemSelectRow
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ItemEssentialScreen(
+fun AddHasScreen(
     imageUri: String?,
     typeInputState: TextFieldState,
     tagInputState: TextFieldState,
@@ -99,20 +103,13 @@ fun ItemEssentialScreen(
                 modifier = Modifier.padding(bottom = 16.dp),
                 text = "사진"
             )
-            Box(
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(RoundedCornerShape(10.dp))
-                    .clickable { showGalleryActivity.invoke() }
-            ) {
-                SubcomposeAsyncImage(
-                    model = imageUri,
-                    contentDescription = "gallery image",
-                    modifier = Modifier.aspectRatio(1f),
-                    contentScale = ContentScale.Crop,
-                    loading = { ShimmerLoadingAnimation() },
-                    error = { ShimmerLoadingAnimation() }
+            imageUri?.let {
+                SelectPhotoItem(
+                    imageUri = imageUri,
+                    onClick = showGalleryActivity
                 )
+            } ?: run {
+                UnselectPhotoItem(onClick = showGalleryActivity)
             }
             ItemContentTitle(
                 modifier = Modifier.padding(top = 36.dp, bottom = 16.dp),
@@ -229,7 +226,9 @@ fun ItemEssentialScreen(
             Spacer(modifier = Modifier.height(20.dp))
             ItemSelectRow {
                 Row(
-                    modifier = Modifier.padding(start = 12.dp, end = 8.dp).clickable { test.invoke() }
+                    modifier = Modifier
+                        .padding(start = 12.dp, end = 8.dp)
+                        .clickable { test.invoke() }
                 ) {
                     Text(
                         text = "카테고리 선택",
@@ -241,7 +240,9 @@ fun ItemEssentialScreen(
                         )
                     )
                     Spacer(modifier = Modifier.weight(1f))
-                    Box(modifier = Modifier.size(24.dp).background(Color.Black))
+                    Box(modifier = Modifier
+                        .size(24.dp)
+                        .background(Color.Black))
                 }
             }
             Spacer(modifier = Modifier.weight(1f))
@@ -279,7 +280,7 @@ fun ItemEssentialScreen(
 @DevicePreviews
 @Composable
 fun ItemEssentialScreenPreview() {
-    ItemEssentialScreen(
+    AddHasScreen(
         imageUri = null,
         typeInputState = TextFieldState(),
         tagInputState = TextFieldState(),
