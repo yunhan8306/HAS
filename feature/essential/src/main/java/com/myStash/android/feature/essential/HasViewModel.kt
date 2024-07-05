@@ -43,7 +43,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
-class EssentialViewModel @Inject constructor(
+class HasViewModel @Inject constructor(
     private val application: Application,
     private val getItemListUseCase: GetItemListUseCase,
     private val getTagListUseCase: GetTagListUseCase,
@@ -59,9 +59,9 @@ class EssentialViewModel @Inject constructor(
     // dispatcher
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-) : ContainerHost<EssentialScreenState, EssentialSideEffect>, ViewModel() {
-    override val container: Container<EssentialScreenState, EssentialSideEffect> =
-        container(EssentialScreenState())
+) : ContainerHost<HasScreenState, HasSideEffect>, ViewModel() {
+    override val container: Container<HasScreenState, HasSideEffect> =
+        container(HasScreenState())
 
     init {
         fetch()

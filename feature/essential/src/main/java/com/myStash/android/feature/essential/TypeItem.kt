@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,10 +12,12 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
+import com.myStash.android.design_system.ui.component.text.HasFontWeight
+import com.myStash.android.design_system.ui.component.text.HasText
 
 @Composable
 fun TypeItem(
-    name : String,
+    name: String,
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
@@ -42,7 +43,10 @@ fun TypeItem(
                 .clickable { onClick.invoke() }
                 .padding(5.dp)
         ) {
-            Text(text = name)
+            HasText(
+                text = name,
+                fontWeight = if(isSelected) HasFontWeight.Bold else HasFontWeight.Medium
+            )
         }
     }
 }

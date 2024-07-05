@@ -20,7 +20,7 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.myStash.android.common.compose.activityViewModel
 import com.myStash.android.core.model.Tag
-import com.myStash.android.feature.essential.essentialScreen
+import com.myStash.android.feature.essential.hasScreen
 import com.myStash.android.feature.feed.feedScreen
 import com.myStash.android.feature.myPage.myPageScreen
 import com.myStash.android.navigation.MainNavType
@@ -34,7 +34,7 @@ fun MainNavHost(
         navController = navHostController,
         startDestination = MainNavType.ESSENTIAL.name
     ) {
-        essentialScreen()
+        hasScreen()
         testScreen(MainNavType.TEST2.name)
         feedScreen()
         myPageScreen()
