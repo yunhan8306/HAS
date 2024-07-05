@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -46,6 +47,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -195,7 +197,7 @@ fun HasScreen(
                 .fillMaxWidth()
                 .drawBehind {
                     drawLine(
-                        color = Color.Gray,
+                        color = Color(0xFFF1F1F1),
                         start = Offset(x = 0f, y = size.height),
                         end = Offset(x = size.width, y = size.height),
                         strokeWidth = 1.dp.toPx(),
@@ -216,9 +218,9 @@ fun HasScreen(
         }
         FlowRow(
             modifier = Modifier
+                .heightIn(max = if(flowToggle) 200.dp else Dp.Unspecified)
                 .fillMaxWidth()
-                .padding(top = 18.dp, bottom = 8.dp)
-                .padding(horizontal = 16.dp)
+                .padding(top = 18.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
         ) {
             testTagList.forEachIndexed { index, tag ->
                 val isSelected by remember(selectTagList) {
@@ -264,109 +266,6 @@ fun HasScreen(
             }
         }
     }
-
-
-
-//    // Fix Search
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .background(Color.White)
-//            .verticalScroll(scrollState)
-//            .padding(horizontal = 16.dp),
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//    ) {
-//        Spacer(modifier = Modifier.height(16.dp))
-//        Text(
-//            text = "HAS",
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(16.dp),
-//            textAlign = TextAlign.Center
-//        )
-//        Spacer(modifier = Modifier.height(16.dp))
-//        // Search
-//        SearchText(
-//            textState = searchTextState,
-//            onClick = search
-//        )
-//        Spacer(modifier = Modifier.height(18.dp))
-//        // Type
-//        LazyRow(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(34.dp)
-//                .drawBehind {
-//                    drawLine(
-//                        color = Color.Gray,
-//                        start = Offset(x = 0f, y = size.height),
-//                        end = Offset(x = size.width, y = size.height),
-//                        strokeWidth = 1.dp.toPx(),
-//                        cap = StrokeCap.Square
-//                    )
-//                }
-//            ,
-//        ) {
-//            items(
-//                items = typeTotalList,
-//                key = { type -> type.name}
-//            ) { type ->
-//                TypeItem(
-//                    name = type.name,
-//                    isSelected = selectedType.id == type.id,
-//                    onClick = { onSelectType.invoke(type) }
-//                )
-//            }
-//        }
-//        Spacer(modifier = Modifier.height(15.dp))
-//        // tag
-//        FlowRow(
-//            modifier = Modifier.fillMaxWidth()
-//        ) {
-//            testTagList.forEachIndexed { index, tag ->
-//                val isSelected by remember(selectTagList) {
-//                    derivedStateOf {
-//                        selectTagList.contains(tag)
-//                    }
-//                }
-//                if(index < 3 || flowToggle) {
-//                    TagChipItem(
-//                        name = tag.name,
-//                        isSelected = isSelected,
-//                        onClick = { selectTag.invoke(tag) }
-//                    )
-//                }
-//            }
-//            TagMoreChipItem(
-//                cnt = "${testTagList.size - 4}",
-//                isFold = !flowToggle,
-//                onClick = { flowToggle = !flowToggle }
-//            )
-//        }
-//        Spacer(modifier = Modifier.height(30.dp))
-//        // grid
-//        LazyVerticalGrid(
-//            modifier = Modifier
-//                .heightIn(max = 4000.dp)
-//                .fillMaxWidth()
-//                .background(Color.Green)
-//            ,
-//            columns = GridCells.Fixed(2),
-//            horizontalArrangement = Arrangement.spacedBy(20.dp),
-//            verticalArrangement = Arrangement.spacedBy(20.dp)
-//        ) {
-//            items(
-//                items = itemList,
-//                key = { it.id!! }
-//            ) { item ->
-//                EssentialItem(
-//                    itemUri = item.imagePath,
-//                    tagList = item.getTagList(tagTotalList),
-//                    onClick = { showItemActivity.invoke(item) }
-//                )
-//            }
-//        }
-//    }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -421,81 +320,6 @@ fun HasScreen(
                 text = "confirm"
             )
         }
-    }
-}
-
-@Composable
-fun HasItem(
-    imagePath: String?,
-    tagList: List<Tag>,
-    selectedTagList: List<Tag>,
-    onSelect: () -> Unit = {},
-) {
-
-    var shortClick by remember { mutableStateOf(false) }
-
-    LaunchedEffect(shortClick) {
-        if(shortClick) {
-            delay(3000)
-            shortClick = false
-        }
-    }
-
-    Box(
-        modifier = Modifier
-            .border(
-                width = 1.dp,
-                color = Color(0xFFE1E1E1),
-                shape = RoundedCornerShape(size = 12.dp)
-            )
-            .clickable { if (shortClick) onSelect.invoke() else shortClick = true },
-        contentAlignment = Alignment.Center
-    ) {
-        SubcomposeAsyncImage(
-            modifier = Modifier
-                .aspectRatio(158f / 210f)
-                .background(color = Color(0x66000000), shape = RoundedCornerShape(size = 12.dp))
-                .clip(shape = RoundedCornerShape(size = 12.dp))
-                .fillMaxSize()
-                .alpha(if (shortClick) 0.4f else 1f),
-            loading = { ShimmerLoadingAnimation() },
-            error = { ShimmerLoadingAnimation() },
-            contentScale = ContentScale.Crop,
-            model = imagePath, // 엑박 이미지 필요?
-            contentDescription = "has image"
-        )
-
-        if(shortClick) {
-            FlowRow(
-                modifier = Modifier.padding(top = 17.dp, bottom = 17.dp, start = 15.dp, end = 15.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                tagList.forEach { tag ->
-                    TagHasChipItem(
-                        name = tag.name,
-                        isSelected = selectedTagList.contains(tag)
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun EssentialTagItem(
-    name: String,
-    isSelected: Boolean,
-    onClick: () -> Unit = {},
-) {
-    Box(
-        modifier = Modifier
-            .height(30.dp)
-            .width(60.dp)
-            .background(if (isSelected) Color.White else Color.Yellow)
-            .clickable { onClick.invoke() },
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = name)
     }
 }
 

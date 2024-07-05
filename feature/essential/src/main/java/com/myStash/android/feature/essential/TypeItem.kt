@@ -26,7 +26,7 @@ fun TypeItem(
             .drawBehind {
                 if (isSelected) {
                     drawLine(
-                        color = Color.Black,
+                        color = Color(0xFF202020),
                         start = Offset(x = 0f + 30, y = size.height),
                         end = Offset(x = size.width - 30, y = size.height),
                         strokeWidth = 4.dp.toPx(),
@@ -41,7 +41,7 @@ fun TypeItem(
         Box(
             modifier = Modifier
                 .clickable { onClick.invoke() }
-                .padding(5.dp)
+                .padding(4.dp)
         ) {
             HasText(
                 text = name,
