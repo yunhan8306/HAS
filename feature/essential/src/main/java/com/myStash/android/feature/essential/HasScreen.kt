@@ -1,34 +1,27 @@
 package com.myStash.android.feature.essential
 
 import android.content.Intent
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,20 +32,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
-import coil.compose.SubcomposeAsyncImage
 import com.google.accompanist.navigation.animation.composable
 import com.myStash.android.common.util.CommonActivityResultContract
 import com.myStash.android.core.model.Item
@@ -67,19 +55,15 @@ import com.myStash.android.design_system.ui.component.SpacerLineBox
 import com.myStash.android.design_system.ui.component.content.ContentHeaderSearchText
 import com.myStash.android.design_system.ui.component.has.HasMainItem
 import com.myStash.android.design_system.ui.component.tag.TagChipItem
-import com.myStash.android.design_system.ui.component.tag.TagHasChipItem
 import com.myStash.android.design_system.ui.component.tag.TagMoreChipItem
-import com.myStash.android.design_system.ui.component.text.HasText
-import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 import com.myStash.android.feature.item.ItemActivity
 import com.myStash.android.feature.search.SearchScreen
 import com.myStash.android.navigation.MainNavType
-import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.compose.collectAsState
 
 fun NavGraphBuilder.hasScreen() {
     composable(
-        route = MainNavType.ESSENTIAL.name
+        route = MainNavType.HAS.name
     ) {
         HasRoute()
     }
@@ -90,11 +74,12 @@ fun HasRoute(
     viewModel: HasViewModel = hiltViewModel(),
 ) {
 
+    val totalTypeList = viewModel.collectAsState().value.totalTypeList
+    val totalTagList = viewModel.collectAsState().value.totalTagList
     val itemList = viewModel.collectAsState().value.itemList
-    val tagTotalList = viewModel.collectAsState().value.tagTotalList
-    val selectTagList = viewModel.collectAsState().value.selectTagList
-    val typeTotalList = viewModel.collectAsState().value.typeTotalList
+    val selectedTagList = viewModel.collectAsState().value.selectedTagList
     val selectedType = viewModel.collectAsState().value.selectedType
+
     val searchTextState by remember { mutableStateOf(viewModel.searchTextState) }
 
     val activity = LocalContext.current as ComponentActivity
@@ -108,33 +93,34 @@ fun HasRoute(
     var testConfirm by remember { mutableStateOf(false) }
 
     HasScreen(
-        searchTextState = searchTextState,
-        typeTotalList = typeTotalList,
-        selectedType = selectedType,
-        onSelectType = viewModel::selectType,
+        totalTypeList = totalTypeList,
+        totalTagList = totalTagList,
         itemList = itemList,
-        tagTotalList = tagTotalList,
-        selectTagList = selectTagList,
-        search = { testSearchFlag = true },
-        selectTag = viewModel::selectTag,
-        testItemAdd = viewModel::testItemAdd,
-        testTagAdd = viewModel::testTagAdd,
-        testConfirm = { testConfirm = true},
-        deleteAllItem = viewModel::deleteAllItem,
-        deleteAllTag = viewModel::deleteAllTag,
+        selectedTagList = selectedTagList,
+        selectedType = selectedType,
+        onSearch = { testSearchFlag = true },
+        onSelectType = viewModel::selectType,
+        onSelectTag = viewModel::selectTag,
         showItemActivity = { item ->
             val intent = Intent(activity.apply { slideIn() }, ItemActivity::class.java)
                 .putExtra("item", item)
             itemActivityLauncher.launch(intent)
         },
+
+        //test
+        testItemAdd = viewModel::testItemAdd,
+        testTagAdd = viewModel::testTagAdd,
+        testConfirm = { testConfirm = true},
+        deleteAllItem = viewModel::deleteAllItem,
+        deleteAllTag = viewModel::deleteAllTag,
     )
 
     if(testSearchFlag) {
         SearchScreen(
             searchTextState = searchTextState,
             searchText = searchTextState.text.toString(),
-            selectTagList = selectTagList,
-            tagList = tagTotalList,
+            selectTagList = selectedTagList,
+            tagList = totalTagList,
             select = viewModel::selectTag,
             onBack = { testSearchFlag = false },
         )
@@ -153,16 +139,16 @@ fun HasRoute(
 
 @Composable
 fun HasScreen(
-    searchTextState: TextFieldState,
-    typeTotalList: List<Type>,
-    selectedType: Type,
-    onSelectType: (Type) -> Unit,
+    totalTypeList: List<Type>,
+    totalTagList: List<Tag>,
     itemList: List<Item>,
-    tagTotalList: List<Tag>,
-    selectTagList: List<Tag>,
-    search: () -> Unit,
+    selectedTagList: List<Tag>,
+    selectedType: Type,
+    onSearch: () -> Unit,
+    onSelectType: (Type) -> Unit,
+    onSelectTag: (Tag) -> Unit,
     showItemActivity: (Item?) -> Unit,
-    selectTag: (Tag) -> Unit,
+    // test
     testItemAdd: () -> Unit,
     testTagAdd: () -> Unit,
     testConfirm: () -> Unit,
@@ -171,13 +157,10 @@ fun HasScreen(
 ) {
 
     val tagScrollState = rememberLazyListState()
-    var testTagToggle by remember { mutableStateOf(false) }
-
-    val scrollState = rememberScrollState()
 
     var flowToggle by remember { mutableStateOf(false) }
 
-    LaunchedEffect(tagTotalList) {
+    LaunchedEffect(totalTagList) {
         tagScrollState.scrollToItem(0)
     }
 
@@ -189,7 +172,7 @@ fun HasScreen(
     ) {
         ContentHeaderSearchText(
             text = "원하는 태그를 검색해 보세요",
-            onClick = search
+            onClick = onSearch
         )
         LazyRow(
             modifier = Modifier
@@ -206,7 +189,7 @@ fun HasScreen(
                 }
         ) {
             items(
-                items = typeTotalList,
+                items = totalTypeList,
                 key = { type -> type.name}
             ) { type ->
                 TypeItem(
@@ -218,26 +201,26 @@ fun HasScreen(
         }
         FlowRow(
             modifier = Modifier
-                .heightIn(max = if(flowToggle) 200.dp else Dp.Unspecified)
+                .heightIn(max = if (flowToggle) 200.dp else Dp.Unspecified)
                 .fillMaxWidth()
                 .padding(top = 18.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
         ) {
-            testTagList.forEachIndexed { index, tag ->
-                val isSelected by remember(selectTagList) {
+            totalTagList.forEachIndexed { index, tag ->
+                val isSelected by remember(selectedTagList) {
                     derivedStateOf {
-                        selectTagList.contains(tag)
+                        selectedTagList.contains(tag)
                     }
                 }
                 if(index < 3 || flowToggle) {
                     TagChipItem(
                         name = tag.name,
                         isSelected = isSelected,
-                        onClick = { selectTag.invoke(tag) }
+                        onClick = { onSelectTag.invoke(tag) }
                     )
                 }
             }
             TagMoreChipItem(
-                cnt = "${testTagList.size - 4}",
+                cnt = "${totalTagList.size - 4}",
                 isFold = !flowToggle,
                 onClick = { flowToggle = !flowToggle }
             )
@@ -259,8 +242,8 @@ fun HasScreen(
             ) { has ->
                 HasMainItem(
                     imagePath = has.imagePath,
-                    tagList = has.getTagList(tagTotalList),
-                    selectTagList = selectTagList,
+                    tagList = has.getTagList(totalTagList),
+                    selectTagList = selectedTagList,
                     onSelect = { showItemActivity.invoke(has) }
                 )
             }
@@ -327,16 +310,15 @@ fun HasScreen(
 @Composable
 fun EssentialScreenPreview() {
     HasScreen(
-        searchTextState = TextFieldState(),
-        typeTotalList = testManTypeTotalList,
+        totalTypeList = testManTypeTotalList,
         selectedType = Type(id = 0),
         onSelectType = {},
         itemList = emptyList(),
-        tagTotalList = testTagList,
-        selectTagList = emptyList(),
-        search = {},
+        totalTagList = testTagList,
+        selectedTagList = emptyList(),
+        onSearch = {},
         showItemActivity = {},
-        selectTag = {},
+        onSelectTag = {},
         testItemAdd = {},
         testTagAdd = {},
         testConfirm = {},

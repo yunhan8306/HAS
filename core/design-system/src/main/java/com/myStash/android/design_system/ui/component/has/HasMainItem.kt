@@ -1,6 +1,5 @@
 package com.myStash.android.design_system.ui.component.has
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -23,13 +22,9 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
-import com.myStash.android.common.resource.R
 import com.myStash.android.core.model.Tag
-import com.myStash.android.core.model.testTagList
-import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.component.tag.TagHasChipItem
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 import kotlinx.coroutines.delay

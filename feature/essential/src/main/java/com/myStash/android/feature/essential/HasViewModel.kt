@@ -122,8 +122,8 @@ class HasViewModel @Inject constructor(
                     reduce {
                         state.copy(
                             itemList = itemList,
-                            tagTotalList = tagTotalList,
-                            typeTotalList = typeTotalList
+                            totalTagList = tagTotalList,
+                            totalTypeList = typeTotalList
                         )
                     }
                 }
@@ -136,7 +136,7 @@ class HasViewModel @Inject constructor(
             viewModelScope.launch {
                 searchTagList.collectLatest {
                     reduce {
-                        state.copy(tagTotalList = it.toList())
+                        state.copy(totalTagList = it.toList())
                     }
                 }
             }
@@ -150,7 +150,7 @@ class HasViewModel @Inject constructor(
 
                 reduce {
                     state.copy(
-                        selectTagList = selectedTagList.toList()
+                        selectedTagList = selectedTagList.toList()
                     )
                 }
             }

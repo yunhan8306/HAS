@@ -32,7 +32,7 @@ fun MainNavHost(
 ) {
     AnimatedNavHost(
         navController = navHostController,
-        startDestination = MainNavType.ESSENTIAL.name
+        startDestination = MainNavType.HAS.name
     ) {
         hasScreen()
         testScreen(MainNavType.TEST2.name)

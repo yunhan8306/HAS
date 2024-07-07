@@ -26,6 +26,7 @@
             <option value="$PROJECT_DIR$/build-logic/convention" />
             <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/common/compose" />
+            <option value="$PROJECT_DIR$/common/resource" />
             <option value="$PROJECT_DIR$/common/util" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core/data" />
