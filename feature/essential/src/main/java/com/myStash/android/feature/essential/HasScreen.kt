@@ -22,6 +22,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -156,12 +158,12 @@ fun HasScreen(
     deleteAllTag: () -> Unit,
 ) {
 
-    val tagScrollState = rememberLazyListState()
+    val tagScrollState = rememberScrollState()
 
     var flowToggle by remember { mutableStateOf(false) }
 
     LaunchedEffect(totalTagList) {
-        tagScrollState.scrollToItem(0)
+        tagScrollState.scrollTo(0)
     }
 
     Column(
@@ -204,6 +206,7 @@ fun HasScreen(
                 .heightIn(max = if (flowToggle) 200.dp else Dp.Unspecified)
                 .fillMaxWidth()
                 .padding(top = 18.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
+                .verticalScroll(tagScrollState)
         ) {
             totalTagList.forEachIndexed { index, tag ->
                 val isSelected by remember(selectedTagList) {

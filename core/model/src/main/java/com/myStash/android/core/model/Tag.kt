@@ -7,7 +7,7 @@ data class Tag(
     val isRemove: Boolean = false
 ) {
     override fun equals(other: Any?): Boolean {
-        return name == (other as Tag).name
+        return id == (other as Tag).id
     }
 }
 

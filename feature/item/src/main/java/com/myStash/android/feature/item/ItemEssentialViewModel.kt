@@ -1,10 +1,7 @@
 package com.myStash.android.feature.item
 
-import android.util.Log
 import androidx.compose.foundation.text2.input.TextFieldState
-import androidx.compose.foundation.text2.input.clearText
 import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
-import androidx.compose.foundation.text2.input.setTextAndSelectAll
 import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -19,16 +16,13 @@ import com.myStash.android.core.di.DefaultDispatcher
 import com.myStash.android.core.model.Item
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
-import com.myStash.android.core.model.testTagList
 import com.myStash.android.core.model.testWomanTypeTotalList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -72,7 +66,7 @@ class ItemEssentialViewModel @Inject constructor(
         .textAsFlow()
         .flowOn(defaultDispatcher)
         .onEach { text -> searchTextState.setTextAndPlaceCursorAtEnd(text.removeBlank()) }
-        .map { search -> testTagList.filter { it.name.contains(search) } }
+        .map { search -> tagTotalList.value.filter { it.name.contains(search) } }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),
