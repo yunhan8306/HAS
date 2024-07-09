@@ -35,7 +35,7 @@ fun ContentTextField(
     textState: TextFieldState,
     hint: String,
     isBack: Boolean = false,
-    back: () -> Unit,
+    back: () -> Unit = {},
     delete: () -> Unit
 ) {
 

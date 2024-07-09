@@ -6,11 +6,13 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.text2.input.rememberTextFieldState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -21,6 +23,8 @@ import com.myStash.android.feature.item.EssentialItemSideEffect
 import com.myStash.android.feature.item.ItemEssentialViewModel
 import com.myStash.android.feature.item.TagSearchBottomSheet
 import com.myStash.android.feature.search.EssentialTagSearchScreen
+import com.myStash.android.feature.search.TagSearchBottomSheetLayout
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -55,6 +59,9 @@ fun AddHasRoute(
 
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Expanded, skipHalfExpanded = true)
 
+    val scaffoldState = rememberBottomSheetScaffoldState()
+    val scope = rememberCoroutineScope()
+
     AddHasScreen(
         imageUri = state.imageUri,
         selectedType = state.selectedType,
@@ -62,13 +69,37 @@ fun AddHasRoute(
         selectType = viewModel::selectType,
         selectedTagList = state.selectedTagList,
         selectTag = viewModel::selectTag,
-        search = { showSearchScreen = true },
+        search = {
+//            showSearchScreen = true
+            scope.launch {
+                scaffoldState.bottomSheetState.expand()
+            }
+        },
         saveItem = viewModel::saveItem,
         showGalleryActivity = {
             val intent = Intent(activity.apply { slideIn() }, GalleryActivity::class.java)
             galleryActivityLauncher.launch(intent)
         },
-        onBack = finishActivity
+        onBack = finishActivity,
+
+        scaffoldState = scaffoldState,
+        sheetContent = {
+            TagSearchBottomSheetLayout(
+                searchTextState = viewModel.searchTextState,
+                totalTagList = state.tagTotalList,
+                selectTagList = state.selectedTagList,
+                searchTagList = state.searchTagList,
+                buttonText = "완료",
+                onSelect = viewModel::selectTag,
+                onConfirm = { /*TODO*/ },
+                onDelete = {},
+                onBack = {
+                    scope.launch {
+                        scaffoldState.bottomSheetState.collapse()
+                    }
+                }
+            )
+        }
     )
 
     if(showSearchScreen) {
