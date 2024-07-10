@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetScaffoldState
@@ -77,6 +78,8 @@ fun AddHasScreen(
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetContent = sheetContent,
+        sheetShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+        sheetElevation = 10.dp,
         sheetPeekHeight = 0.dp
     ) { paddingValues ->
 

@@ -62,45 +62,61 @@ fun AddHasRoute(
     val scaffoldState = rememberBottomSheetScaffoldState()
     val scope = rememberCoroutineScope()
 
-    AddHasScreen(
-        imageUri = state.imageUri,
-        selectedType = state.selectedType,
-        typeTotalList = state.typeTotalList,
-        selectType = viewModel::selectType,
-        selectedTagList = state.selectedTagList,
-        selectTag = viewModel::selectTag,
-        search = {
-//            showSearchScreen = true
+    TagSearchBottomSheetLayout(
+        searchTextState = viewModel.searchTextState,
+        totalTagList = state.tagTotalList,
+        selectTagList = state.selectedTagList,
+        searchTagList = state.searchTagList,
+        buttonText = "완료",
+        onSelect = viewModel::selectTag,
+        onConfirm = { /*TODO*/ },
+        onDelete = {},
+        onBack = {
             scope.launch {
-                scaffoldState.bottomSheetState.expand()
+                scaffoldState.bottomSheetState.collapse()
             }
-        },
-        saveItem = viewModel::saveItem,
-        showGalleryActivity = {
-            val intent = Intent(activity.apply { slideIn() }, GalleryActivity::class.java)
-            galleryActivityLauncher.launch(intent)
-        },
-        onBack = finishActivity,
-
-        scaffoldState = scaffoldState,
-        sheetContent = {
-            TagSearchBottomSheetLayout(
-                searchTextState = viewModel.searchTextState,
-                totalTagList = state.tagTotalList,
-                selectTagList = state.selectedTagList,
-                searchTagList = state.searchTagList,
-                buttonText = "완료",
-                onSelect = viewModel::selectTag,
-                onConfirm = { /*TODO*/ },
-                onDelete = {},
-                onBack = {
-                    scope.launch {
-                        scaffoldState.bottomSheetState.collapse()
-                    }
-                }
-            )
         }
     )
+
+//    AddHasScreen(
+//        imageUri = state.imageUri,
+//        selectedType = state.selectedType,
+//        typeTotalList = state.typeTotalList,
+//        selectType = viewModel::selectType,
+//        selectedTagList = state.selectedTagList,
+//        selectTag = viewModel::selectTag,
+//        search = {
+////            showSearchScreen = true
+//            scope.launch {
+//                scaffoldState.bottomSheetState.expand()
+//            }
+//        },
+//        saveItem = viewModel::saveItem,
+//        showGalleryActivity = {
+//            val intent = Intent(activity.apply { slideIn() }, GalleryActivity::class.java)
+//            galleryActivityLauncher.launch(intent)
+//        },
+//        onBack = finishActivity,
+//
+//        scaffoldState = scaffoldState,
+//        sheetContent = {
+//            TagSearchBottomSheetLayout(
+//                searchTextState = viewModel.searchTextState,
+//                totalTagList = state.tagTotalList,
+//                selectTagList = state.selectedTagList,
+//                searchTagList = state.searchTagList,
+//                buttonText = "완료",
+//                onSelect = viewModel::selectTag,
+//                onConfirm = { /*TODO*/ },
+//                onDelete = {},
+//                onBack = {
+//                    scope.launch {
+//                        scaffoldState.bottomSheetState.collapse()
+//                    }
+//                }
+//            )
+//        }
+//    )
 
     if(showSearchScreen) {
 //        SearchScreen(
