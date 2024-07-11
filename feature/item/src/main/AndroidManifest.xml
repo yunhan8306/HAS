@@ -6,7 +6,8 @@
         <activity
             android:name="com.myStash.android.feature.item.ItemActivity"
             android:exported="false"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

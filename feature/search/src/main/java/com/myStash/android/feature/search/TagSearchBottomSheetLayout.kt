@@ -16,6 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -23,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.testTagList
@@ -35,6 +37,8 @@ import com.myStash.android.design_system.ui.component.tag.TagDeleteChipItem
 import com.myStash.android.design_system.ui.component.tag.TagSearchItem
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
+import com.myStash.android.design_system.util.KeyboardState
+import com.myStash.android.design_system.util.addFocusCleaner
 
 @Composable
 fun TagSearchBottomSheetLayout(
@@ -51,12 +55,18 @@ fun TagSearchBottomSheetLayout(
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val bottomSheetHeight = screenHeight - 50.dp
+    val focusManager = LocalFocusManager.current
+
+    KeyboardState { isOpen ->
+        if(!isOpen) focusManager.clearFocus()
+    }
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-//            .height(bottomSheetHeight)
+            .height(bottomSheetHeight)
             .padding(top = 32.dp)
+            .addFocusCleaner(focusManager)
     ) {
         Column(
             modifier = Modifier.fillMaxWidth()
@@ -112,12 +122,9 @@ fun TagSearchBottomSheetLayout(
                     }
                 }
             }
-
             SpacerLineBox()
             Column(
-                modifier = Modifier
-    //                .weight(1f)
-                    .padding(top = 24.dp, start = 16.dp, end = 16.dp)
+                modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp)
             ) {
                 if(searchTextState.text.isEmpty()) {
                     val scrollState = rememberScrollState()
@@ -167,19 +174,17 @@ fun TagSearchBottomSheetLayout(
             }
         }
         Column(
-            modifier = Modifier.imePadding()
+            modifier = Modifier
+                .imePadding()
+                .padding(start = 16.dp, end = 16.dp, bottom = 12.dp)
         ) {
-            Column(
-                modifier = Modifier.weight(1f).padding(start = 16.dp, end = 16.dp, bottom = 12.dp)
-            ) {
-                Spacer(modifier = Modifier.weight(1f))
-                HasButton(
-                    text = buttonText,
-                    onClick = onConfirm
-                )
-            }
-            BackHandler(onBack = onBack)
+            Spacer(modifier = Modifier.weight(1f))
+            HasButton(
+                text = buttonText,
+                onClick = onConfirm
+            )
         }
+        BackHandler(onBack = onBack)
     }
 }
 

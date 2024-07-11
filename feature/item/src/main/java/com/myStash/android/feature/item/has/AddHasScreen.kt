@@ -50,11 +50,11 @@ import com.myStash.android.design_system.ui.component.tag.TagDeleteChipItem
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.feature.item.component.ItemTitleText
-import com.myStash.android.feature.search.TagSearchBottomSheetLayout
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AddHasScreen(
+    scaffoldState: BottomSheetScaffoldState,
     imageUri: String?,
     selectedType: Type?,
     typeTotalList: List<Type>,
@@ -65,10 +65,7 @@ fun AddHasScreen(
     saveItem: () -> Unit,
     showGalleryActivity: () -> Unit,
     onBack: () -> Unit,
-    // test
-    sheetContent: @Composable (ColumnScope.() -> Unit) = {},
-    scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
-
+    sheetContent: @Composable (ColumnScope.() -> Unit),
 ) {
     val dropDownScrollState = rememberScrollState()
     var dropDownExpanded by remember { mutableStateOf(false) }
@@ -231,6 +228,7 @@ fun AddHasScreen(
 @Composable
 fun ItemEssentialScreenPreview() {
     AddHasScreen(
+        scaffoldState = rememberBottomSheetScaffoldState(),
         imageUri = null,
         selectedType = Type(id = 1, name = "상의"),
         typeTotalList = testManTypeTotalList,
@@ -240,6 +238,7 @@ fun ItemEssentialScreenPreview() {
         search = {},
         showGalleryActivity = {},
         saveItem = {},
-        onBack = {}
+        onBack = {},
+        sheetContent = {}
     )
 }

@@ -1,6 +1,7 @@
 package com.myStash.android.feature.item
 
 import androidx.compose.foundation.text2.input.TextFieldState
+import androidx.compose.foundation.text2.input.clearText
 import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.SavedStateHandle
@@ -109,6 +110,10 @@ class ItemEssentialViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun deleteSearchText() {
+        searchTextState.clearText()
     }
 
     fun addImage(uri: String) {
