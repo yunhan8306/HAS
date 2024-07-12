@@ -4,7 +4,9 @@ import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -36,6 +38,8 @@ fun AddHasRoute(
     )
 
     val state by viewModel.collectAsState()
+    val searchModalState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden, skipHalfExpanded = true)
+    val scope = rememberCoroutineScope()
 
     viewModel.collectSideEffect { sideEffect ->
         when(sideEffect) {
@@ -43,9 +47,6 @@ fun AddHasRoute(
             else -> Unit
         }
     }
-
-    val searchScaffoldState = rememberBottomSheetScaffoldState()
-    val scope = rememberCoroutineScope()
 
     AddHasScreen(
         imageUri = state.imageUri,
@@ -56,9 +57,7 @@ fun AddHasRoute(
         selectTag = viewModel::selectTag,
         search = {
             viewModel.deleteSearchText()
-            scope.launch {
-                searchScaffoldState.bottomSheetState.expand()
-            }
+            scope.launch { searchModalState.show() }
         },
         saveItem = viewModel::saveItem,
         showGalleryActivity = {
@@ -66,25 +65,19 @@ fun AddHasRoute(
             galleryActivityLauncher.launch(intent)
         },
         onBack = finishActivity,
-        scaffoldState = searchScaffoldState,
+        searchModalState = searchModalState,
         sheetContent = {
             TagSearchBottomSheetLayout(
+                searchModalState = searchModalState,
                 searchTextState = viewModel.searchTextState,
                 totalTagList = state.tagTotalList,
                 selectTagList = state.selectedTagList,
                 searchTagList = state.searchTagList,
                 buttonText = "완료",
                 onSelect = viewModel::selectTag,
-                onConfirm = {
-                    scope.launch {
-                        searchScaffoldState.bottomSheetState.collapse()
-                    }
-                },
+                onConfirm = { scope.launch { searchModalState.hide() } },
                 onDelete = viewModel::deleteSearchText,
-                onBack = {
-                    scope.launch {
-                        searchScaffoldState.bottomSheetState.collapse()
-                    }
+                onBack = { scope.launch { searchModalState.hide() }
                 }
             )
         }

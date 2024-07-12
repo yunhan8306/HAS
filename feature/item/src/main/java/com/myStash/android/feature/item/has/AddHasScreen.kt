@@ -1,5 +1,7 @@
 package com.myStash.android.feature.item.has
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -15,14 +17,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.BottomSheetScaffold
-import androidx.compose.material.BottomSheetScaffoldState
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExposedDropdownMenuBox
-import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -32,9 +34,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.myStash.android.common.resource.R
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
@@ -49,12 +53,13 @@ import com.myStash.android.design_system.ui.component.photo.UnselectPhotoItem
 import com.myStash.android.design_system.ui.component.tag.TagDeleteChipItem
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
+import com.myStash.android.design_system.util.clickableRipple
 import com.myStash.android.feature.item.component.ItemTitleText
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AddHasScreen(
-    scaffoldState: BottomSheetScaffoldState,
+    searchModalState: ModalBottomSheetState,
     imageUri: String?,
     selectedType: Type?,
     typeTotalList: List<Type>,
@@ -67,24 +72,45 @@ fun AddHasScreen(
     onBack: () -> Unit,
     sheetContent: @Composable (ColumnScope.() -> Unit),
 ) {
+    val scope = rememberCoroutineScope()
     val dropDownScrollState = rememberScrollState()
     var dropDownExpanded by remember { mutableStateOf(false) }
 
-    val scope = rememberCoroutineScope()
+    val headerFadeAni by animateFloatAsState(
+        targetValue = if(searchModalState.targetValue == ModalBottomSheetValue.Expanded) 1f else 0f,
+        animationSpec = tween(800),
+        label = "header fade ani"
+    )
 
-    BottomSheetScaffold(
-        scaffoldState = scaffoldState,
+
+    ModalBottomSheetLayout(
+        sheetState = searchModalState,
         sheetContent = sheetContent,
-        sheetShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
-        sheetElevation = 10.dp,
-        sheetPeekHeight = 0.dp
-    ) { paddingValues ->
-
+        sheetBackgroundColor = Color.Transparent,
+        scrimColor = Color.Transparent,
+        sheetElevation = 0.dp,
+    ) {
+        Box(
+            modifier = Modifier
+                .alpha(headerFadeAni)
+                .fillMaxWidth()
+                .height(90.dp)
+                .background(Color.White)
+                .padding(start = 12.dp, top = 8.dp)
+                .zIndex(1f)
+        ) {
+            Image(
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickableRipple { scope.launch { searchModalState.hide() } },
+                painter = painterResource(id = R.drawable.btn_header_delete),
+                contentDescription = "header back"
+            )
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .padding(paddingValues)
         ) {
             HasHeader(
                 text = "등록하기",
@@ -93,8 +119,7 @@ fun AddHasScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(40.dp)
-                    .background(Color.Red),
+                    .height(40.dp),
                 contentAlignment = Alignment.Center
             ) {
                 HasText(text = "탭 선택 공간")
@@ -228,7 +253,7 @@ fun AddHasScreen(
 @Composable
 fun ItemEssentialScreenPreview() {
     AddHasScreen(
-        scaffoldState = rememberBottomSheetScaffoldState(),
+        searchModalState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
         imageUri = null,
         selectedType = Type(id = 1, name = "상의"),
         typeTotalList = testManTypeTotalList,

@@ -50,6 +50,7 @@ private fun Project.buildComposeMetricsParameters(): List<String> {
         metricParameters += "-P"
         metricParameters += "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=${reportsFolder.absolutePath}"
     }
+    metricParameters += "-opt-in=androidx.compose.material.ExperimentalMaterialApi"
 
     return metricParameters.toList()
 }
