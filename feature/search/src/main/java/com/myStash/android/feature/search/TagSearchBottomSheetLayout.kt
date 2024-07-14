@@ -20,7 +20,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
@@ -34,9 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.font.FontVariation.weight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.testTagList
 import com.myStash.android.design_system.ui.DevicePreviews
@@ -79,14 +76,15 @@ fun TagSearchBottomSheetLayout(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .zIndex(1f)
             .addFocusCleaner(focusManager)
     ) {
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
             Box(
-                modifier = Modifier.size(50.dp).clickable { onBack.invoke() }
+                modifier = Modifier
+                    .size(50.dp)
+                    .clickable { onBack.invoke() }
             )
             Column(
                 modifier = Modifier

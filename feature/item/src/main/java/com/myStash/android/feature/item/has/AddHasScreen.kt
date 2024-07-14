@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,7 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExposedDropdownMenuBox
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
@@ -38,7 +36,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import com.myStash.android.common.resource.R
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
@@ -47,7 +44,6 @@ import com.myStash.android.core.model.testTagList
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.component.button.HasButton
 import com.myStash.android.design_system.ui.component.content.ContentText
-import com.myStash.android.design_system.ui.component.header.HasHeader
 import com.myStash.android.design_system.ui.component.photo.SelectPhotoItem
 import com.myStash.android.design_system.ui.component.photo.UnselectPhotoItem
 import com.myStash.android.design_system.ui.component.tag.TagDeleteChipItem
@@ -55,6 +51,7 @@ import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.design_system.util.clickableRipple
 import com.myStash.android.feature.item.component.ItemTitleText
+import com.myStash.android.feature.item.item.AddItemAware
 import kotlinx.coroutines.launch
 
 @Composable
@@ -90,40 +87,7 @@ fun AddHasScreen(
         scrimColor = Color.Transparent,
         sheetElevation = 0.dp,
     ) {
-        Box(
-            modifier = Modifier
-                .alpha(headerFadeAni)
-                .fillMaxWidth()
-                .height(90.dp)
-                .background(Color.White)
-                .padding(start = 12.dp, top = 8.dp)
-                .zIndex(1f)
-        ) {
-            Image(
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickableRipple { scope.launch { searchModalState.hide() } },
-                painter = painterResource(id = R.drawable.btn_header_delete),
-                contentDescription = "header back"
-            )
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)
-        ) {
-            HasHeader(
-                text = "등록하기",
-                onBack = onBack
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(40.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                HasText(text = "탭 선택 공간")
-            }
+        AddItemAware {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -245,10 +209,27 @@ fun AddHasScreen(
                 )
             }
         }
+        if(headerFadeAni > 0) {
+            Box(
+                modifier = Modifier
+                    .alpha(headerFadeAni)
+                    .fillMaxWidth()
+                    .height(90.dp)
+                    .background(Color.White)
+                    .padding(start = 12.dp, top = 8.dp)
+            ) {
+                Image(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickableRipple { scope.launch { searchModalState.hide() } },
+                    painter = painterResource(id = R.drawable.btn_header_delete),
+                    contentDescription = "header back"
+                )
+            }
+        }
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @DevicePreviews
 @Composable
 fun ItemEssentialScreenPreview() {

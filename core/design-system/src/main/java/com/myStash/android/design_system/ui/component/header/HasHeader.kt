@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import com.myStash.android.common.resource.R
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
@@ -33,8 +32,7 @@ fun HasHeader(
             .fillMaxWidth()
             .height(40.dp)
             .background(Color.White)
-            .padding(horizontal = 12.dp)
-            .zIndex(1f),
+            .padding(horizontal = 12.dp),
         contentAlignment = Alignment.CenterStart
     ) {
         Image(

@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.myStash.android.design_system.animation.slideOut
-import com.myStash.android.feature.item.has.AddHasRoute
+import com.myStash.android.feature.item.item.AddItemRoute
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -14,8 +14,8 @@ class ItemActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            AddHasRoute(
-                finishActivity = ::finish
+            AddItemRoute(
+                onBack = ::finish
             )
         }
     }

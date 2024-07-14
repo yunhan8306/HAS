@@ -17,13 +17,14 @@ fun AddItemTab(
     Tab(
         modifier = Modifier.background(Color.White),
         selected = selected,
-        selectedContentColor = Color(0xFFF1F1F1),
+        selectedContentColor = Color(0xFF202020),
         unselectedContentColor = Color(0xFFF1F1F1),
         onClick = onClick
     ) {
         HasText(
             text = name,
-            fontWeight = HasFontWeight.Bold
+            color = if(selected) Color(0xFF000000) else Color(0xFF909090),
+            fontWeight = if(selected) HasFontWeight.Bold else HasFontWeight.Medium
         )
     }
 }
