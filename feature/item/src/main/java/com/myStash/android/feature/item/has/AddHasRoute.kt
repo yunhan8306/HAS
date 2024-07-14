@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,8 +14,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.myStash.android.common.util.CommonActivityResultContract
 import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.feature.gallery.GalleryActivity
-import com.myStash.android.feature.item.EssentialItemSideEffect
-import com.myStash.android.feature.item.ItemEssentialViewModel
 import com.myStash.android.feature.search.TagSearchBottomSheetLayout
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
@@ -25,7 +22,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AddHasRoute(
-    viewModel: ItemEssentialViewModel = hiltViewModel(),
+    viewModel: AddHasViewModel = hiltViewModel(),
     finishActivity: () -> Unit
 ) {
 
@@ -43,7 +40,7 @@ fun AddHasRoute(
 
     viewModel.collectSideEffect { sideEffect ->
         when(sideEffect) {
-            EssentialItemSideEffect.Finish -> finishActivity.invoke()
+            AddHasSideEffect.Finish -> finishActivity.invoke()
             else -> Unit
         }
     }

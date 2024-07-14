@@ -51,7 +51,7 @@ import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.design_system.util.clickableRipple
 import com.myStash.android.feature.item.component.ItemTitleText
-import com.myStash.android.feature.item.item.AddItemAware
+import com.myStash.android.feature.item.component.AddItemAware
 import kotlinx.coroutines.launch
 
 @Composable

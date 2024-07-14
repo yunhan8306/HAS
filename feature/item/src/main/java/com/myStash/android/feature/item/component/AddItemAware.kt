@@ -1,4 +1,4 @@
-package com.myStash.android.feature.item.item
+package com.myStash.android.feature.item.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope

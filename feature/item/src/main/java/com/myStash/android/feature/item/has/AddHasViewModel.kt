@@ -1,4 +1,4 @@
-package com.myStash.android.feature.item
+package com.myStash.android.feature.item.has
 
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.text2.input.clearText
@@ -36,7 +36,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
-class ItemEssentialViewModel @Inject constructor(
+class AddHasViewModel @Inject constructor(
     private val checkAvailableTagUseCase: CheckAvailableTagUseCase,
 
     private val getTagListUseCase: GetTagListUseCase,
@@ -46,9 +46,9 @@ class ItemEssentialViewModel @Inject constructor(
     private val stateHandle: SavedStateHandle,
     // dispatcher
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
-): ContainerHost<EssentialItemScreenState, EssentialItemSideEffect>, ViewModel() {
-    override val container: Container<EssentialItemScreenState, EssentialItemSideEffect> =
-        container(EssentialItemScreenState())
+): ContainerHost<AddHasScreenState, AddHasSideEffect>, ViewModel() {
+    override val container: Container<AddHasScreenState, AddHasSideEffect> =
+        container(AddHasScreenState())
 
     init {
         fetch()
@@ -186,7 +186,7 @@ class ItemEssentialViewModel @Inject constructor(
 
                 saveItemUseCase.invoke(saveItem)
 
-                postSideEffect(EssentialItemSideEffect.Finish)
+                postSideEffect(AddHasSideEffect.Finish)
             }
         }
     }

@@ -1,9 +1,9 @@
-package com.myStash.android.feature.item
+package com.myStash.android.feature.item.has
 
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
 
-data class EssentialItemScreenState(
+data class AddHasScreenState(
     val imageUri: String? = null,
     val typeTotalList: List<Type> = emptyList(),
     val selectedType: Type? = null,
@@ -12,6 +12,6 @@ data class EssentialItemScreenState(
     val searchTagList: List<Tag> = emptyList()
 )
 
-sealed interface EssentialItemSideEffect {
-    object Finish: EssentialItemSideEffect
+sealed interface AddHasSideEffect {
+    object Finish: AddHasSideEffect
 }
