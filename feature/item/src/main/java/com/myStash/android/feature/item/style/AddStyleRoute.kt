@@ -1,8 +1,9 @@
-package com.myStash.android.feature.item.has
+package com.myStash.android.feature.item.style
 
 import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -19,8 +20,8 @@ import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
-fun AddHasRoute(
-    viewModel: AddHasViewModel = hiltViewModel(),
+fun AddStyleRoute(
+    viewModel: AddStyleViewModel = hiltViewModel(),
     finishActivity: () -> Unit
 ) {
 
@@ -38,12 +39,12 @@ fun AddHasRoute(
 
     viewModel.collectSideEffect { sideEffect ->
         when(sideEffect) {
-            AddHasSideEffect.Finish -> finishActivity.invoke()
+            AddStyleSideEffect.Finish -> finishActivity.invoke()
             else -> Unit
         }
     }
 
-    AddHasScreen(
+    AddStyleScreen(
         imageUri = state.imageUri,
         selectedType = state.selectedType,
         typeTotalList = state.typeTotalList,
