@@ -14,6 +14,9 @@ data class TypeEntity(
     @ColumnInfo(name = "name")
     val name: String,
 
+    @ColumnInfo(name = "order")
+    val order: Long? = id,
+
     @ColumnInfo(name = "createAt")
     val createTime: Long = System.currentTimeMillis(),
 
@@ -24,6 +27,7 @@ data class TypeEntity(
         fun TypeEntity.toType(): Type = Type(
             id = id,
             name = name,
+            order = order,
             createTime = createTime,
             isRemove = isRemove
         )
@@ -31,6 +35,7 @@ data class TypeEntity(
         fun Type.toEntity(): TypeEntity = TypeEntity(
             id = id,
             name = name,
+            order = order,
             createTime = createTime,
             isRemove = isRemove
         )

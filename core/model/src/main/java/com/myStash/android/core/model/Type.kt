@@ -3,6 +3,7 @@ package com.myStash.android.core.model
 class Type(
     val id: Long? = null,
     val name: String = "",
+    val order: Long? = 99,
     val createTime: Long = System.currentTimeMillis(),
     val isRemove: Boolean = false
 ) {

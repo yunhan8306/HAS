@@ -11,11 +11,8 @@ data class StyleEntity(
     @ColumnInfo(name = "pk")
     val id: Long? = null,
 
-    @ColumnInfo(name = "imagePath")
-    val imagePaths: List<String> = emptyList(),
-
-    @ColumnInfo(name = "items")
-    val items: List<Long> = emptyList(),
+    @ColumnInfo(name = "hass")
+    val hass: List<Long> = emptyList(),
 
     @ColumnInfo(name = "createAt")
     val createTime: Long = System.currentTimeMillis(),
@@ -26,16 +23,14 @@ data class StyleEntity(
     companion object {
         fun StyleEntity.toStyle() = Style(
             id = id,
-            imagePaths = imagePaths,
-            items = items,
+            hass = hass,
             createTime = createTime,
             isRemove = isRemove
         )
 
         fun Style.toStyleEntity() = StyleEntity(
             id = id,
-            imagePaths = imagePaths,
-            items = items,
+            hass = hass,
             createTime = createTime,
             isRemove = isRemove
         )
