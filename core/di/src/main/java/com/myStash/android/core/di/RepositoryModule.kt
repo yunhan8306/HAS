@@ -4,8 +4,8 @@ import com.myStash.android.core.data.repository.gender.GenderRepository
 import com.myStash.android.core.data.repository.gender.GenderRepositoryImpl
 import com.myStash.android.core.data.repository.init.InitRepository
 import com.myStash.android.core.data.repository.init.InitRepositoryImpl
-import com.myStash.android.core.data.repository.item.ItemRepository
-import com.myStash.android.core.data.repository.item.ItemRepositoryImpl
+import com.myStash.android.core.data.repository.has.HasRepository
+import com.myStash.android.core.data.repository.has.HasRepositoryImpl
 import com.myStash.android.core.data.repository.style.StyleRepository
 import com.myStash.android.core.data.repository.style.StyleRepositoryImpl
 import com.myStash.android.core.data.repository.tag.TagRepository
@@ -20,9 +20,9 @@ import dagger.hilt.components.SingletonComponent
 interface RepositoryModule {
 
     @Binds
-    fun bindsItemRepository(
-        itemRepository: ItemRepositoryImpl
-    ): ItemRepository
+    fun bindsHasRepository(
+        hasRepository: HasRepositoryImpl
+    ): HasRepository
 
     @Binds
     fun bindsStyleRepository(

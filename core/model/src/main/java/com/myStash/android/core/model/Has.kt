@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Item(
+data class Has(
     val id: Long? = null,
     val tags: List<Long> = emptyList(),
     val type: Long,

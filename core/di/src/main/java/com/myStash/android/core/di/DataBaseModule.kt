@@ -2,7 +2,7 @@ package com.myStash.android.core.di
 
 import android.content.Context
 import com.myStash.android.data_base.DataBase
-import com.myStash.android.data_base.item.dao.ItemDao
+import com.myStash.android.data_base.has.dao.HasDao
 import com.myStash.android.data_base.style.dao.StyleDao
 import com.myStash.android.data_base.tag.dao.TagDao
 import com.myStash.android.data_base.type.dao.TypeDao
@@ -29,9 +29,9 @@ class DataBaseModule {
 @InstallIn(SingletonComponent::class)
 class DaoModule {
     @Provides
-    fun providesItemDao(
+    fun providesHasDao(
         dataBase: DataBase
-    ) : ItemDao = dataBase.ItemDao()
+    ) : HasDao = dataBase.HasDao()
 
     @Provides
     fun providesStyleDao(

@@ -9,12 +9,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.common.util.offerOrRemove
 import com.myStash.android.common.util.removeBlank
-import com.myStash.android.core.data.usecase.item.SaveItemUseCase
+import com.myStash.android.core.data.usecase.has.SaveHasUseCase
 import com.myStash.android.core.data.usecase.tag.CheckAvailableTagUseCase
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
 import com.myStash.android.core.data.usecase.tag.SaveTagUseCase
 import com.myStash.android.core.di.DefaultDispatcher
-import com.myStash.android.core.model.Item
+import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.testWomanTypeTotalList
@@ -41,7 +41,7 @@ class AddHasViewModel @Inject constructor(
 
     private val getTagListUseCase: GetTagListUseCase,
 
-    private val saveItemUseCase: SaveItemUseCase,
+    private val saveHasUseCase: SaveHasUseCase,
     private val saveTagUseCase: SaveTagUseCase,
     private val stateHandle: SavedStateHandle,
     // dispatcher
@@ -84,7 +84,7 @@ class AddHasViewModel @Inject constructor(
     private fun fetch() {
         intent {
             viewModelScope.launch {
-                val item = stateHandle.get<Item?>("item")
+                val has = stateHandle.get<Has?>("has")
 
                 // type total list 호출
                 tagTotalList.collectLatest {
@@ -178,13 +178,13 @@ class AddHasViewModel @Inject constructor(
                 }
 
                 // essential item 생성
-                val saveItem = Item(
+                val saveHas = Has(
                     imagePath = state.imageUri,
                     tags = selectedTagList.map { it.id!! },
                     type = state.selectedType?.id!!,
                 )
 
-                saveItemUseCase.invoke(saveItem)
+                saveHasUseCase.invoke(saveHas)
 
                 postSideEffect(AddHasSideEffect.Finish)
             }

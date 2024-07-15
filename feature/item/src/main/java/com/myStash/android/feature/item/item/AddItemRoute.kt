@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myStash.android.feature.item.has.AddHasRoute
+import com.myStash.android.feature.item.style.AddStyleRoute
 import org.orbitmvi.orbit.compose.collectAsState
 
 @Composable
@@ -23,7 +24,7 @@ fun AddItemRoute(
                     AddHasRoute(finishActivity = onBack)
                 }
                 ItemTab.STYLE -> {
-
+                    AddStyleRoute(finishActivity = onBack)
                 }
                 ItemTab.FEED -> {
 

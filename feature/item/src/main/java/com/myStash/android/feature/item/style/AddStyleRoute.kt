@@ -29,7 +29,7 @@ fun AddStyleRoute(
     val galleryActivityLauncher = rememberLauncherForActivityResult(
         contract = CommonActivityResultContract(),
         onResult = { intent ->
-            intent?.getStringExtra("imageUri")?.let { viewModel.addImage(it) }
+//            intent?.getStringExtra("imageUri")?.let { viewModel.addImage(it) }
         }
     )
 
@@ -45,7 +45,7 @@ fun AddStyleRoute(
     }
 
     AddStyleScreen(
-        imageUri = state.imageUri,
+        imageUri = "",
         selectedType = state.selectedType,
         typeTotalList = state.typeTotalList,
         selectType = viewModel::selectType,
@@ -55,7 +55,7 @@ fun AddStyleRoute(
             viewModel.deleteSearchText()
             scope.launch { searchModalState.show() }
         },
-        saveItem = viewModel::saveItem,
+        saveItem = {},
         showGalleryActivity = {
             val intent = Intent(activity.apply { slideIn() }, GalleryActivity::class.java)
             galleryActivityLauncher.launch(intent)
@@ -63,19 +63,19 @@ fun AddStyleRoute(
         onBack = finishActivity,
         searchModalState = searchModalState,
         sheetContent = {
-            TagSearchBottomSheetLayout(
-                searchModalState = searchModalState,
-                searchTextState = viewModel.searchTextState,
-                totalTagList = state.tagTotalList,
-                selectTagList = state.selectedTagList,
-                searchTagList = state.searchTagList,
-                buttonText = "완료",
-                onSelect = viewModel::selectTag,
-                onConfirm = { scope.launch { searchModalState.hide() } },
-                onDelete = viewModel::deleteSearchText,
-                onBack = { scope.launch { searchModalState.hide() }
-                }
-            )
+//            TagSearchBottomSheetLayout(
+//                searchModalState = searchModalState,
+//                searchTextState = viewModel.searchTextState,
+//                totalTagList = state.tagTotalList,
+//                selectTagList = state.selectedTagList,
+//                searchTagList = state.searchTagList,
+//                buttonText = "완료",
+//                onSelect = viewModel::selectTag,
+//                onConfirm = { scope.launch { searchModalState.hide() } },
+//                onDelete = viewModel::deleteSearchText,
+//                onBack = { scope.launch { searchModalState.hide() }
+//                }
+//            )
         }
     )
 }

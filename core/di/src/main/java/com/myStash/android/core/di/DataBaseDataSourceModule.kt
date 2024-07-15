@@ -1,7 +1,7 @@
 package com.myStash.android.core.di
 
-import com.myStash.android.data_base.item.datasource.ItemDataSource
-import com.myStash.android.data_base.item.datasource.ItemDataSourceImpl
+import com.myStash.android.data_base.has.datasource.HasDataSource
+import com.myStash.android.data_base.has.datasource.HasDataSourceImpl
 import com.myStash.android.data_base.style.datasource.StyleDataSource
 import com.myStash.android.data_base.style.datasource.StyleDataSourceImpl
 import com.myStash.android.data_base.tag.datasource.TagDataSource
@@ -16,9 +16,9 @@ import dagger.hilt.components.SingletonComponent
 interface DataBaseDataSourceModule {
 
     @Binds
-    fun bindsItemDataSource(
-        itemDataSource: ItemDataSourceImpl
-    ): ItemDataSource
+    fun bindsHasDataSource(
+        hasDataSource: HasDataSourceImpl
+    ): HasDataSource
 
     @Binds
     fun bindsStyleDataSource(

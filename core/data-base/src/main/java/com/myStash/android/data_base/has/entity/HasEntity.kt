@@ -1,12 +1,12 @@
-package com.myStash.android.data_base.item.entity
+package com.myStash.android.data_base.has.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.myStash.android.core.model.Item
+import com.myStash.android.core.model.Has
 
-@Entity(tableName = "item")
-data class ItemEntity(
+@Entity(tableName = "has")
+data class HasEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "pk")
     val id: Long? = null,
@@ -27,7 +27,7 @@ data class ItemEntity(
     val isRemove: Boolean = false
 ) {
     companion object {
-        fun ItemEntity.toItem() = Item(
+        fun HasEntity.toHas() = Has(
             id = id,
             tags = tags,
             type = type,
@@ -36,7 +36,7 @@ data class ItemEntity(
             isRemove = isRemove,
         )
 
-        fun Item.toItemEntity() = ItemEntity(
+        fun Has.toHasEntity() = HasEntity(
             id = id,
             tags = tags,
             type = type,

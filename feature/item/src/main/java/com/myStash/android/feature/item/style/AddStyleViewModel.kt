@@ -9,13 +9,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.common.util.offerOrRemove
 import com.myStash.android.common.util.removeBlank
-import com.myStash.android.core.data.usecase.item.SaveItemUseCase
 import com.myStash.android.core.data.usecase.style.SaveStyleUseCase
-import com.myStash.android.core.data.usecase.tag.CheckAvailableTagUseCase
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
 import com.myStash.android.core.data.usecase.tag.SaveTagUseCase
 import com.myStash.android.core.di.DefaultDispatcher
-import com.myStash.android.core.model.Item
+import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Style
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
@@ -83,7 +81,7 @@ class AddStyleViewModel @Inject constructor(
     private fun fetch() {
         intent {
             viewModelScope.launch {
-                val item = stateHandle.get<Item?>("item")
+                val has = stateHandle.get<Has?>("has")
 
                 // type total list 호출
                 tagTotalList.collectLatest {

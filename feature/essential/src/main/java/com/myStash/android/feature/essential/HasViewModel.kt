@@ -8,15 +8,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.common.util.offerOrRemove
 import com.myStash.android.core.data.usecase.gender.GetSelectedGenderUseCase
-import com.myStash.android.core.data.usecase.item.DeleteItemUseCase
-import com.myStash.android.core.data.usecase.item.GetItemListUseCase
-import com.myStash.android.core.data.usecase.item.SaveItemUseCase
+import com.myStash.android.core.data.usecase.has.DeleteHasUseCase
+import com.myStash.android.core.data.usecase.has.GetHasListUseCase
+import com.myStash.android.core.data.usecase.has.SaveHasUseCase
 import com.myStash.android.core.data.usecase.tag.DeleteTagUseCase
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
 import com.myStash.android.core.data.usecase.tag.SaveTagUseCase
 import com.myStash.android.core.di.DefaultDispatcher
 import com.myStash.android.core.di.IoDispatcher
-import com.myStash.android.core.model.Item
+import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.testManTypeTotalList
@@ -45,13 +45,13 @@ import javax.inject.Inject
 @HiltViewModel
 class HasViewModel @Inject constructor(
     private val application: Application,
-    private val getItemListUseCase: GetItemListUseCase,
+    private val getHasListUseCase: GetHasListUseCase,
     private val getTagListUseCase: GetTagListUseCase,
-    private val saveItemUseCase: SaveItemUseCase,
+    private val saveHasUseCase: SaveHasUseCase,
     // test
     private val saveTagUseCase: SaveTagUseCase,
     private val deleteTagUseCase: DeleteTagUseCase,
-    private val deleteItemUseCase: DeleteItemUseCase,
+    private val deleteHasUseCase: DeleteHasUseCase,
     // image
     private val imageRepository: ImageRepository,
     // gender
@@ -84,7 +84,7 @@ class HasViewModel @Inject constructor(
 
     var testImageCnt = 0
 
-    private val itemList = getItemListUseCase.itemList
+    private val itemList = getHasListUseCase.hasList
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),
@@ -121,7 +121,7 @@ class HasViewModel @Inject constructor(
                 }.collectLatest { (typeTotalList, itemList, tagTotalList) ->
                     reduce {
                         state.copy(
-                            itemList = itemList,
+                            hasList = itemList,
                             totalTagList = tagTotalList,
                             totalTypeList = typeTotalList
                         )
@@ -181,14 +181,14 @@ class HasViewModel @Inject constructor(
                 Log.d("qwe123", "list - $it")
                 if(it.isEmpty()) return@collectLatest
 
-                val newItem = Item(
+                val newHas = Has(
     //                tags = tags,
     //                brand = brand,
     //                type = type,
                     imagePath = it[testImageCnt].uri.toString(),
                     type = 1
                 )
-                val result = saveItemUseCase.invoke(newItem)
+                val result = saveHasUseCase.invoke(newHas)
                 testImageCnt++
             }
         }
@@ -215,7 +215,7 @@ class HasViewModel @Inject constructor(
     fun deleteAllItem() {
         viewModelScope.launch {
             itemList.value.forEach {
-                deleteItemUseCase.invoke(it)
+                deleteHasUseCase.invoke(it)
             }
         }
     }

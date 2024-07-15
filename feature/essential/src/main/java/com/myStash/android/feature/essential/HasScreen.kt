@@ -21,7 +21,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
@@ -45,7 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
 import com.myStash.android.common.util.CommonActivityResultContract
-import com.myStash.android.core.model.Item
+import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.testManTypeTotalList
@@ -78,7 +77,7 @@ fun HasRoute(
 
     val totalTypeList = viewModel.collectAsState().value.totalTypeList
     val totalTagList = viewModel.collectAsState().value.totalTagList
-    val itemList = viewModel.collectAsState().value.itemList
+    val hasList = viewModel.collectAsState().value.hasList
     val selectedTagList = viewModel.collectAsState().value.selectedTagList
     val selectedType = viewModel.collectAsState().value.selectedType
 
@@ -97,15 +96,15 @@ fun HasRoute(
     HasScreen(
         totalTypeList = totalTypeList,
         totalTagList = totalTagList,
-        itemList = itemList,
+        hasList = hasList,
         selectedTagList = selectedTagList,
         selectedType = selectedType,
         onSearch = { testSearchFlag = true },
         onSelectType = viewModel::selectType,
         onSelectTag = viewModel::selectTag,
-        showItemActivity = { item ->
+        showItemActivity = { has ->
             val intent = Intent(activity.apply { slideIn() }, ItemActivity::class.java)
-                .putExtra("item", item)
+                .putExtra("has", has)
             itemActivityLauncher.launch(intent)
         },
 
@@ -143,13 +142,13 @@ fun HasRoute(
 fun HasScreen(
     totalTypeList: List<Type>,
     totalTagList: List<Tag>,
-    itemList: List<Item>,
+    hasList: List<Has>,
     selectedTagList: List<Tag>,
     selectedType: Type,
     onSearch: () -> Unit,
     onSelectType: (Type) -> Unit,
     onSelectTag: (Tag) -> Unit,
-    showItemActivity: (Item?) -> Unit,
+    showItemActivity: (Has?) -> Unit,
     // test
     testItemAdd: () -> Unit,
     testTagAdd: () -> Unit,
@@ -240,7 +239,7 @@ fun HasScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(
-                items = itemList,
+                items = hasList,
                 key = { it.id!! }
             ) { has ->
                 HasMainItem(
@@ -316,7 +315,7 @@ fun EssentialScreenPreview() {
         totalTypeList = testManTypeTotalList,
         selectedType = Type(id = 0),
         onSelectType = {},
-        itemList = emptyList(),
+        hasList = emptyList(),
         totalTagList = testTagList,
         selectedTagList = emptyList(),
         onSearch = {},
