@@ -17,6 +17,7 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 
@@ -70,5 +71,18 @@ fun ShimmerLoadingAnimation() {
             .fillMaxSize()
             .background(Color(0xFFE1E1E1))
             .shimmerLoadingAnimation(false),
+    )
+}
+
+@Composable
+fun ShimmerRectangleLoadingAnimation() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFE1E1E1))
+            .shimmerLoadingAnimation(
+                shape = RectangleShape,
+                isLoadingCompleted = false
+            ),
     )
 }
