@@ -6,6 +6,8 @@ import com.myStash.android.data_base.style.datasource.StyleDataSource
 import com.myStash.android.data_base.style.datasource.StyleDataSourceImpl
 import com.myStash.android.data_base.tag.datasource.TagDataSource
 import com.myStash.android.data_base.tag.datasource.TagDataSourceImpl
+import com.myStash.android.data_base.type.datasource.TypeDataSource
+import com.myStash.android.data_base.type.datasource.TypeDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -29,4 +31,9 @@ interface DataBaseDataSourceModule {
     fun bindsTagDataSource(
         tagDataSource: TagDataSourceImpl
     ): TagDataSource
+
+    @Binds
+    fun bindsTypeDataSource(
+        typeDataSource: TypeDataSourceImpl
+    ): TypeDataSource
 }
