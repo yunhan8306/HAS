@@ -9,19 +9,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.common.util.offerOrRemove
 import com.myStash.android.common.util.removeBlank
+import com.myStash.android.core.data.usecase.has.GetHasListUseCase
 import com.myStash.android.core.data.usecase.style.SaveStyleUseCase
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
 import com.myStash.android.core.data.usecase.tag.SaveTagUseCase
+import com.myStash.android.core.data.usecase.type.GetTypeListUseCase
 import com.myStash.android.core.di.DefaultDispatcher
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Style
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
-import com.myStash.android.core.model.testWomanTypeTotalList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -41,6 +43,9 @@ class AddStyleViewModel @Inject constructor(
     private val saveStyleUseCase: SaveStyleUseCase,
     private val saveTagUseCase: SaveTagUseCase,
     private val stateHandle: SavedStateHandle,
+
+    private val getHasListUseCase: GetHasListUseCase,
+    private val getTypeListUseCase: GetTypeListUseCase,
     // dispatcher
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ): ContainerHost<AddStyleScreenState, AddStyleSideEffect>, ViewModel() {
@@ -49,29 +54,38 @@ class AddStyleViewModel @Inject constructor(
 
     init {
         fetch()
-        collectSearchText()
     }
-
-    private val selectedTagList = mutableListOf<Tag>()
-
-    val newTagList = mutableListOf<String>()
-
-    var typeTextState = TextFieldState()
 
     val searchTextState = TextFieldState()
 
-    private val searchTagList = searchTextState
+    private val searchHasList = searchTextState
         .textAsFlow()
         .flowOn(defaultDispatcher)
         .onEach { text -> searchTextState.setTextAndPlaceCursorAtEnd(text.removeBlank()) }
-        .map { search -> tagTotalList.value.filter { it.name.contains(search) } }
+        .map { search ->
+            if(search.isNotEmpty()) {
+                val tagIdList = tagTotalList.value.filter { it.name.contains(search) }.map { it.id }
+                hasTotalList.value.filter { tagIdList.contains(it.id) }
+            } else {
+                hasTotalList.value
+            }
+        }
+
+    private val tagTotalList = getTagListUseCase.tagList
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),
             initialValue = emptyList()
         )
 
-    private val tagTotalList = getTagListUseCase.tagList
+    private val typeTotalList = getTypeListUseCase.typeList
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000L),
+            initialValue = emptyList()
+        )
+
+    private val hasTotalList = getHasListUseCase.hasList
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),
@@ -81,18 +95,19 @@ class AddStyleViewModel @Inject constructor(
     private fun fetch() {
         intent {
             viewModelScope.launch {
-                val has = stateHandle.get<Has?>("has")
+                val selectedHasIdList = stateHandle.get<Set<Long>>("style")?.toList() ?: emptyList()
 
-                // type total list 호출
-                tagTotalList.collectLatest {
+                combine(typeTotalList, hasTotalList, tagTotalList) { typeList, hasList, _ ->
                     reduce {
                         state.copy(
-                            tagTotalList = it,
-                            typeTotalList = testWomanTypeTotalList,
-                            searchTagList = it
+                            typeTotalList = typeList,
+                            hasList = hasList,
+                            selectedHasList = hasList.filter { selectedHasIdList.contains(it.id) }
                         )
                     }
                 }
+
+                collectSearchText()
             }
         }
     }
@@ -100,17 +115,13 @@ class AddStyleViewModel @Inject constructor(
     private fun collectSearchText() {
         intent {
             viewModelScope.launch {
-                searchTagList.collectLatest {
+                searchHasList.collectLatest {
                     reduce {
-                        state.copy(searchTagList = it.toList())
+                        state.copy(hasList = it.toList())
                     }
                 }
             }
         }
-    }
-
-    fun deleteSearchText() {
-        searchTextState.clearText()
     }
 
     fun selectType(type: Type?) {
@@ -125,13 +136,13 @@ class AddStyleViewModel @Inject constructor(
         }
     }
 
-    fun selectTag(tag: Tag) {
+    fun selectHas(has: Has) {
         intent {
             viewModelScope.launch {
-                selectedTagList.offerOrRemove(tag) { it.name == tag.name }
+                val selectedHasList = state.selectedHasList.toMutableList().apply { offerOrRemove(has) { it.id == has.id } }
                 reduce {
                     state.copy(
-                        selectedTagList = selectedTagList.toList()
+                        selectedHasList = selectedHasList.toList()
                     )
                 }
             }
@@ -141,11 +152,10 @@ class AddStyleViewModel @Inject constructor(
     fun saveStyle() {
         intent {
             viewModelScope.launch {
-
-                val saveStyle = Style()
-
+                val saveStyle = Style(
+                    hass = state.selectedHasList.map { it.id!! }
+                )
                 saveStyleUseCase.invoke(saveStyle)
-
                 postSideEffect(AddStyleSideEffect.Finish)
             }
         }

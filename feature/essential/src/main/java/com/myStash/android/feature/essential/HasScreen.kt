@@ -264,48 +264,48 @@ fun HasScreen(
         )
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomStart
-    ) {
-        Row {
-            Text(
-                modifier = Modifier
-                    .height(40.dp)
-                    .background(Color.Red)
-                    .clickable { testTagAdd.invoke() },
-                text = "test tag Add"
-            )
-            Text(
-                modifier = Modifier
-                    .height(40.dp)
-                    .background(Color.Red)
-                    .clickable { testItemAdd.invoke() },
-                text = "test Item Add"
-            )
-            Text(
-                modifier = Modifier
-                    .height(40.dp)
-                    .background(Color.Red)
-                    .clickable { deleteAllTag.invoke() },
-                text = "delete all Tag"
-            )
-            Text(
-                modifier = Modifier
-                    .height(40.dp)
-                    .background(Color.Red)
-                    .clickable { deleteAllItem.invoke() },
-                text = "delete all Item"
-            )
-            Text(
-                modifier = Modifier
-                    .height(40.dp)
-                    .background(Color.Red)
-                    .clickable { testConfirm.invoke() },
-                text = "confirm"
-            )
-        }
-    }
+//    Box(
+//        modifier = Modifier.fillMaxSize(),
+//        contentAlignment = Alignment.BottomStart
+//    ) {
+//        Row {
+//            Text(
+//                modifier = Modifier
+//                    .height(40.dp)
+//                    .background(Color.Red)
+//                    .clickable { testTagAdd.invoke() },
+//                text = "test tag Add"
+//            )
+//            Text(
+//                modifier = Modifier
+//                    .height(40.dp)
+//                    .background(Color.Red)
+//                    .clickable { testItemAdd.invoke() },
+//                text = "test Item Add"
+//            )
+//            Text(
+//                modifier = Modifier
+//                    .height(40.dp)
+//                    .background(Color.Red)
+//                    .clickable { deleteAllTag.invoke() },
+//                text = "delete all Tag"
+//            )
+//            Text(
+//                modifier = Modifier
+//                    .height(40.dp)
+//                    .background(Color.Red)
+//                    .clickable { deleteAllItem.invoke() },
+//                text = "delete all Item"
+//            )
+//            Text(
+//                modifier = Modifier
+//                    .height(40.dp)
+//                    .background(Color.Red)
+//                    .clickable { testConfirm.invoke() },
+//                text = "confirm"
+//            )
+//        }
+//    }
 }
 
 @DevicePreviews

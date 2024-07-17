@@ -54,9 +54,7 @@ fun HasHeader(
             centerContent.invoke()
         }
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onBack.invoke() },
+            modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.CenterEnd
         ) {
             endContent.invoke()

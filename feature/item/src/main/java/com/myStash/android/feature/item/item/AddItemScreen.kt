@@ -8,10 +8,12 @@ import androidx.compose.material.TabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.component.header.HasHeader
 import com.myStash.android.design_system.ui.component.tab.AddItemTab
+import com.myStash.android.design_system.util.addFocusCleaner
 
 @Composable
 fun AddItemScreen(
@@ -20,11 +22,14 @@ fun AddItemScreen(
     onBack: () -> Unit,
     content: @Composable () -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
+
     Column(
         modifier = Modifier
             .height(80.dp)
             .fillMaxWidth()
             .background(Color.White)
+//            .addFocusCleaner(focusManager)
     ) {
         HasHeader(
             text = "등록하기",
