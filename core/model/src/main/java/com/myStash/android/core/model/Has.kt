@@ -13,4 +13,12 @@ data class Has(
     val isRemove: Boolean = false
 ): Parcelable {
     fun getTagList(tagTotalList: List<Tag>) = tagTotalList.filter { tags.contains(it.id) }
+
+}
+fun List<Has>.selectType(type: Type): List<Has> {
+    return if(type.id?.toInt() == 0) {
+        this
+    } else {
+        this.filter { it.type == type.id }
+    }
 }

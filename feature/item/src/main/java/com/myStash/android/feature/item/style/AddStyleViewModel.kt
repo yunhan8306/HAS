@@ -19,6 +19,7 @@ import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Style
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
+import com.myStash.android.core.model.selectType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
@@ -97,7 +98,9 @@ class AddStyleViewModel @Inject constructor(
             viewModelScope.launch {
                 val selectedHasIdList = stateHandle.get<Set<Long>>("style")?.toList() ?: emptyList()
 
-                combine(typeTotalList, hasTotalList, tagTotalList) { typeList, hasList, _ ->
+                combine(typeTotalList, hasTotalList, tagTotalList) { typeList, hasList, tagTotalList ->
+                    Triple(typeList, hasList, tagTotalList)
+                }.collectLatest { (typeList, hasList, _) ->
                     reduce {
                         state.copy(
                             typeTotalList = typeList,
@@ -124,11 +127,12 @@ class AddStyleViewModel @Inject constructor(
         }
     }
 
-    fun selectType(type: Type?) {
+    fun selectType(type: Type) {
         intent {
             viewModelScope.launch {
                 reduce {
                     state.copy(
+                        hasList = hasTotalList.value.selectType(type),
                         selectedType = type
                     )
                 }
