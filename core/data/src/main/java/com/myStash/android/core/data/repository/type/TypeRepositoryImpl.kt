@@ -6,6 +6,7 @@ import com.myStash.android.data_base.has.datasource.HasDataSource
 import com.myStash.android.data_base.has.entity.HasEntity.Companion.toHas
 import com.myStash.android.data_base.has.entity.HasEntity.Companion.toHasEntity
 import com.myStash.android.data_base.type.datasource.TypeDataSource
+import com.myStash.android.data_base.type.entity.TypeEntity
 import com.myStash.android.data_base.type.entity.TypeEntity.Companion.toEntity
 import com.myStash.android.data_base.type.entity.TypeEntity.Companion.toType
 import kotlinx.coroutines.flow.Flow
@@ -23,4 +24,6 @@ class TypeRepositoryImpl @Inject constructor(
         typeDataSource.delete(type.toEntity())
     override fun selectAll() : Flow<List<Type>> =
         typeDataSource.selectAll().map { list -> list.map { it.toType() } }
+    override suspend fun getType(name: String): Type? =
+        typeDataSource.getType(name)?.toType()
 }
