@@ -210,7 +210,7 @@ fun HasScreen(
             totalTagList.forEachIndexed { index, tag ->
                 val isSelected by remember(selectedTagList) {
                     derivedStateOf {
-                        selectedTagList.contains(tag)
+                        tag.checkSelected(selectedTagList)
                     }
                 }
                 if(index < 3 || flowToggle) {

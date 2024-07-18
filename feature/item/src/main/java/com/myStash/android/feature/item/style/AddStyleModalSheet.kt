@@ -134,7 +134,7 @@ fun AddStyleModalSheet(
                 ) { has ->
                     val isSelected by remember(state.selectedHasList) {
                         derivedStateOf {
-                            state.selectedHasList.contains(has)
+                            has.checkSelected(state.selectedHasList)
                         }
                     }
 

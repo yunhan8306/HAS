@@ -101,7 +101,7 @@ fun SearchScreen(
                 tagList.forEach { tag ->
                     val isSelected by remember(selectTagList) {
                         derivedStateOf {
-                            selectTagList.contains(tag)
+                            tag.checkSelected(selectTagList)
                         }
                     }
 
@@ -126,7 +126,7 @@ fun SearchScreen(
                 items(tagList) { tag ->
                     val isSelected by remember(selectTagList) {
                         derivedStateOf {
-                            selectTagList.contains(tag)
+                            tag.checkSelected(selectTagList)
                         }
                     }
                     TagSearchItem(

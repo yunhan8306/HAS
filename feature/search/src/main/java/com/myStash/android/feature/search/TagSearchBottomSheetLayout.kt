@@ -174,7 +174,7 @@ fun TagSearchBottomSheetLayout(
                                 totalTagList.forEach { tag ->
                                     val isSelected by remember(selectTagList) {
                                         derivedStateOf {
-                                            selectTagList.contains(tag)
+                                            tag.checkSelected(selectTagList)
                                         }
                                     }
                                     TagChipItem(
@@ -191,7 +191,7 @@ fun TagSearchBottomSheetLayout(
                                 items(searchTagList) { tag ->
                                     val isSelected by remember(selectTagList) {
                                         derivedStateOf {
-                                            selectTagList.contains(tag)
+                                            tag.checkSelected(selectTagList)
                                         }
                                     }
                                     TagSearchItem(

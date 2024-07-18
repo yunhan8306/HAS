@@ -77,7 +77,7 @@ fun HasMainItem(
                 tagList.forEach { tag ->
                     TagHasChipItem(
                         name = tag.name,
-                        isSelected = selectTagList.contains(tag)
+                        isSelected = tag.checkSelected(selectTagList)
                     )
                 }
             }
