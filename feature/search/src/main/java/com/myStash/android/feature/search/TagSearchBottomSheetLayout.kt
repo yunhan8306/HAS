@@ -218,7 +218,9 @@ fun TagSearchBottomSheetLayout(
                 onClick = onConfirm
             )
         }
-        BackHandler(onBack = onBack)
+        if(searchModalState.isVisible || searchModalState.targetValue == ModalBottomSheetValue.Expanded) {
+            BackHandler(onBack = onBack)
+        }
     }
 }
 
