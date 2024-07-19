@@ -41,6 +41,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.myStash.android.common.resource.R
+import com.myStash.android.common.util.isNotNull
+import com.myStash.android.common.util.isNotNullAndNotEmpty
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.testManTypeTotalList
@@ -210,7 +212,7 @@ fun AddHasScreen(
             ) {
                 HasButton(
                     text = "등록하기",
-                    isComplete = true,
+                    isComplete = imageUri.isNotNullAndNotEmpty() && selectedType.isNotNull() && selectedTagList.isNotEmpty(),
                     onClick = saveItem
                 )
             }
