@@ -140,7 +140,7 @@ fun AddStyleModalSheet(
 
                     val selectedNumber by remember(state.selectedHasList) {
                         derivedStateOf {
-                            state.selectedHasList.indexOf(has)
+                            state.selectedHasList.indexOf(has) + 1
                         }
                     }
 
