@@ -28,3 +28,21 @@ fun List<Has>.selectType(type: Type): List<Has> {
         this.filter { it.type == type.id }
     }
 }
+
+fun List<Has>.selectTag(tags: List<Tag>): List<Has> {
+    val selectedTagsId = tags.map { it.id!! }
+    return if(tags.isEmpty()) {
+        this
+    } else {
+        this.filter { has ->
+            var isSelected = false
+            has.tags.forEach { tagId ->
+                if(selectedTagsId.contains(tagId)) {
+                    isSelected = true
+                    return@forEach
+                }
+            }
+            isSelected
+        }
+    }
+}

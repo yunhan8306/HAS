@@ -20,8 +20,8 @@ import com.myStash.android.core.di.IoDispatcher
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
+import com.myStash.android.core.model.selectTag
 import com.myStash.android.core.model.selectType
-import com.myStash.android.core.model.testTagList
 import com.myStash.android.feature.gallery.ImageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
@@ -74,9 +74,8 @@ class HasViewModel @Inject constructor(
         .textAsFlow()
         .debounce(500)
         .flowOn(defaultDispatcher)
-        .mapLatest { search ->
-            testTagList.filter { it.name.contains(search) }
-        }.stateIn(
+        .map { search -> tagTotalList.value.filter { it.name.contains(search) } }
+        .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),
             initialValue = emptyList()
@@ -157,7 +156,8 @@ class HasViewModel @Inject constructor(
 
                 reduce {
                     state.copy(
-                        selectedTagList = selectedTagList.toList()
+                        selectedTagList = selectedTagList.toList(),
+                        hasList = hasTotalList.value.selectTag(selectedTagList)
                     )
                 }
             }
