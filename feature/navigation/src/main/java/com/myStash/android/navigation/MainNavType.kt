@@ -10,7 +10,7 @@ enum class MainNavType(
         activeIcon = R.drawable.btn_btm_bar_swipe_on,
         inactiveIcon = R.drawable.btn_btm_bar_swipe_off
     ),
-    TEST2(
+    STYLE(
         activeIcon = R.drawable.btn_btm_bar_like_on,
         inactiveIcon = R.drawable.btn_btm_bar_like_off
     ),

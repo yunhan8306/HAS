@@ -1,7 +1,6 @@
 package com.myStash.android.feature.item.style
 
 import androidx.compose.foundation.text2.input.TextFieldState
-import androidx.compose.foundation.text2.input.clearText
 import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.SavedStateHandle
@@ -17,7 +16,6 @@ import com.myStash.android.core.data.usecase.type.GetTypeListUseCase
 import com.myStash.android.core.di.DefaultDispatcher
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Style
-import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.selectType
 import dagger.hilt.android.lifecycle.HiltViewModel
