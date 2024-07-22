@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -89,8 +90,9 @@ fun StyleRoute(
 
     StyleScreen(
         totalTagList = totalTagList,
-        styleList = styleList,
         selectedTagList = selectedTagList,
+        styleList = styleList,
+        selectedStyle = null,
         onSearch = { testSearchFlag = true },
         onSelectTag = viewModel::selectTag,
         showItemActivity = { has ->
@@ -125,8 +127,9 @@ fun StyleRoute(
 @Composable
 fun StyleScreen(
     totalTagList: List<Tag>,
-    styleList: List<StyleScreenModel>,
     selectedTagList: List<Tag>,
+    styleList: List<StyleScreenModel>,
+    selectedStyle: StyleScreenModel?,
     onSearch: () -> Unit,
     onSelectTag: (Tag) -> Unit,
     showItemActivity: (Has?) -> Unit,
@@ -191,8 +194,15 @@ fun StyleScreen(
                 items = styleList,
                 key = { it.id }
             ) { style ->
+                val isSelected by remember(selectedTagList) {
+                    derivedStateOf {
+                        selectedStyle?.id == style.id
+                    }
+                }
+
                 StyleMainItem(
-                    style = style
+                    style = style,
+                    isSelected = isSelected
                 )
             }
         }
@@ -214,10 +224,11 @@ fun StyleScreen(
 @Composable
 fun StyleMainItem(
     style: StyleScreenModel,
+    isSelected: Boolean
 ) {
     Box(
         modifier = Modifier
-//            .border(width = 2.dp, color = Color(0xFF716DF6), shape = RoundedCornerShape(size = 12.dp)))
+            .border(width = if(isSelected) 2.dp else 1.dp, color = if(isSelected) Color(0xFF716DF6) else Color(0xFFE1E1E1), shape = RoundedCornerShape(size = 12.dp))
             .clip(RoundedCornerShape(size = 12.dp))
     ) {
         LazyVerticalGrid(
@@ -262,6 +273,7 @@ fun EssentialScreenPreview() {
         styleList = emptyList(),
         totalTagList = testTagList,
         selectedTagList = emptyList(),
+        selectedStyle = null,
         onSearch = {},
         showItemActivity = {},
         onSelectTag = {},
