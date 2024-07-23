@@ -1,7 +1,5 @@
 package com.myStash.android.core.model
 
-import com.myStash.android.core.model.Style.Companion.toStyleScreenModel
-
 data class Style(
     val id: Long? = null,
     val hass: List<Long> = emptyList(),
@@ -21,16 +19,15 @@ data class StyleScreenModel(
     val hasList: List<Has>
 )
 
-fun List<Style>.filterSelectTag(
-    tags: List<Tag>,
-    hasList: List<Has>
-): List<Style> {
+fun List<StyleScreenModel>.filterSelectTag(
+    tags: List<Tag>
+): List<StyleScreenModel> {
     return if(tags.isEmpty()) {
         this
     } else {
         this.filter { style ->
             var isSelect = false
-            style.toStyleScreenModel(hasList).hasList.forEachIndexed { _, has ->
+            style.hasList.forEachIndexed { _, has ->
                 tags.forEach { tag ->
                     if(has.tags.contains(tag.id)) {
                         isSelect = true

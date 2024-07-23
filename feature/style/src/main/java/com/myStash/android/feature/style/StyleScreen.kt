@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -44,7 +42,6 @@ import androidx.navigation.NavGraphBuilder
 import coil.compose.SubcomposeAsyncImage
 import com.google.accompanist.navigation.animation.composable
 import com.myStash.android.common.util.CommonActivityResultContract
-import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.testTagList
@@ -74,6 +71,7 @@ fun StyleRoute(
     viewModel: StyleViewModel = hiltViewModel(),
 ) {
 
+    val state by viewModel.collectAsState()
     val totalTagList = viewModel.collectAsState().value.totalTagList
     val selectedTagList = viewModel.collectAsState().value.selectedTagList
     val styleList = viewModel.collectAsState().value.styleList
@@ -87,44 +85,48 @@ fun StyleRoute(
         onResult = {}
     )
 
-    var testSearchFlag by remember { mutableStateOf(false) }
-    var testConfirm by remember { mutableStateOf(false) }
+    var isShowSearch by remember { mutableStateOf(false) }
+    var isShowMoreStyle by remember { mutableStateOf(false) }
 
     StyleScreen(
         totalTagList = totalTagList,
         selectedTagList = selectedTagList,
         styleList = styleList,
         selectedStyle = selectedStyle,
-        onSearch = { testSearchFlag = true },
-        onSelectTag = viewModel::selectTag,
-        onSelectStyle = viewModel::selectStyle,
-        onShowStyle = {},
-        showItemActivity = { has ->
-            val intent = Intent(activity.apply { slideIn() }, ItemActivity::class.java)
-                .putExtra("has", has)
-            itemActivityLauncher.launch(intent)
-        },
+        onAction = { action ->
+            when(action) {
+                is StyleScreenAction.ShowSearch -> isShowSearch = true
+                is StyleScreenAction.ShowMoreStyle -> isShowMoreStyle = true
+                is StyleScreenAction.ShowItemActivity -> {
+                    val intent = Intent(activity.apply { slideIn() }, ItemActivity::class.java)
+                        .putExtra("tab", "Style")
+                        .putExtra("style", action.style.hasList.map { it.id }.toTypedArray())
+                    itemActivityLauncher.launch(intent)
+                }
+                else -> viewModel.onAction(action)
+            }
+        }
     )
 
-    if(testSearchFlag) {
+    if(isShowSearch) {
         SearchScreen(
             searchTextState = searchTextState,
             searchText = searchTextState.text.toString(),
             selectTagList = selectedTagList,
             tagList = totalTagList,
             select = viewModel::selectTag,
-            onBack = { testSearchFlag = false },
+            onBack = { isShowSearch = false },
         )
     }
 
     HasConfirmDialog(
-        isShow = testConfirm,
+        isShow = isShowMoreStyle,
         title = "title",
         content = "content",
         confirmText = "confirm",
         dismissText = "닫기",
-        onConfirm = { testConfirm = false },
-        onDismiss = { testConfirm = false }
+        onConfirm = { isShowMoreStyle = false },
+        onDismiss = { isShowMoreStyle = false }
     )
 }
 
@@ -134,11 +136,7 @@ fun StyleScreen(
     selectedTagList: List<Tag>,
     styleList: List<StyleScreenModel>,
     selectedStyle: StyleScreenModel?,
-    onSearch: () -> Unit,
-    onSelectTag: (Tag) -> Unit,
-    onSelectStyle: (StyleScreenModel) -> Unit,
-    onShowStyle: (StyleScreenModel) -> Unit,
-    showItemActivity: (Has?) -> Unit,
+    onAction: (StyleScreenAction) -> Unit,
 ) {
 
     val tagScrollState = rememberScrollState()
@@ -156,7 +154,7 @@ fun StyleScreen(
     ) {
         ContentHeaderSearchText(
             text = "원하는 태그를 검색해 보세요",
-            onClick = onSearch
+            onClick = { onAction.invoke(StyleScreenAction.ShowSearch) }
         )
         FlowRow(
             modifier = Modifier
@@ -175,7 +173,7 @@ fun StyleScreen(
                     TagChipItem(
                         name = tag.name,
                         isSelected = isSelected,
-                        onClick = { onSelectTag.invoke(tag) }
+                        onClick = { onAction.invoke(StyleScreenAction.SelectTag(tag)) }
                     )
                 }
             }
@@ -209,23 +207,11 @@ fun StyleScreen(
                 StyleMainItem(
                     style = style,
                     isSelected = isSelected,
-                    onClick = onShowStyle,
-                    onLongClick = onSelectStyle
+                    onClick = { onAction.invoke(StyleScreenAction.ShowMoreStyle(style)) },
+                    onLongClick = { onAction.invoke(StyleScreenAction.SelectStyle(style)) }
                 )
             }
         }
-    }
-
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomEnd
-    ) {
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .background(Color.Red)
-                .clickable { showItemActivity.invoke(null) }
-        )
     }
 }
 
@@ -238,7 +224,11 @@ fun StyleMainItem(
 ) {
     Box(
         modifier = Modifier
-            .border(width = if(isSelected) 2.dp else 1.dp, color = if(isSelected) Color(0xFF716DF6) else Color(0xFFE1E1E1), shape = RoundedCornerShape(size = 12.dp))
+            .border(
+                width = if (isSelected) 2.dp else 1.dp,
+                color = if (isSelected) Color(0xFF716DF6) else Color(0xFFE1E1E1),
+                shape = RoundedCornerShape(size = 12.dp)
+            )
             .clip(RoundedCornerShape(size = 12.dp))
             .combinedClickable(
                 onLongClick = { onLongClick.invoke(style) },
@@ -288,10 +278,6 @@ fun EssentialScreenPreview() {
         totalTagList = testTagList,
         selectedTagList = emptyList(),
         selectedStyle = null,
-        onSearch = {},
-        showItemActivity = {},
-        onSelectTag = {},
-        onShowStyle = {},
-        onSelectStyle = {}
+        onAction = {},
     )
 }

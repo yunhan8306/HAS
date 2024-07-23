@@ -1,6 +1,5 @@
 package com.myStash.android.feature.style
 
-import com.myStash.android.core.model.Style
 import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
 
@@ -12,3 +11,11 @@ data class StyleScreenState(
 )
 
 sealed interface StyleSideEffect
+
+sealed interface StyleScreenAction {
+    data class SelectStyle(val style: StyleScreenModel) : StyleScreenAction
+    data class SelectTag(val tag: Tag) : StyleScreenAction
+    object ShowSearch : StyleScreenAction
+    data class ShowMoreStyle(val style: StyleScreenModel): StyleScreenAction
+    data class ShowItemActivity(val style: StyleScreenModel): StyleScreenAction
+}
