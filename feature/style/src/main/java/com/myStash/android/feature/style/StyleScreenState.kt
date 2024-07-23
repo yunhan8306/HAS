@@ -6,7 +6,7 @@ import com.myStash.android.core.model.Tag
 
 data class StyleScreenState(
     val styleList: List<StyleScreenModel> = emptyList(),
-    val selectedStyle: Style? = null,
+    val selectedStyle: StyleScreenModel? = null,
     val totalTagList: List<Tag> = emptyList(),
     val selectedTagList: List<Tag> = emptyList()
 )

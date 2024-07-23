@@ -13,6 +13,7 @@ import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
 import com.myStash.android.core.di.DefaultDispatcher
 import com.myStash.android.core.di.IoDispatcher
 import com.myStash.android.core.model.Style.Companion.toStyleScreenModel
+import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.filterSelectTag
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -128,6 +129,18 @@ class StyleViewModel @Inject constructor(
                     state.copy(
                         selectedTagList = selectedTagList.toList(),
                         styleList = styleList
+                    )
+                }
+            }
+        }
+    }
+
+    fun selectStyle(style: StyleScreenModel) {
+        intent {
+            viewModelScope.launch {
+                reduce {
+                    state.copy(
+                        selectedStyle = style
                     )
                 }
             }

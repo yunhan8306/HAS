@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -74,8 +75,9 @@ fun StyleRoute(
 ) {
 
     val totalTagList = viewModel.collectAsState().value.totalTagList
-    val styleList = viewModel.collectAsState().value.styleList
     val selectedTagList = viewModel.collectAsState().value.selectedTagList
+    val styleList = viewModel.collectAsState().value.styleList
+    val selectedStyle = viewModel.collectAsState().value.selectedStyle
 
     val searchTextState by remember { mutableStateOf(viewModel.searchTextState) }
 
@@ -92,9 +94,11 @@ fun StyleRoute(
         totalTagList = totalTagList,
         selectedTagList = selectedTagList,
         styleList = styleList,
-        selectedStyle = null,
+        selectedStyle = selectedStyle,
         onSearch = { testSearchFlag = true },
         onSelectTag = viewModel::selectTag,
+        onSelectStyle = viewModel::selectStyle,
+        onShowStyle = {},
         showItemActivity = { has ->
             val intent = Intent(activity.apply { slideIn() }, ItemActivity::class.java)
                 .putExtra("has", has)
@@ -132,6 +136,8 @@ fun StyleScreen(
     selectedStyle: StyleScreenModel?,
     onSearch: () -> Unit,
     onSelectTag: (Tag) -> Unit,
+    onSelectStyle: (StyleScreenModel) -> Unit,
+    onShowStyle: (StyleScreenModel) -> Unit,
     showItemActivity: (Has?) -> Unit,
 ) {
 
@@ -194,7 +200,7 @@ fun StyleScreen(
                 items = styleList,
                 key = { it.id }
             ) { style ->
-                val isSelected by remember(selectedTagList) {
+                val isSelected by remember(selectedStyle) {
                     derivedStateOf {
                         selectedStyle?.id == style.id
                     }
@@ -202,7 +208,9 @@ fun StyleScreen(
 
                 StyleMainItem(
                     style = style,
-                    isSelected = isSelected
+                    isSelected = isSelected,
+                    onClick = onShowStyle,
+                    onLongClick = onSelectStyle
                 )
             }
         }
@@ -224,12 +232,18 @@ fun StyleScreen(
 @Composable
 fun StyleMainItem(
     style: StyleScreenModel,
-    isSelected: Boolean
+    isSelected: Boolean,
+    onClick: (StyleScreenModel) -> Unit,
+    onLongClick: (StyleScreenModel) -> Unit
 ) {
     Box(
         modifier = Modifier
             .border(width = if(isSelected) 2.dp else 1.dp, color = if(isSelected) Color(0xFF716DF6) else Color(0xFFE1E1E1), shape = RoundedCornerShape(size = 12.dp))
             .clip(RoundedCornerShape(size = 12.dp))
+            .combinedClickable(
+                onLongClick = { onLongClick.invoke(style) },
+                onClick = { onClick.invoke(style) },
+            )
     ) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -277,5 +291,7 @@ fun EssentialScreenPreview() {
         onSearch = {},
         showItemActivity = {},
         onSelectTag = {},
+        onShowStyle = {},
+        onSelectStyle = {}
     )
 }
