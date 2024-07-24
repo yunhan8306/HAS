@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
+import com.myStash.android.common.compose.activityViewModel
 import com.myStash.android.common.util.CommonActivityResultContract
 import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.testManTypeTotalList
@@ -54,6 +55,7 @@ import com.myStash.android.design_system.ui.component.has.HasMainItem
 import com.myStash.android.design_system.ui.component.tag.TagChipItem
 import com.myStash.android.design_system.ui.component.tag.TagMoreChipItem
 import com.myStash.android.feature.item.ItemActivity
+import com.myStash.android.feature.item.item.ItemTab
 import com.myStash.android.feature.search.SearchScreen
 import com.myStash.android.navigation.MainNavType
 import org.orbitmvi.orbit.compose.collectAsState
@@ -68,7 +70,7 @@ fun NavGraphBuilder.hasScreen() {
 
 @Composable
 fun HasRoute(
-    viewModel: HasViewModel = hiltViewModel(),
+    viewModel: HasViewModel = activityViewModel()
 ) {
 
     val state by viewModel.collectAsState()
@@ -90,6 +92,7 @@ fun HasRoute(
                  is HasScreenAction.ShowSearch -> { isShowSearch = true }
                  is HasScreenAction.ShowItemActivity -> {
                      val intent = Intent(activity.apply { slideIn() }, ItemActivity::class.java)
+                         .putExtra("tab", ItemTab.HAS.name)
                          .putExtra("has", action.has)
                      itemActivityLauncher.launch(intent)
                  }

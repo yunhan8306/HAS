@@ -3,7 +3,7 @@ package com.myStash.android.feature.item.item
 enum class ItemTab(
     val tabName: String
 ) {
-    HAS("Has"), STYLE("Style"), FEED("Feed")
+    HAS("HAS"), STYLE("STYLE"), FEED("FEED")
 }
 
 fun String?.getItemTab(): ItemTab {

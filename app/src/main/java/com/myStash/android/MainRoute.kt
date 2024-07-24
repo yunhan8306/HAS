@@ -14,6 +14,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.myStash.android.common.util.CommonActivityResultContract
 import com.myStash.android.feature.gender.GenderActivity
+import com.myStash.android.feature.item.ItemActivity
+import com.myStash.android.feature.item.item.ItemTab
 import com.myStash.android.navigation.MainNavigation
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -53,4 +55,22 @@ fun MainRoute(
             )
         }
     }
+
+    MainBottomModal(
+        navHostController = navHostController,
+        showAddStyleItemActivity = { hasList ->
+            val intent = Intent(activity, ItemActivity::class.java).apply {
+                putExtra("tab", ItemTab.STYLE.name)
+                putExtra("style", hasList.map { it.id }.toTypedArray())
+            }
+            itemActivityLauncher.launch(intent)
+        },
+        showAddFeedItemActivity = { style ->
+            val intent = Intent(activity, ItemActivity::class.java).apply {
+                putExtra("tab", ItemTab.FEED.name)
+                putExtra("feed", style.id)
+            }
+            itemActivityLauncher.launch(intent)
+        }
+    )
 }

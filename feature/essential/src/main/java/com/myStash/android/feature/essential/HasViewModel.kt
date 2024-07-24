@@ -36,6 +36,7 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
@@ -155,6 +156,7 @@ class HasViewModel @Inject constructor(
             is HasScreenAction.SelectType -> selectType(action.type)
             is HasScreenAction.SelectTag -> selectTag(action.tag)
             is HasScreenAction.SelectHas -> selectHas(action.has)
+            is HasScreenAction.ResetSelectHas -> resetSelectHas()
             else -> Unit
         }
     }
@@ -191,6 +193,19 @@ class HasViewModel @Inject constructor(
         intent {
             viewModelScope.launch {
                 selectedHasList.offerOrRemove(has) { it.id == has.id }
+                reduce {
+                    state.copy(
+                        selectedHasList = selectedHasList.toList()
+                    )
+                }
+            }
+        }
+    }
+
+    private fun resetSelectHas() {
+        intent {
+            viewModelScope.launch {
+                selectedHasList.clear()
                 reduce {
                     state.copy(
                         selectedHasList = selectedHasList.toList()

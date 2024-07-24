@@ -41,6 +41,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import coil.compose.SubcomposeAsyncImage
 import com.google.accompanist.navigation.animation.composable
+import com.myStash.android.common.compose.activityViewModel
 import com.myStash.android.common.util.CommonActivityResultContract
 import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
@@ -54,6 +55,7 @@ import com.myStash.android.design_system.ui.component.tag.TagChipItem
 import com.myStash.android.design_system.ui.component.tag.TagMoreChipItem
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 import com.myStash.android.feature.item.ItemActivity
+import com.myStash.android.feature.item.item.ItemTab
 import com.myStash.android.feature.search.SearchScreen
 import com.myStash.android.navigation.MainNavType
 import org.orbitmvi.orbit.compose.collectAsState
@@ -68,7 +70,7 @@ fun NavGraphBuilder.styleScreen() {
 
 @Composable
 fun StyleRoute(
-    viewModel: StyleViewModel = hiltViewModel(),
+    viewModel: StyleViewModel = activityViewModel(),
 ) {
 
     val state by viewModel.collectAsState()
@@ -99,7 +101,7 @@ fun StyleRoute(
                 is StyleScreenAction.ShowMoreStyle -> isShowMoreStyle = true
                 is StyleScreenAction.ShowItemActivity -> {
                     val intent = Intent(activity.apply { slideIn() }, ItemActivity::class.java)
-                        .putExtra("tab", "Style")
+                        .putExtra("tab", ItemTab.STYLE.name)
                         .putExtra("style", action.style.hasList.map { it.id }.toTypedArray())
                     itemActivityLauncher.launch(intent)
                 }

@@ -94,7 +94,7 @@ class AddStyleViewModel @Inject constructor(
     private fun fetch() {
         intent {
             viewModelScope.launch {
-                val selectedHasIdList = stateHandle.get<Set<Long>>("style")?.toList() ?: emptyList()
+                val selectedHasIdList = stateHandle.get<Array<Long>>("style")?.toList() ?: emptyList()
 
                 combine(typeTotalList, hasTotalList, tagTotalList) { typeList, hasList, tagTotalList ->
                     Triple(typeList, hasList, tagTotalList)

@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
@@ -126,12 +127,12 @@ class StyleViewModel @Inject constructor(
         }
     }
 
-    fun selectStyle(style: StyleScreenModel) {
+    private fun selectStyle(style: StyleScreenModel?) {
         intent {
             viewModelScope.launch {
                 reduce {
                     state.copy(
-                        selectedStyle = style
+                        selectedStyle = if(state.selectedStyle == style) null else style
                     )
                 }
             }
