@@ -98,6 +98,7 @@ class HasViewModel @Inject constructor(
         )
 
     private val selectedTagList = mutableListOf<Tag>()
+    private val selectedHasList = mutableListOf<Has>()
 
 //    private val typeTotalList = getSelectedGenderUseCase.gender
 //        .mapLatest {
@@ -149,6 +150,15 @@ class HasViewModel @Inject constructor(
         }
     }
 
+    fun onAction(action: HasScreenAction) {
+        when(action) {
+            is HasScreenAction.SelectType -> selectType(action.type)
+            is HasScreenAction.SelectTag -> selectTag(action.tag)
+            is HasScreenAction.SelectHas -> selectHas(action.has)
+            else -> Unit
+        }
+    }
+
     fun selectTag(tag: Tag) {
         intent {
             viewModelScope.launch {
@@ -164,13 +174,26 @@ class HasViewModel @Inject constructor(
         }
     }
 
-    fun selectType(type: Type) {
+    private fun selectType(type: Type) {
         intent {
             viewModelScope.launch {
                 reduce {
                     state.copy(
                         hasList = hasTotalList.value.selectType(type),
                         selectedType = type
+                    )
+                }
+            }
+        }
+    }
+
+    private fun selectHas(has: Has) {
+        intent {
+            viewModelScope.launch {
+                selectedHasList.offerOrRemove(has) { it.id == has.id }
+                reduce {
+                    state.copy(
+                        selectedHasList = selectedHasList.toList()
                     )
                 }
             }
