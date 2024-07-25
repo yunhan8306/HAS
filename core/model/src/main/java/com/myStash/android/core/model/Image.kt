@@ -6,6 +6,8 @@ data class Image(
     val id: Long,
     val name: String,
     val uri: Uri,
+    val folderId: Long,
+    val folder: String,
     var isSelected: Boolean = false,
 ) {
     fun select() {
