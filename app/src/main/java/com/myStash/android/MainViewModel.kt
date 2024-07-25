@@ -96,7 +96,7 @@ class MainViewModel @Inject constructor(
                     testSaveTagList()
                     testSaveTypeList()
                     testSaveHasList()
-                    setInitUseCase.invoke(true)
+//                    setInitUseCase.invoke(true)
                 }
             }
         }
@@ -135,12 +135,12 @@ class MainViewModel @Inject constructor(
         )
 
     private suspend fun testSaveHasList() {
-        val testHastCnt = 35
+        val testHastCnt = 9
         combine(typeTotalList, tagTotalList, imageRepository.imagesStateFlow) { typeList, tagList, imageList ->
             Triple(typeList, tagList, imageList)
         }.collectLatest { (typeList, tagList, imageList) ->
             if(typeList.isNotEmpty() && tagList.isNotEmpty() && imageList.isNotEmpty()) {
-                (0..34).forEachIndexed { index, i ->
+                (0 until testHastCnt).forEachIndexed { index, i ->
                     val typeIndex = (testHastCnt - index) % testManTypeTotalList.size
                     val saveTypeId = typeIndex.takeIf { it != -1 }?.let { typeList[typeIndex].id }!!
                     val saveTagIds = tagList.filter { tagList.indexOf(it) % 10 == index }.map { it.id!! }
@@ -151,6 +151,7 @@ class MainViewModel @Inject constructor(
                     )
                     val saveHasId = saveHasUseCase.invoke(saveHas)
                 }
+                setInitUseCase.invoke(true)
             }
         }
     }

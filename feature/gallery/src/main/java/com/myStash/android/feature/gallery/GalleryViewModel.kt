@@ -2,6 +2,7 @@ package com.myStash.android.feature.gallery
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.myStash.android.common.util.AppConfig
 import com.myStash.android.common.util.offerOrRemove
 import com.myStash.android.core.di.IoDispatcher
 import com.myStash.android.core.model.Image
@@ -28,7 +29,6 @@ class GalleryViewModel @Inject constructor(
 
     init {
         fetch()
-        initGalleryImages()
     }
 
     private val _selectedList = mutableListOf<Image>()
@@ -37,16 +37,18 @@ class GalleryViewModel @Inject constructor(
     private fun fetch() {
         intent {
             viewModelScope.launch {
-                imageRepository.imagesStateFlow.collectLatest {
+                getGalleryImages()
+                imageRepository.imagesStateFlow.collectLatest { imageList ->
+                    AppConfig.allowReadMediaVisualUserSelected = imageList.size > 30
                     reduce {
-                        state.copy(imageList = it)
+                        state.copy(imageList = imageList)
                     }
                 }
             }
         }
     }
 
-    private fun initGalleryImages() {
+    fun getGalleryImages() {
         viewModelScope.launch(ioDispatcher) {
             imageRepository.init()
         }
