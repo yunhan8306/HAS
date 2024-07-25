@@ -13,7 +13,6 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
-import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
@@ -62,31 +61,38 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
-    fun event(event: GalleryEvent) {
-        when (event) {
-            is GalleryEvent.OnClick -> {
-                selectImage(event.image)
+    fun onAction(action: GalleryAction) {
+        when (action) {
+            is GalleryAction.AddSelectedList -> {
+                addSelectedList(action.image)
             }
-            is GalleryEvent.Zoom -> {
-                zoomImage(event.image)
+            is GalleryAction.Focus -> {
+                onFocus(action.image)
             }
         }
     }
 
-    private fun selectImage(image: Image) {
+    private fun addSelectedList(image: Image) {
         intent {
             _selectedList.offerOrRemove(image) { it.name == image.name }
             reduce {
                 state.copy(
+                    focusImage = image,
                     selectedImageList = _selectedList.toList()
                 )
             }
         }
     }
 
-    private fun zoomImage(image: Image) {
+    private fun onFocus(image: Image) {
         intent {
-            postSideEffect(GallerySideEffect.Zoom(image))
+            viewModelScope.launch {
+                reduce {
+                    state.copy(
+                        focusImage = image
+                    )
+                }
+            }
         }
     }
 
@@ -96,7 +102,7 @@ class GalleryViewModel @Inject constructor(
     }
 }
 
-sealed interface GalleryEvent {
-    data class OnClick(val image: Image): GalleryEvent
-    data class Zoom(val image: Image): GalleryEvent
+sealed interface GalleryAction {
+    data class AddSelectedList(val image: Image): GalleryAction
+    data class Focus(val image: Image): GalleryAction
 }

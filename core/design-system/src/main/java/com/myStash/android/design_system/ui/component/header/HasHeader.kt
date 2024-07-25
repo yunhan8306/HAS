@@ -22,16 +22,16 @@ import com.myStash.android.design_system.ui.component.text.TextConstant.HAS_TEXT
 
 @Composable
 fun HasHeader(
+    modifier: Modifier = Modifier,
     text: String = HAS_TEXT_EMPTY,
     centerContent: @Composable () -> Unit = {},
     endContent: @Composable () -> Unit = {},
     onBack: () -> Unit = {},
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(40.dp)
-            .background(Color.White)
             .padding(horizontal = 12.dp),
         contentAlignment = Alignment.CenterStart
     ) {
