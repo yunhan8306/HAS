@@ -139,7 +139,7 @@ class MainViewModel @Inject constructor(
         combine(typeTotalList, tagTotalList, imageRepository.imagesStateFlow) { typeList, tagList, imageList ->
             Triple(typeList, tagList, imageList)
         }.collectLatest { (typeList, tagList, imageList) ->
-            if(typeList.isNotEmpty() && tagList.isNotEmpty() && imageList.isNotEmpty()) {
+            if(typeList.isNotEmpty() && tagList.isNotEmpty() && imageList.isNotEmpty() && imageList.size >= testHastCnt) {
                 (0 until testHastCnt).forEachIndexed { index, i ->
                     val typeIndex = (testHastCnt - index) % testManTypeTotalList.size
                     val saveTypeId = typeIndex.takeIf { it != -1 }?.let { typeList[typeIndex].id }!!
