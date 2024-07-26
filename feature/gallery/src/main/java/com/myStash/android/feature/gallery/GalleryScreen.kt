@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.BottomSheetScaffoldState
+import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,16 +29,22 @@ import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.myStash.android.common.resource.R
 import com.myStash.android.core.model.Image
+import com.myStash.android.core.model.ImageFolder
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.component.header.HasHeader
+import com.myStash.android.design_system.ui.component.snackbar.HasSnackBar
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.design_system.ui.theme.clickableNoRipple
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 
 @Composable
 fun GalleryScreen(
+    scaffoldState: BottomSheetScaffoldState,
     focusImage: Image?,
-    complete: () -> Unit,
+    selectedFolder: ImageFolder,
+    isShowFolderWindow: Boolean,
+    onSelectFolder: () -> Unit,
+    onAction: (GalleryAction) -> Unit,
     onBack: () -> Unit,
     sheetContent: @Composable (ColumnScope.() -> Unit),
 ) {
@@ -46,8 +54,10 @@ fun GalleryScreen(
     val sheetPeekHeight = screenHeight - screenWidth
 
     BottomSheetScaffold(
-        sheetPeekHeight = sheetPeekHeight,
         sheetContent = sheetContent,
+        scaffoldState = scaffoldState,
+        snackbarHost = { HasSnackBar(it) },
+        sheetPeekHeight = sheetPeekHeight,
         sheetBackgroundColor = Color.White,
         sheetElevation = 0.dp,
         backgroundColor = Color.Transparent,
@@ -64,41 +74,44 @@ fun GalleryScreen(
                 centerContent = {
                     Box(
                         modifier = Modifier
-                            .width(100.dp)
                             .height(26.dp)
                             .background(
                                 color = Color(0xFF202020),
                                 shape = RoundedCornerShape(size = 13.dp)
                             )
                             .clip(shape = RoundedCornerShape(size = 13.dp))
-                            .clickable { },
+                            .clickable { onSelectFolder.invoke() },
                         contentAlignment = Alignment.Center
                     ) {
-                        Row {
+                        Row(
+                            modifier = Modifier.padding(start = 12.dp, end = 8.dp),
+                        ) {
                             HasText(
-                                text = "최근 항목",
+                                text = selectedFolder.name,
                                 color = Color.White,
                                 fontSize = 16.dp
                             )
                             Image(
                                 modifier = Modifier.size(20.dp),
-                                painter = painterResource(id = R.drawable.btn_gallery_down),
-                                contentDescription = "gallery folder down"
+                                painter = painterResource(id = if(isShowFolderWindow) R.drawable.btn_gallery_up else R.drawable.btn_gallery_down),
+                                contentDescription = "gallery folder toggle"
                             )
                         }
                     }
                 },
                 endContent = {
-                    Box(
-                        modifier = Modifier
-                            .padding(4.dp)
-                            .clickableNoRipple { complete.invoke() }
-                    ) {
-                        HasText(
-                            text = "등록",
-                            color = Color(0xFFE4F562),
-                            fontSize = 16.dp
-                        )
+                    if(!isShowFolderWindow) {
+                        Box(
+                            modifier = Modifier
+                                .padding(4.dp)
+                                .clickableNoRipple { onAction.invoke(GalleryAction.Complete) }
+                        ) {
+                            HasText(
+                                text = "등록",
+                                color = Color(0xFFE4F562),
+                                fontSize = 16.dp
+                            )
+                        }
                     }
                 },
                 onBack = onBack
@@ -107,7 +120,9 @@ fun GalleryScreen(
             SubcomposeAsyncImage(
                 model = focusImage?.uri,
                 contentDescription = "gallery image",
-                modifier = Modifier.fillMaxWidth().height(screenWidth),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(screenWidth),
                 contentScale = ContentScale.Crop,
                 loading = { ShimmerLoadingAnimation() },
                 error = { ShimmerLoadingAnimation() }
@@ -120,8 +135,12 @@ fun GalleryScreen(
 @Composable
 fun GalleryScreenPreview() {
     GalleryScreen(
+        scaffoldState = rememberBottomSheetScaffoldState(),
         focusImage = null,
-        complete = {},
+        selectedFolder = ImageFolder(),
+        isShowFolderWindow = false,
+        onSelectFolder = {},
+        onAction = {},
         onBack = {},
         sheetContent = {}
     )

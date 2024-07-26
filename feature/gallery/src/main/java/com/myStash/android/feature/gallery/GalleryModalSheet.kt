@@ -22,13 +22,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.myStash.android.common.util.AppConfig
-import com.myStash.android.core.model.Image
 import com.myStash.android.design_system.ui.component.text.HasText
+import com.myStash.android.feature.gallery.GalleryConstants.MULTI_CNT
+import com.myStash.android.feature.gallery.GalleryConstants.SINGLE
 
 @Composable
 fun GalleryModalSheet(
-    imageList: List<Image>,
-    selectedImageList: List<Image>,
+    state: GalleryScreenState,
     onAction: (GalleryAction) -> Unit,
     onRequestPermission: () -> Unit,
 ) {
@@ -55,7 +55,7 @@ fun GalleryModalSheet(
                     fontSize = 14.dp
                 )
                 HasText(
-                    text = selectedImageList.size.toString(),
+                    text = state.selectedImageList.size.toString(),
                     color = Color(0xFFE4F562),
                 )
                 HasText(
@@ -64,8 +64,9 @@ fun GalleryModalSheet(
                     fontSize = 14.dp
                 )
                 HasText(
-                    text = selectedImageList.size.toString(),
+                    text = if(state.type == SINGLE) "1" else MULTI_CNT.toString(),
                     color = Color.White,
+                    fontSize = 14.dp
                 )
                 HasText(
                     text = ")",
@@ -94,22 +95,23 @@ fun GalleryModalSheet(
                 }
             }
             items(
-                items = imageList,
+                items = state.imageList,
                 key = { image -> image.uri }
             ) { image ->
 
-                val selectedNumber: Int? by remember(selectedImageList) {
+                val selectedNumber: Int? by remember(state.selectedImageList) {
                     derivedStateOf {
-                        val index = selectedImageList.indexOfFirst { it.uri == image.uri }
+                        val index = state.selectedImageList.indexOfFirst { it.uri == image.uri }
                         if(index != -1) index + 1 else null
                     }
                 }
 
                 GalleryItem(
+                    isSingle = state.type == SINGLE,
                     imageUri = image.uri,
                     selectedNumber = selectedNumber,
                     onClick = { onAction.invoke(GalleryAction.AddSelectedList(image)) },
-                    zoom = { onAction.invoke(GalleryAction.Focus(image)) }
+                    onFocus = { onAction.invoke(GalleryAction.Focus(image)) }
                 )
             }
         }
