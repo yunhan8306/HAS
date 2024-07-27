@@ -20,6 +20,7 @@ import com.myStash.android.common.util.CommonActivityResultContract
 import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.design_system.ui.component.dialog.HasConfirmDialog
 import com.myStash.android.feature.gallery.GalleryActivity
+import com.myStash.android.feature.gallery.GalleryConstants
 import com.myStash.android.feature.gallery.permission.GalleryPermission
 import com.myStash.android.feature.gallery.permission.PermissionUtil.galleryPermissionCheck
 import com.myStash.android.feature.search.TagSearchBottomSheetLayout
@@ -34,25 +35,29 @@ fun AddHasRoute(
 ) {
 
     val activity = LocalContext.current as ComponentActivity
-    val galleryActivityLauncher = rememberLauncherForActivityResult(
-        contract = CommonActivityResultContract(),
-        onResult = { intent ->
-            intent?.getStringExtra("imageUri")?.let { viewModel.addImage(it) }
-        }
-    )
-    val requestPermissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            val intent = Intent(activity.apply { slideIn() }, GalleryActivity::class.java)
-            galleryActivityLauncher.launch(intent)
-        }
-    }
-
     val state by viewModel.collectAsState()
     val searchModalState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden, skipHalfExpanded = true)
     val scope = rememberCoroutineScope()
     var isShowPermissionRequestConfirm by remember { mutableStateOf(false) }
+
+    val galleryActivityLauncher = rememberLauncherForActivityResult(
+        contract = CommonActivityResultContract(),
+        onResult = { intent ->
+            intent?.getStringExtra(GalleryConstants.SINGLE)?.let { viewModel.addImage(it) }
+        }
+    )
+
+    val requestPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            val intent = Intent(activity.apply { slideIn() }, GalleryActivity::class.java).apply {
+                putExtra(GalleryConstants.TYPE, GalleryConstants.SINGLE)
+                putExtra(GalleryConstants.AGO_IMAGE_URI_ARRAY, arrayOf(state.imageUri))
+            }
+            galleryActivityLauncher.launch(intent)
+        }
+    }
 
     viewModel.collectSideEffect { sideEffect ->
         when(sideEffect) {
