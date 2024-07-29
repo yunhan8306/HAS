@@ -91,7 +91,7 @@ class AddFeedViewModel @Inject constructor(
                 tagTotalList.collectLatest {
                     reduce {
                         state.copy(
-//                            tagTotalList = it,
+                            tagTotalList = it,
                             typeTotalList = testWomanTypeTotalList,
 //                            searchTagList = it
                         )
@@ -105,9 +105,9 @@ class AddFeedViewModel @Inject constructor(
         intent {
             viewModelScope.launch {
                 searchTagList.collectLatest {
-//                    reduce {
-//                        state.copy(searchTagList = it.toList())
-//                    }
+                    reduce {
+                        state.copy(searchTagList = it.toList())
+                    }
                 }
             }
         }
@@ -149,31 +149,18 @@ class AddFeedViewModel @Inject constructor(
 //        }
 //    }
 
-    fun selectType(type: Type?) {
+    fun selectTag(tag: Tag) {
         intent {
             viewModelScope.launch {
+                selectedTagList.offerOrRemove(tag) { it.name == tag.name }
                 reduce {
                     state.copy(
-                        selectedType = if(state.selectedType == type) null else type
+                        selectedTagList = selectedTagList.toList()
                     )
                 }
-                typeTextState = TextFieldState(initialText = state.selectedType?.name ?: "")
             }
         }
     }
-
-//    fun selectTag(tag: Tag) {
-//        intent {
-//            viewModelScope.launch {
-//                selectedTagList.offerOrRemove(tag) { it.name == tag.name }
-//                reduce {
-//                    state.copy(
-//                        selectedTagList = selectedTagList.toList()
-//                    )
-//                }
-//            }
-//        }
-//    }
 
     fun saveItem() {
         intent {

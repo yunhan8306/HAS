@@ -4,6 +4,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -73,6 +74,7 @@ fun AddFeedScreen(
 //    saveItem: () -> Unit,
     showGalleryActivity: () -> Unit,
 //    onBack: () -> Unit,
+    showStyleSheet: () -> Unit,
     sheetContent: @Composable (ColumnScope.() -> Unit),
 ) {
     val scope = rememberCoroutineScope()
@@ -147,7 +149,8 @@ fun AddFeedScreen(
                         .background(
                             color = Color(0xFFF1F1F1),
                             shape = RoundedCornerShape(size = 10.dp)
-                        ),
+                        )
+                        .clickable { showStyleSheet.invoke() },
                     contentAlignment = Alignment.Center
                 ) {
                     Image(

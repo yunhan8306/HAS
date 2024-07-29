@@ -23,6 +23,7 @@ import com.myStash.android.feature.gallery.GalleryActivity
 import com.myStash.android.feature.gallery.GalleryConstants
 import com.myStash.android.feature.gallery.permission.GalleryPermission
 import com.myStash.android.feature.gallery.permission.PermissionUtil.galleryPermissionCheck
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -77,13 +78,23 @@ fun AddFeedRoute(
                 onPermissionDenied = { isShowPermissionRequestConfirm = true }
             )
         },
+        showStyleSheet = {
+            scope.launch { selectStyleModalState.show() }
+        },
         sheetContent = {
             SelectStyleModalSheet(
                 selectStyleModalState = selectStyleModalState,
                 state = state,
                 searchTextState = viewModel.searchTextState,
-//                onSelectType = viewModel::selectType,
-//                onSelectHas = viewModel::selectHas,
+
+                totalTagList = state.tagTotalList,
+                selectTagList = state.selectedTagList,
+                searchTagList = state.searchTagList,
+                buttonText = "완료",
+                onSelect = viewModel::selectTag,
+                onConfirm = { scope.launch { selectStyleModalState.hide() } },
+                onDelete = viewModel::deleteSearchText,
+                onBack = { scope.launch { selectStyleModalState.hide() } }
             )
         }
     )

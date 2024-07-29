@@ -20,6 +20,7 @@ data class AddFeedScreenState(
 
     val selectedTagList: List<Tag> = emptyList(),
     val searchStyleList: List<StyleScreenModel> = emptyList(),
+    val searchTagList: List<Tag> = emptyList()
 )
 
 sealed interface AddFeedSideEffect {
