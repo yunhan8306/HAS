@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -37,7 +38,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import coil.compose.SubcomposeAsyncImage
 import com.google.accompanist.navigation.animation.composable
@@ -53,6 +53,7 @@ import com.myStash.android.design_system.ui.component.content.ContentHeaderSearc
 import com.myStash.android.design_system.ui.component.dialog.HasConfirmDialog
 import com.myStash.android.design_system.ui.component.tag.TagChipItem
 import com.myStash.android.design_system.ui.component.tag.TagMoreChipItem
+import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 import com.myStash.android.feature.item.ItemActivity
 import com.myStash.android.feature.item.item.ItemTab
@@ -189,13 +190,26 @@ fun StyleScreen(
         LazyVerticalGrid(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
-                .padding(top = 24.dp)
                 .weight(1f)
                 .fillMaxWidth(),
             columns = GridCells.Fixed(2),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            items(
+                count = 2,
+                key = { it }
+            ) { index ->
+                Box(
+                    modifier = Modifier
+                        .height(44.dp)
+                        .padding(top = 24.dp, end = 4.dp),
+                    contentAlignment = Alignment.TopEnd
+                ) {
+                    if(index == 1) HasText(text = "총 ${styleList.size}개")
+                }
+            }
+
             items(
                 items = styleList,
                 key = { it.id }

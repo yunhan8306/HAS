@@ -38,7 +38,6 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
 import com.myStash.android.common.compose.activityViewModel
@@ -47,13 +46,14 @@ import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.testManTypeTotalList
 import com.myStash.android.core.model.testTagList
 import com.myStash.android.design_system.animation.slideIn
-import com.myStash.android.design_system.ui.component.dialog.HasConfirmDialog
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.component.SpacerLineBox
 import com.myStash.android.design_system.ui.component.content.ContentHeaderSearchText
+import com.myStash.android.design_system.ui.component.dialog.HasConfirmDialog
 import com.myStash.android.design_system.ui.component.has.HasMainItem
 import com.myStash.android.design_system.ui.component.tag.TagChipItem
 import com.myStash.android.design_system.ui.component.tag.TagMoreChipItem
+import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.feature.item.ItemActivity
 import com.myStash.android.feature.item.item.ItemTab
 import com.myStash.android.feature.search.SearchScreen
@@ -219,13 +219,25 @@ fun HasScreen(
         LazyVerticalGrid(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
-                .padding(top = 24.dp)
                 .weight(1f)
                 .fillMaxWidth(),
             columns = GridCells.Fixed(2),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            items(
+                count = 2,
+                key = { it }
+            ) { index ->
+                Box(
+                    modifier = Modifier
+                        .height(44.dp)
+                        .padding(top = 24.dp, end = 4.dp),
+                    contentAlignment = Alignment.TopEnd
+                ) {
+                    if(index == 1) HasText(text = "총 ${state.hasList.size}개")
+                }
+            }
             items(
                 items = state.hasList,
                 key = { it.id!! }
