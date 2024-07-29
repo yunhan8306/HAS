@@ -87,14 +87,27 @@ fun AddFeedRoute(
                 state = state,
                 searchTextState = viewModel.searchTextState,
 
-                totalTagList = state.tagTotalList,
+                totalTagList = state.tagList,
                 selectTagList = state.selectedTagList,
-                searchTagList = state.searchTagList,
+                searchTagList = state.tagList,
                 buttonText = "완료",
                 onSelect = viewModel::selectTag,
                 onConfirm = { scope.launch { selectStyleModalState.hide() } },
                 onDelete = viewModel::deleteSearchText,
-                onBack = { scope.launch { selectStyleModalState.hide() } }
+                onBack = { scope.launch { selectStyleModalState.hide() } },
+
+
+                onAction = { action ->
+                    when(action) {
+                        is AddFeedScreenAction.SelectStyle -> {
+                            scope.launch {
+                                viewModel.onAction(action)
+                                selectStyleModalState.hide()
+                            }
+                        }
+                        else -> viewModel.onAction(action)
+                    }
+                }
             )
         }
     )

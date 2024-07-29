@@ -1,7 +1,6 @@
 package com.myStash.android.feature.item.feed
 
 import com.myStash.android.core.model.Has
-import com.myStash.android.core.model.Image
 import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
@@ -15,14 +14,17 @@ data class AddFeedScreenState(
     val date: String = "",
     val selectedStyle: StyleScreenModel? = null,
     val typeTotalList: List<Type> = emptyList(),
-    val tagTotalList: List<Tag> = emptyList(),
 
 
+    val styleList: List<StyleScreenModel> = emptyList(),
+    val tagList: List<Tag> = emptyList(),
     val selectedTagList: List<Tag> = emptyList(),
-    val searchStyleList: List<StyleScreenModel> = emptyList(),
-    val searchTagList: List<Tag> = emptyList()
 )
 
 sealed interface AddFeedSideEffect {
     object Finish: AddFeedSideEffect
+}
+
+sealed interface AddFeedScreenAction {
+    data class SelectStyle(val style: StyleScreenModel?): AddFeedScreenAction
 }

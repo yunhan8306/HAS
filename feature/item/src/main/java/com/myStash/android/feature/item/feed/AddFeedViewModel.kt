@@ -9,20 +9,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.common.util.offerOrRemove
 import com.myStash.android.common.util.removeBlank
+import com.myStash.android.core.data.usecase.has.GetHasListUseCase
 import com.myStash.android.core.data.usecase.has.SaveHasUseCase
+import com.myStash.android.core.data.usecase.style.GetStyleListUseCase
 import com.myStash.android.core.data.usecase.tag.CheckAvailableTagUseCase
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
 import com.myStash.android.core.data.usecase.tag.SaveTagUseCase
 import com.myStash.android.core.di.DefaultDispatcher
-import com.myStash.android.core.model.Has
-import com.myStash.android.core.model.Style
+import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
-import com.myStash.android.core.model.Type
-import com.myStash.android.core.model.testWomanTypeTotalList
+import com.myStash.android.core.model.filterSelectTag
+import com.myStash.android.core.model.getStyleScreenModel
+import com.myStash.android.feature.item.item.ItemTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -31,7 +34,6 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
-import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
@@ -41,6 +43,9 @@ class AddFeedViewModel @Inject constructor(
     private val checkAvailableTagUseCase: CheckAvailableTagUseCase,
 
     private val getTagListUseCase: GetTagListUseCase,
+
+    private val getStyleListUseCase: GetStyleListUseCase,
+    private val getHasListUseCase: GetHasListUseCase,
 
     private val saveHasUseCase: SaveHasUseCase,
     private val saveTagUseCase: SaveTagUseCase,
@@ -58,10 +63,6 @@ class AddFeedViewModel @Inject constructor(
 
     private val selectedTagList = mutableListOf<Tag>()
 
-    val newTagList = mutableListOf<String>()
-
-    var typeTextState = TextFieldState()
-
     val searchTextState = TextFieldState()
 
     private val searchTagList = searchTextState
@@ -69,6 +70,20 @@ class AddFeedViewModel @Inject constructor(
         .flowOn(defaultDispatcher)
         .onEach { text -> searchTextState.setTextAndPlaceCursorAtEnd(text.removeBlank()) }
         .map { search -> tagTotalList.value.filter { it.name.contains(search) } }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000L),
+            initialValue = emptyList()
+        )
+
+    private val styleTotalList = getStyleListUseCase.styleList
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000L),
+            initialValue = emptyList()
+        )
+
+    private val hasTotalList = getHasListUseCase.hasList
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),
@@ -85,15 +100,14 @@ class AddFeedViewModel @Inject constructor(
     private fun fetch() {
         intent {
             viewModelScope.launch {
-                val style = stateHandle.get<Style?>("style")
-
-                // type total list 호출
-                tagTotalList.collectLatest {
+                combine(styleTotalList, hasTotalList, tagTotalList) { styleList, hasList, tagList ->
+                    Triple(styleList, hasList, tagList)
+                }.collectLatest { (styleList, hasList, tagList) ->
                     reduce {
                         state.copy(
-                            tagTotalList = it,
-                            typeTotalList = testWomanTypeTotalList,
-//                            searchTagList = it
+                            styleList = styleList,
+                            tagList = tagList,
+                            selectedStyle = stateHandle.get<Long?>(ItemTab.FEED.name).getStyleScreenModel(styleList)
                         )
                     }
                 }
@@ -106,8 +120,26 @@ class AddFeedViewModel @Inject constructor(
             viewModelScope.launch {
                 searchTagList.collectLatest {
                     reduce {
-                        state.copy(searchTagList = it.toList())
+                        state.copy(tagList = it.toList())
                     }
+                }
+            }
+        }
+    }
+
+    fun onAction(action: AddFeedScreenAction) {
+        when(action) {
+            is AddFeedScreenAction.SelectStyle -> selectStyle(action.style)
+        }
+    }
+
+    private fun selectStyle(style: StyleScreenModel?) {
+        intent {
+            viewModelScope.launch {
+                reduce {
+                    state.copy(
+                        selectedStyle = style
+                    )
                 }
             }
         }
@@ -155,7 +187,8 @@ class AddFeedViewModel @Inject constructor(
                 selectedTagList.offerOrRemove(tag) { it.name == tag.name }
                 reduce {
                     state.copy(
-                        selectedTagList = selectedTagList.toList()
+                        selectedTagList = selectedTagList.toList(),
+                        styleList = styleTotalList.value.filterSelectTag(selectedTagList)
                     )
                 }
             }

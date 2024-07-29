@@ -40,3 +40,15 @@ fun List<StyleScreenModel>.filterSelectTag(
         }
     }
 }
+
+fun Long?.getStyleScreenModel(styleList: List<StyleScreenModel>): StyleScreenModel? {
+    return styleList.firstOrNull { it.id == this }
+}
+
+fun StyleScreenModel.selectOrNull(style: StyleScreenModel?): StyleScreenModel? {
+    return if(id != style?.id) {
+        this
+    } else {
+        null
+    }
+}

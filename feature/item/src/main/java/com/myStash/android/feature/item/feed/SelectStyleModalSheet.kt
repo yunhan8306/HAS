@@ -3,11 +3,13 @@ package com.myStash.android.feature.item.feed
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
@@ -15,10 +17,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text2.input.TextFieldState
+import androidx.compose.foundation.text2.input.clearText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
@@ -38,10 +44,12 @@ import androidx.compose.ui.unit.dp
 import com.myStash.android.common.util.isNotNull
 import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
+import com.myStash.android.core.model.selectOrNull
 import com.myStash.android.design_system.ui.component.SpacerLineBox
 import com.myStash.android.design_system.ui.component.button.HasButton
 import com.myStash.android.design_system.ui.component.button.HasSelectButton
 import com.myStash.android.design_system.ui.component.content.ContentTextField
+import com.myStash.android.design_system.ui.component.style.StyleMainItem
 import com.myStash.android.design_system.ui.component.tag.TagChipItem
 import com.myStash.android.design_system.ui.component.tag.TagDeleteChipItem
 import com.myStash.android.design_system.ui.component.tag.TagSearchItem
@@ -64,17 +72,23 @@ fun SelectStyleModalSheet(
     onSelect: (Tag) -> Unit,
     onConfirm: () -> Unit,
     onDelete: () -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+
+    onAction: (AddFeedScreenAction) -> Unit = {}
 ) {
     val focusManager = LocalFocusManager.current
     val imeState = rememberImeState()
 
-    var modalType by remember { mutableStateOf(SelectStyleModalType.TAG) }
+    var modalType by remember { mutableStateOf(SelectStyleModalType.STYLE) }
 
     var selectedStyle by remember { mutableStateOf<StyleScreenModel?>(null) }
 
     LaunchedEffect(imeState.value) {
-        if(!imeState.value) focusManager.clearFocus()
+        if(!imeState.value) {
+            focusManager.clearFocus()
+        } else {
+            modalType = SelectStyleModalType.TAG
+        }
     }
 
     LaunchedEffect(selectStyleModalState.targetValue) {
@@ -82,7 +96,12 @@ fun SelectStyleModalSheet(
     }
 
     LaunchedEffect(Unit) {
-        modalType = SelectStyleModalType.TAG
+        modalType = SelectStyleModalType.STYLE
+        selectedStyle = state.selectedStyle
+    }
+
+    LaunchedEffect(modalType) {
+        if(modalType == SelectStyleModalType.STYLE) focusManager.clearFocus()
     }
 
 
@@ -223,7 +242,47 @@ fun SelectStyleModalSheet(
                         }
                     }
                     SelectStyleModalType.STYLE -> {
+                        LazyVerticalGrid(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .weight(1f)
+                                .fillMaxWidth(),
+                            columns = GridCells.Fixed(2),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(
+                                count = 2,
+                                key = { it }
+                            ) { index ->
+                                Box(
+                                    modifier = Modifier
+                                        .height(44.dp)
+                                        .padding(top = 24.dp, end = 4.dp),
+                                    contentAlignment = Alignment.TopEnd
+                                ) {
+                                    if(index == 1) HasText(text = "총 ${state.styleList.size}개")
+                                }
+                            }
 
+                            items(
+                                items = state.styleList,
+                                key = { it.id }
+                            ) { style ->
+                                val isSelected by remember(selectedStyle) {
+                                    derivedStateOf {
+                                        selectedStyle?.id == style.id
+                                    }
+                                }
+
+                                StyleMainItem(
+                                    style = style,
+                                    isSelected = isSelected,
+                                    onClick = { selectedStyle = style.selectOrNull(selectedStyle) },
+                                    onLongClick = {  }
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -238,24 +297,37 @@ fun SelectStyleModalSheet(
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
                     HasButton(
-                        text = buttonText,
+                        text = "${state.styleList.size}개 Style 보기",
+                        isComplete = state.styleList.isNotEmpty(),
                         onClick = { modalType = SelectStyleModalType.STYLE }
                     )
                 }
             }
             SelectStyleModalType.STYLE -> {
-                MainStyleBottomModel(
-                    selectedStyle = selectedStyle,
-                    onSelect = {
-                        // 선택
-                    },
-                    onCancel = { selectedStyle = null },
-                )
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.BottomCenter
+                ) {
+                    MainStyleBottomModel(
+                        selectedStyle = selectedStyle,
+                        onSelect = { onAction.invoke(AddFeedScreenAction.SelectStyle(selectedStyle)) },
+                        onCancel = { selectedStyle = null },
+                    )
+                }
             }
         }
 
         if(selectStyleModalState.isVisible || selectStyleModalState.targetValue == ModalBottomSheetValue.Expanded) {
-            BackHandler(onBack = onBack)
+            BackHandler {
+                when {
+                    modalType == SelectStyleModalType.TAG -> {
+                        modalType = SelectStyleModalType.STYLE
+                        searchTextState.clearText()
+                    }
+                    selectedStyle.isNotNull() -> selectedStyle = null
+                    else -> onBack.invoke()
+                }
+            }
         }
     }
 }
