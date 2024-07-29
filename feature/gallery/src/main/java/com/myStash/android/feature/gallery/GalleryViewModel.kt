@@ -61,6 +61,8 @@ class GalleryViewModel @Inject constructor(
                 imageRepository.imagesStateFlow.collectLatest { imageList ->
                     AppConfig.allowReadMediaVisualUserSelected = imageList.size > 30
                     val imageFolderList = imageList.getFolderList().addTotalFolder(application.packageName, imageList.size)
+                    val agoImageList = agoImageArray.getImageList(imageList)
+                    _selectedList.addAll(agoImageList)
                     reduce {
                         state.copy(
                             type = type,
@@ -68,7 +70,7 @@ class GalleryViewModel @Inject constructor(
                             selectedFolder = imageFolderList.first(),
                             imageList = imageList,
                             imageFolderList = imageFolderList,
-                            selectedImageList = agoImageArray.getImageList(imageList)
+                            selectedImageList = agoImageList
                         )
                     }
                 }

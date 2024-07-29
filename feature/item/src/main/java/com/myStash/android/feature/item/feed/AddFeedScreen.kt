@@ -106,19 +106,19 @@ fun AddFeedScreen(
                     if (state.selectedImageList.size < 5) {
                         item { UnselectPhotoItem(onClick = showGalleryActivity) }
                     }
-                    items(state.selectedImageList) { image ->
-                        SelectPhotoItem(
-                            imageUri = image.uri.toString(),
-                            onClick = showGalleryActivity
-                        )
+                    items(state.selectedImageList) { uri ->
+                        Row {
+                            SelectPhotoItem(
+                                imageUri = uri,
+                                onClick = showGalleryActivity
+                            )
+                        }
                     }
                 }
-
                 ItemTitleText(
                     modifier = Modifier.padding(top = 32.dp, bottom = 16.dp),
                     text = "날짜"
                 )
-
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

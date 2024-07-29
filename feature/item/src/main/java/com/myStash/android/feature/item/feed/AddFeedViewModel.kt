@@ -15,6 +15,7 @@ import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
 import com.myStash.android.core.data.usecase.tag.SaveTagUseCase
 import com.myStash.android.core.di.DefaultDispatcher
 import com.myStash.android.core.model.Has
+import com.myStash.android.core.model.Style
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.testWomanTypeTotalList
@@ -84,7 +85,7 @@ class AddFeedViewModel @Inject constructor(
     private fun fetch() {
         intent {
             viewModelScope.launch {
-                val has = stateHandle.get<Has?>("has")
+                val style = stateHandle.get<Style?>("style")
 
                 // type total list 호출
                 tagTotalList.collectLatest {
@@ -104,9 +105,21 @@ class AddFeedViewModel @Inject constructor(
         intent {
             viewModelScope.launch {
                 searchTagList.collectLatest {
-                    reduce {
-                        state.copy(searchTagList = it.toList())
-                    }
+//                    reduce {
+//                        state.copy(searchTagList = it.toList())
+//                    }
+                }
+            }
+        }
+    }
+
+    fun addImageList(imageList: List<String>) {
+        intent {
+            viewModelScope.launch {
+                reduce {
+                    state.copy(
+                        selectedImageList = imageList
+                    )
                 }
             }
         }
@@ -116,25 +129,25 @@ class AddFeedViewModel @Inject constructor(
         searchTextState.clearText()
     }
 
-    fun addImage(uri: String) {
-        intent {
-            reduce {
-                state.copy(
-                    imageUri = uri
-                )
-            }
-        }
-    }
-
-    fun removeImage() {
-        intent {
-            reduce {
-                state.copy(
-                    imageUri = null
-                )
-            }
-        }
-    }
+//    fun addImage(uri: String) {
+//        intent {
+//            reduce {
+//                state.copy(
+//                    imageUri = uri
+//                )
+//            }
+//        }
+//    }
+//
+//    fun removeImage() {
+//        intent {
+//            reduce {
+//                state.copy(
+//                    imageUri = null
+//                )
+//            }
+//        }
+//    }
 
     fun selectType(type: Type?) {
         intent {
@@ -149,18 +162,18 @@ class AddFeedViewModel @Inject constructor(
         }
     }
 
-    fun selectTag(tag: Tag) {
-        intent {
-            viewModelScope.launch {
-                selectedTagList.offerOrRemove(tag) { it.name == tag.name }
-                reduce {
-                    state.copy(
-                        selectedTagList = selectedTagList.toList()
-                    )
-                }
-            }
-        }
-    }
+//    fun selectTag(tag: Tag) {
+//        intent {
+//            viewModelScope.launch {
+//                selectedTagList.offerOrRemove(tag) { it.name == tag.name }
+//                reduce {
+//                    state.copy(
+//                        selectedTagList = selectedTagList.toList()
+//                    )
+//                }
+//            }
+//        }
+//    }
 
     fun saveItem() {
         intent {
@@ -178,15 +191,15 @@ class AddFeedViewModel @Inject constructor(
                 }
 
                 // essential item 생성
-                val saveHas = Has(
-                    imagePath = state.imageUri,
-                    tags = selectedTagList.map { it.id!! },
-                    type = state.selectedType?.id!!,
-                )
-
-                saveHasUseCase.invoke(saveHas)
-
-                postSideEffect(AddHasSideEffect.Finish)
+//                val saveHas = Has(
+//                    imagePath = state.imageUri,
+//                    tags = selectedTagList.map { it.id!! },
+//                    type = state.selectedType?.id!!,
+//                )
+//
+//                saveHasUseCase.invoke(saveHas)
+//
+//                postSideEffect(AddHasSideEffect.Finish)
             }
         }
     }

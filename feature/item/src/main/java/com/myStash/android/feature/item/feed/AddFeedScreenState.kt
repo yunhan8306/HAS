@@ -2,16 +2,24 @@ package com.myStash.android.feature.item.feed
 
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Image
+import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
 
 data class AddFeedScreenState(
-    val typeTotalList: List<Type> = emptyList(),
     val hasList: List<Has> = emptyList(),
     val selectedType: Type? = null,
     val selectedHasList: List<Has> = emptyList(),
 
-    val selectedImageList: List<Image> = emptyList(),
+    val selectedImageList: List<String> = emptyList(),
+    val date: String = "",
+    val selectedStyle: StyleScreenModel? = null,
+    val typeTotalList: List<Type> = emptyList(),
+    val tagTotalList: List<Tag> = emptyList(),
+
+
+    val selectedTagList: List<Tag> = emptyList(),
+    val searchStyleList: List<StyleScreenModel> = emptyList(),
 )
 
 sealed interface AddFeedSideEffect {
