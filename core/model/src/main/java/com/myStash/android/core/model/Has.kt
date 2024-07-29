@@ -46,3 +46,17 @@ fun List<Has>.selectTag(tags: List<Tag>): List<Has> {
         }
     }
 }
+
+fun String.searchHasList(tagTotalList: List<Tag>, hasTotalList: List<Has>): List<Has> {
+    val tagIdList = tagTotalList.filter { it.name.contains(this) }.map { it.id }
+    return hasTotalList.filter { tagIdList.contains(it.id) }
+}
+
+fun String.searchSelectedTypeHasList(tagTotalList: List<Tag>, hasTotalList: List<Has>, type: Type): List<Has> {
+    return when {
+        type.id == null -> searchHasList(tagTotalList, hasTotalList)
+        isNotEmpty() -> searchHasList(tagTotalList, hasTotalList).selectType(type)
+        isEmpty() -> hasTotalList.selectType(type)
+        else -> emptyList()
+    }
+}
