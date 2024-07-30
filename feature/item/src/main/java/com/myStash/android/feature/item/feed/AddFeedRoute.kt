@@ -90,10 +90,6 @@ fun AddFeedRoute(
                 totalTagList = state.tagList,
                 selectTagList = state.selectedTagList,
                 searchTagList = state.tagList,
-                buttonText = "완료",
-                onSelect = viewModel::selectTag,
-                onConfirm = { scope.launch { selectStyleModalState.hide() } },
-                onDelete = viewModel::deleteSearchText,
                 onBack = { scope.launch { selectStyleModalState.hide() } },
 
 

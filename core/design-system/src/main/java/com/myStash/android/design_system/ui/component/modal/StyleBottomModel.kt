@@ -1,4 +1,4 @@
-package com.myStash.android
+package com.myStash.android.design_system.ui.component.modal
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -22,12 +22,11 @@ import com.myStash.android.design_system.ui.component.button.HasSelectButton
 import com.myStash.android.design_system.ui.theme.clickableNoRipple
 
 @Composable
-fun MainStyleBottomModel(
+fun StyleBottomModel(
     selectedStyle: StyleScreenModel?,
     onSelect: () -> Unit,
     onCancel: () -> Unit,
 ) {
-
     var isShow by remember { mutableStateOf(false) }
 
     LaunchedEffect(selectedStyle) {
@@ -37,11 +36,18 @@ fun MainStyleBottomModel(
     if(isShow) {
         Column(
             modifier = Modifier
-                .shadow(elevation = 10.dp, spotColor = Color(0x29000000), ambientColor = Color(0x29000000))
+                .shadow(
+                    elevation = 10.dp,
+                    spotColor = Color(0x29000000),
+                    ambientColor = Color(0x29000000)
+                )
                 .fillMaxWidth()
                 .height(84.dp)
-                .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-                .clickableNoRipple {  }
+                .background(
+                    color = Color(0xFFFFFFFF),
+                    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                )
+                .clickableNoRipple { }
                 .padding(16.dp)
         ) {
             HasSelectButton(

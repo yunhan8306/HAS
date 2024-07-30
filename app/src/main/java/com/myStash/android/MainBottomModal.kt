@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.StyleScreenModel
+import com.myStash.android.design_system.ui.component.modal.StyleBottomModel
 import com.myStash.android.feature.essential.HasScreenAction
 import com.myStash.android.feature.essential.HasViewModel
 import com.myStash.android.feature.style.StyleScreenAction
@@ -47,7 +48,7 @@ fun MainBottomModal(
                 )
             }
             MainNavType.STYLE.name -> {
-                MainStyleBottomModel(
+                StyleBottomModel(
                     selectedStyle = selectedStyle,
                     onSelect = { selectedStyle?.let { showAddFeedItemActivity.invoke(it) } },
                     onCancel = { styleViewModel.onAction(StyleScreenAction.SelectStyle(selectedStyle)) },

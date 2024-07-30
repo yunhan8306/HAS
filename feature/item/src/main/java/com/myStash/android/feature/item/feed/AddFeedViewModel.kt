@@ -130,6 +130,8 @@ class AddFeedViewModel @Inject constructor(
     fun onAction(action: AddFeedScreenAction) {
         when(action) {
             is AddFeedScreenAction.SelectStyle -> selectStyle(action.style)
+            is AddFeedScreenAction.DeleteSearchText -> deleteSearchText()
+            is AddFeedScreenAction.SelectTag -> selectTag(action.tag)
         }
     }
 
@@ -137,8 +139,27 @@ class AddFeedViewModel @Inject constructor(
         intent {
             viewModelScope.launch {
                 reduce {
+                    deleteSearchText()
                     state.copy(
                         selectedStyle = style
+                    )
+                }
+            }
+        }
+    }
+
+    private fun deleteSearchText() {
+        searchTextState.clearText()
+    }
+
+    private fun selectTag(tag: Tag) {
+        intent {
+            viewModelScope.launch {
+                selectedTagList.offerOrRemove(tag) { it.name == tag.name }
+                reduce {
+                    state.copy(
+                        selectedTagList = selectedTagList.toList(),
+                        styleList = styleTotalList.value.filterSelectTag(selectedTagList)
                     )
                 }
             }
@@ -155,10 +176,6 @@ class AddFeedViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    fun deleteSearchText() {
-        searchTextState.clearText()
     }
 
 //    fun addImage(uri: String) {
@@ -180,20 +197,6 @@ class AddFeedViewModel @Inject constructor(
 //            }
 //        }
 //    }
-
-    fun selectTag(tag: Tag) {
-        intent {
-            viewModelScope.launch {
-                selectedTagList.offerOrRemove(tag) { it.name == tag.name }
-                reduce {
-                    state.copy(
-                        selectedTagList = selectedTagList.toList(),
-                        styleList = styleTotalList.value.filterSelectTag(selectedTagList)
-                    )
-                }
-            }
-        }
-    }
 
     fun saveItem() {
         intent {

@@ -49,6 +49,7 @@ import com.myStash.android.design_system.ui.component.SpacerLineBox
 import com.myStash.android.design_system.ui.component.button.HasButton
 import com.myStash.android.design_system.ui.component.button.HasSelectButton
 import com.myStash.android.design_system.ui.component.content.ContentTextField
+import com.myStash.android.design_system.ui.component.modal.StyleBottomModel
 import com.myStash.android.design_system.ui.component.style.StyleMainItem
 import com.myStash.android.design_system.ui.component.tag.TagChipItem
 import com.myStash.android.design_system.ui.component.tag.TagDeleteChipItem
@@ -68,10 +69,6 @@ fun SelectStyleModalSheet(
     totalTagList: List<Tag>,
     selectTagList: List<Tag>,
     searchTagList: List<Tag>,
-    buttonText: String,
-    onSelect: (Tag) -> Unit,
-    onConfirm: () -> Unit,
-    onDelete: () -> Unit,
     onBack: () -> Unit,
 
     onAction: (AddFeedScreenAction) -> Unit = {}
@@ -101,9 +98,11 @@ fun SelectStyleModalSheet(
     }
 
     LaunchedEffect(modalType) {
-        if(modalType == SelectStyleModalType.STYLE) focusManager.clearFocus()
+        if(modalType == SelectStyleModalType.STYLE) {
+            focusManager.clearFocus()
+            searchTextState.clearText()
+        }
     }
-
 
     Box(
         modifier = Modifier
@@ -139,7 +138,7 @@ fun SelectStyleModalSheet(
                     ContentTextField(
                         textState = searchTextState,
                         hint = "원하는 태그를 검색해 보세요",
-                        delete = onDelete
+                        delete = { onAction.invoke(AddFeedScreenAction.DeleteSearchText) },
                     )
                     Box(
                         modifier = Modifier
@@ -162,7 +161,7 @@ fun SelectStyleModalSheet(
                                     items(selectTagList) { tag ->
                                         TagDeleteChipItem(
                                             name = tag.name,
-                                            onClick = { onSelect.invoke(tag) }
+                                            onClick = { onAction.invoke(AddFeedScreenAction.SelectTag(tag)) }
                                         )
                                     }
                                 }
@@ -215,7 +214,7 @@ fun SelectStyleModalSheet(
                                             TagChipItem(
                                                 name = tag.name,
                                                 isSelected = isSelected,
-                                                onClick = { onSelect.invoke(tag) }
+                                                onClick = { onAction.invoke(AddFeedScreenAction.SelectTag(tag)) }
                                             )
                                         }
                                     }
@@ -233,7 +232,7 @@ fun SelectStyleModalSheet(
                                                 name = tag.name,
                                                 searchText = searchTextState.text.toString(),
                                                 isSelected = isSelected,
-                                                onClick = { onSelect.invoke(tag) }
+                                                onClick = { onAction.invoke(AddFeedScreenAction.SelectTag(tag)) }
                                             )
                                         }
                                     }
@@ -308,7 +307,7 @@ fun SelectStyleModalSheet(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.BottomCenter
                 ) {
-                    MainStyleBottomModel(
+                    StyleBottomModel(
                         selectedStyle = selectedStyle,
                         onSelect = { onAction.invoke(AddFeedScreenAction.SelectStyle(selectedStyle)) },
                         onCancel = { selectedStyle = null },
@@ -322,7 +321,7 @@ fun SelectStyleModalSheet(
                 when {
                     modalType == SelectStyleModalType.TAG -> {
                         modalType = SelectStyleModalType.STYLE
-                        searchTextState.clearText()
+                        onAction.invoke(AddFeedScreenAction.DeleteSearchText)
                     }
                     selectedStyle.isNotNull() -> selectedStyle = null
                     else -> onBack.invoke()
@@ -334,44 +333,4 @@ fun SelectStyleModalSheet(
 
 enum class SelectStyleModalType {
     TAG, STYLE
-}
-
-@Composable
-fun MainStyleBottomModel(
-    selectedStyle: StyleScreenModel?,
-    onSelect: () -> Unit,
-    onCancel: () -> Unit,
-) {
-
-    var isShow by remember { mutableStateOf(false) }
-
-    LaunchedEffect(selectedStyle) {
-        isShow = selectedStyle.isNotNull()
-    }
-
-    if(isShow) {
-        Column(
-            modifier = Modifier
-                .shadow(
-                    elevation = 10.dp,
-                    spotColor = Color(0x29000000),
-                    ambientColor = Color(0x29000000)
-                )
-                .fillMaxWidth()
-                .height(84.dp)
-                .background(
-                    color = Color(0xFFFFFFFF),
-                    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
-                )
-                .clickableNoRipple { }
-                .padding(16.dp)
-        ) {
-            HasSelectButton(
-                modifier = Modifier.padding(top = 16.dp),
-                selectText = "피드 등록하기",
-                onSelect = onSelect,
-                onCancel = onCancel
-            )
-        }
-    }
 }
