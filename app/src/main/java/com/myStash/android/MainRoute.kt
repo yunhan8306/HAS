@@ -68,7 +68,7 @@ fun MainRoute(
         showAddFeedItemActivity = { style ->
             val intent = Intent(activity, ItemActivity::class.java).apply {
                 putExtra("tab", ItemTab.FEED.name)
-                putExtra("feed", style.id)
+                putExtra(ItemTab.FEED.name, style.id)
             }
             itemActivityLauncher.launch(intent)
         }

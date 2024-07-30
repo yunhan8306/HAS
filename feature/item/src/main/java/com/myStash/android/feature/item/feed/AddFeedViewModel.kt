@@ -107,7 +107,7 @@ class AddFeedViewModel @Inject constructor(
                         state.copy(
                             styleList = styleList,
                             tagList = tagList,
-                            selectedStyle = stateHandle.get<Long?>(ItemTab.FEED.name).getStyleScreenModel(styleList)
+                            selectedStyle = stateHandle.get<Long?>(ItemTab.FEED.name).getStyleScreenModel(styleList),
                         )
                     }
                 }

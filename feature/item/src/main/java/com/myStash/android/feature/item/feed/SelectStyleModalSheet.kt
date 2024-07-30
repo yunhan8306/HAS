@@ -47,7 +47,6 @@ import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.selectOrNull
 import com.myStash.android.design_system.ui.component.SpacerLineBox
 import com.myStash.android.design_system.ui.component.button.HasButton
-import com.myStash.android.design_system.ui.component.button.HasSelectButton
 import com.myStash.android.design_system.ui.component.content.ContentTextField
 import com.myStash.android.design_system.ui.component.modal.StyleBottomModel
 import com.myStash.android.design_system.ui.component.style.StyleMainItem
@@ -56,7 +55,6 @@ import com.myStash.android.design_system.ui.component.tag.TagDeleteChipItem
 import com.myStash.android.design_system.ui.component.tag.TagSearchItem
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
-import com.myStash.android.design_system.ui.theme.clickableNoRipple
 import com.myStash.android.design_system.util.addFocusCleaner
 import com.myStash.android.design_system.util.rememberImeState
 
@@ -94,7 +92,6 @@ fun SelectStyleModalSheet(
 
     LaunchedEffect(Unit) {
         modalType = SelectStyleModalType.STYLE
-        selectedStyle = state.selectedStyle
     }
 
     LaunchedEffect(modalType) {
@@ -102,6 +99,10 @@ fun SelectStyleModalSheet(
             focusManager.clearFocus()
             searchTextState.clearText()
         }
+    }
+
+    LaunchedEffect(state.selectedStyle) {
+        selectedStyle = state.selectedStyle
     }
 
     Box(
