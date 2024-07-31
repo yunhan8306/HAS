@@ -7,6 +7,7 @@ import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.myStash.android.common.util.Quadruple
 import com.myStash.android.common.util.offerOrRemove
 import com.myStash.android.common.util.removeBlank
 import com.myStash.android.core.data.usecase.has.GetHasListUseCase
@@ -15,6 +16,7 @@ import com.myStash.android.core.data.usecase.style.GetStyleListUseCase
 import com.myStash.android.core.data.usecase.tag.CheckAvailableTagUseCase
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
 import com.myStash.android.core.data.usecase.tag.SaveTagUseCase
+import com.myStash.android.core.data.usecase.type.GetTypeListUseCase
 import com.myStash.android.core.di.DefaultDispatcher
 import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
@@ -43,6 +45,7 @@ class AddFeedViewModel @Inject constructor(
     private val checkAvailableTagUseCase: CheckAvailableTagUseCase,
 
     private val getTagListUseCase: GetTagListUseCase,
+    private val getTypeListUseCase: GetTypeListUseCase,
 
     private val getStyleListUseCase: GetStyleListUseCase,
     private val getHasListUseCase: GetHasListUseCase,
@@ -97,17 +100,26 @@ class AddFeedViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
+    private val typeTotalList = getTypeListUseCase.typeList
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000L),
+            initialValue = emptyList()
+        )
+
     private fun fetch() {
         intent {
             viewModelScope.launch {
-                combine(styleTotalList, hasTotalList, tagTotalList) { styleList, hasList, tagList ->
-                    Triple(styleList, hasList, tagList)
-                }.collectLatest { (styleList, hasList, tagList) ->
+                combine(styleTotalList, hasTotalList, tagTotalList, typeTotalList) { styleList, hasList, tagList, typeList ->
+                    Quadruple(styleList, hasList, tagList, typeList)
+                }.collectLatest { (styleList, hasList, tagList, typeList) ->
                     reduce {
                         state.copy(
                             styleList = styleList,
                             tagList = tagList,
                             selectedStyle = stateHandle.get<Long?>(ItemTab.FEED.name).getStyleScreenModel(styleList),
+                            typeTotalList = typeList,
+                            tagTotalList = tagList
                         )
                     }
                 }

@@ -14,6 +14,7 @@ data class AddFeedScreenState(
     val date: String = "",
     val selectedStyle: StyleScreenModel? = null,
     val typeTotalList: List<Type> = emptyList(),
+    val tagTotalList: List<Tag> = emptyList(),
 
 
     val styleList: List<StyleScreenModel> = emptyList(),
