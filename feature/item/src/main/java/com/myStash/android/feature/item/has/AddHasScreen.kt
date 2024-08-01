@@ -99,7 +99,7 @@ fun AddHasScreen(
                     .fillMaxWidth()
                     .weight(1f)
                     .background(Color.White)
-                    .padding(horizontal = 12.dp)
+                    .padding(horizontal = 16.dp)
                     .padding(top = 24.dp)
             ) {
                 ItemTitleText(

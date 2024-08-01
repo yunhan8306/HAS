@@ -11,12 +11,15 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
@@ -59,6 +62,7 @@ fun AddFeedScreen(
         animationSpec = tween(800),
         label = "header fade ani"
     )
+    val scrollState = rememberScrollState()
 
     ModalBottomSheetLayout(
         sheetState = searchModalState,
@@ -73,11 +77,11 @@ fun AddFeedScreen(
                     .fillMaxWidth()
                     .weight(1f)
                     .background(Color.White)
-                    .padding(horizontal = 12.dp)
-                    .padding(top = 24.dp)
+                    .padding(horizontal = 16.dp)
+                    .verticalScroll(scrollState)
             ) {
                 ItemTitleText(
-                    modifier = Modifier.padding(bottom = 16.dp),
+                    modifier = Modifier.padding(top = 24.dp, bottom = 16.dp),
                     text = "사진"
                 )
                 LazyRow {
@@ -137,7 +141,9 @@ fun AddFeedScreen(
                 }
 
                 state.selectedStyle?.let { style ->
-                    LazyColumn {
+                    LazyColumn(
+                        modifier = Modifier.heightIn(max = 1000.dp)
+                    ) {
                         items(
                             items = style.hasList
                         ) { has ->

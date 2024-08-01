@@ -110,7 +110,9 @@ fun TypeTest(
     Box(
         modifier = Modifier
             .background(color = Color(0xFF707070), shape = RoundedCornerShape(size = 10.dp))
-            .padding(start = 8.dp, top = 3.dp, end = 8.dp, bottom = 3.dp)
+            .height(20.dp)
+            .padding(start = 8.dp, end = 8.dp),
+        contentAlignment = Alignment.Center
     ) {
         HasText(
             text = name,
@@ -125,7 +127,7 @@ fun getHasTagText(tagList: List<Tag>): Pair<String, String> {
     var secondTagText = ""
 
     tagList.forEach {
-        if(firstTagText.length < secondTagText.length) {
+        if(firstTagText.length <= secondTagText.length) {
             firstTagText += ("#" + it.name + "  ")
         } else {
             secondTagText += ("#" + it.name + "  ")
