@@ -1,5 +1,6 @@
 package com.myStash.android.feature.feed
 
+import com.myStash.android.core.model.CalenderData
 import java.time.LocalDate
 
 data class FeedScreenState(

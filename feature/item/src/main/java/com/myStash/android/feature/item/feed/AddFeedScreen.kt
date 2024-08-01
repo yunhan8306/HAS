@@ -1,9 +1,11 @@
 package com.myStash.android.feature.item.feed
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,13 +27,20 @@ import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.myStash.android.common.resource.R
+import com.myStash.android.core.model.setCalender
+import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.component.calender.HasCalender
 import com.myStash.android.design_system.ui.component.photo.SelectPhotoItem
 import com.myStash.android.design_system.ui.component.photo.UnselectPhotoItem
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
@@ -57,11 +66,21 @@ fun AddFeedScreen(
     sheetContent: @Composable (ColumnScope.() -> Unit),
 ) {
     val scope = rememberCoroutineScope()
-    val headerFadeAni by animateFloatAsState(
-        targetValue = if(searchModalState.targetValue == ModalBottomSheetValue.Expanded) 1f else 0f,
-        animationSpec = tween(800),
+
+    var isShowDate by remember { mutableStateOf(false) }
+
+    val dateFadeIn by animateFloatAsState(
+        targetValue = if(isShowDate) 1f else 0f,
+        animationSpec = tween(1000),
         label = "header fade ani"
     )
+
+    val dateHeight by animateDpAsState(
+        targetValue = if(isShowDate) 268.dp else 0.dp,
+        animationSpec = tween(1000),
+        label = "date height"
+    )
+
     val scrollState = rememberScrollState()
 
     ModalBottomSheetLayout(
@@ -105,15 +124,39 @@ fun AddFeedScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(44.dp)
-                        .background(
-                            color = Color(0xFFF1F1F1),
+                        .border(
+                            width = if (isShowDate) 1.dp else (-1).dp,
+                            color = Color(0xFFBFD320),
                             shape = RoundedCornerShape(size = 10.dp)
-                        ),
+                        )
+                        .background(
+                            color = if (isShowDate) Color(0xFFFCFFE7) else Color(0xFFF1F1F1),
+                            shape = RoundedCornerShape(size = 10.dp)
+                        )
+                        .clickable { isShowDate = !isShowDate },
                     contentAlignment = Alignment.Center
                 ) {
                     HasText(
-                        text = "2024년 5월 7일",
+                        text = "${state.date.year}년 ${state.date.monthValue}월 ${state.date.dayOfMonth}일",
+                        color = if(isShowDate) Color(0xFF8A9918) else Color(0xFF202020),
                         fontWeight = HasFontWeight.Bold
+                    )
+                }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(dateHeight)
+                        .alpha(dateFadeIn)
+                ) {
+                    HasCalender(
+                        year = state.date.year,
+                        month = state.date.monthValue,
+                        selectDate = state.date,
+                        calenderDataList = setCalender(state.date.year, state.date.monthValue),
+                        onClickAgoCalender = {},
+                        onClickNextCalender = {},
+                        onClickDay = {},
                     )
                 }
 
@@ -142,7 +185,8 @@ fun AddFeedScreen(
 
                 state.selectedStyle?.let { style ->
                     LazyColumn(
-                        modifier = Modifier.heightIn(max = 1000.dp)
+                        modifier = Modifier.heightIn(max = 1000.dp),
+                        userScrollEnabled = false
                     ) {
                         items(
                             items = style.hasList
@@ -158,4 +202,16 @@ fun AddFeedScreen(
             }
         }
     }
+}
+
+@DevicePreviews
+@Composable
+fun AddFeedScreenPreview() {
+    AddFeedScreen(
+        searchModalState = ModalBottomSheetState(ModalBottomSheetValue.Expanded),
+        state = AddFeedScreenState(),
+        showGalleryActivity = {},
+        showStyleSheet = {},
+        sheetContent = {}
+    )
 }

@@ -4,6 +4,7 @@ import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
+import java.time.LocalDate
 
 data class AddFeedScreenState(
     val hasList: List<Has> = emptyList(),
@@ -11,7 +12,7 @@ data class AddFeedScreenState(
     val selectedHasList: List<Has> = emptyList(),
 
     val selectedImageList: List<String> = emptyList(),
-    val date: String = "",
+    val date: LocalDate = LocalDate.now(),
     val selectedStyle: StyleScreenModel? = null,
     val typeTotalList: List<Type> = emptyList(),
     val tagTotalList: List<Tag> = emptyList(),

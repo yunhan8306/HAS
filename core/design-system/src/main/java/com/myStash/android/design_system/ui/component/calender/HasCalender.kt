@@ -1,16 +1,16 @@
-package com.myStash.android.feature.feed
+package com.myStash.android.design_system.ui.component.calender
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -19,7 +19,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,12 +34,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import com.myStash.android.core.model.CalenderData
+import com.myStash.android.core.model.setCalender
 import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.component.text.HasFontWeight
+import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 import java.time.LocalDate
 
 @Composable
-fun FeedCalender(
+fun HasCalender(
     year: Int,
     month: Int,
     selectDate: LocalDate,
@@ -46,45 +51,33 @@ fun FeedCalender(
     onClickNextCalender: () -> Unit,
     onClickDay: (String) -> Unit,
 ) {
+
+    var isShowDatePicker by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
+            .height(268.dp)
+            .width(360.dp)
             .padding(horizontal = 16.dp)
             .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 12.dp))
     ) {
+        Box(modifier = Modifier.height(22.dp))
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(52.dp),
+            modifier = Modifier.clickable { isShowDatePicker = !isShowDatePicker },
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
-                modifier = Modifier
-                    .size(20.dp)
-                    .background(Color.Black)
-                    .clickable { onClickAgoCalender.invoke() }
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
+            HasText(
                 text = "$year.$month",
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    lineHeight = 16.sp,
-                    fontWeight = FontWeight(600),
-                    color = Color(0xFF202020),
-                )
+                fontSize = 16.dp,
+                fontWeight = HasFontWeight.Bold
             )
-            Spacer(modifier = Modifier.weight(1f))
-            Box(
-                modifier = Modifier
-                    .size(20.dp)
-                    .background(Color.Black)
-                    .clickable { onClickNextCalender.invoke() }
-            )
+            Box(modifier = Modifier.size(12.dp).background(Color.Blue))
         }
-
+        Box(modifier = Modifier.height(14.dp))
         LazyVerticalGrid(
             modifier = Modifier.fillMaxWidth(),
-            columns = GridCells.Fixed(7)
+            columns = GridCells.Fixed(7),
+            userScrollEnabled = false
         ) {
             items(calenderDataList) { calenderData ->
                 when(calenderData) {
@@ -112,6 +105,10 @@ fun FeedCalender(
             }
         }
     }
+
+    if(isShowDatePicker) {
+        // 피커 작업 필요
+    }
 }
 
 @Composable
@@ -119,7 +116,9 @@ fun FeedCalenderDayOfWeekItem(
     dayOfWeek: String,
 ) {
     Box(
-        modifier = Modifier.size(44.dp),
+        modifier = Modifier
+            .width(44.dp)
+            .height(36.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -138,7 +137,9 @@ fun FeedCalenderDayOfWeekItem(
 @Composable
 fun FeedCalenderSpacerItem() {
     Box(
-        modifier = Modifier.size(44.dp)
+        modifier = Modifier
+            .width(44.dp)
+            .height(36.dp)
     )
 }
 
@@ -150,7 +151,8 @@ fun FeedCalenderDayItem(
 ) {
     Box(
         modifier = Modifier
-            .size(44.dp)
+            .width(44.dp)
+            .height(36.dp)
             .clickable { onClick.invoke(day) },
         contentAlignment = Alignment.Center
     ) {
@@ -158,7 +160,7 @@ fun FeedCalenderDayItem(
             modifier = Modifier
                 .size(36.dp)
                 .clip(RoundedCornerShape(18.dp))
-                .background(if(isSelect) Color(0xFFE4F562) else Color.White),
+                .background(if (isSelect) Color(0xFFE4F562) else Color.White),
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -183,7 +185,8 @@ fun FeedCalenderRecordDayItem(
 ) {
     Box(
         modifier = Modifier
-            .size(44.dp)
+            .width(44.dp)
+            .height(36.dp)
             .clickable { onClick.invoke(day) },
         contentAlignment = Alignment.Center
     ) {
@@ -214,22 +217,17 @@ fun FeedCalenderRecordDayItem(
     }
 }
 
+
 @DevicePreviews
 @Composable
-fun FeedCalenderPreview() {
-    FeedCalender(
-        year = LocalDate.now().year,
-        month = LocalDate.now().monthValue,
+fun HasCalenderPreview() {
+    HasCalender(
+        year = 2024,
+        month = 8,
         selectDate = LocalDate.now(),
-        calenderDataList = setCalender(LocalDate.now().year, LocalDate.now().monthValue),
+        calenderDataList = setCalender(2024, 8),
         onClickAgoCalender = {},
         onClickNextCalender = {},
-        onClickDay = {},
+        onClickDay = {}
     )
 }
-
-
-
-val dayOfWeekList = listOf("일", "월", "화", "수", "목", "금", "토")
-val dayList = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31)
-val spacerList = listOf(0, 0, 0)
