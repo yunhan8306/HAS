@@ -43,6 +43,7 @@ import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.component.SpacerLineBox
 import com.myStash.android.design_system.ui.component.content.ContentHeaderSearchText
 import com.myStash.android.design_system.ui.component.dialog.HasConfirmDialog
+import com.myStash.android.design_system.ui.component.dialog.StyleMoreDialog
 import com.myStash.android.design_system.ui.component.style.StyleMainItem
 import com.myStash.android.design_system.ui.component.tag.TagChipItem
 import com.myStash.android.design_system.ui.component.tag.TagMoreChipItem
@@ -82,6 +83,7 @@ fun StyleRoute(
 
     var isShowSearch by remember { mutableStateOf(false) }
     var isShowMoreStyle by remember { mutableStateOf(false) }
+    var showMoreStyle: StyleScreenModel? by remember { mutableStateOf(null) }
 
     StyleScreen(
         totalTagList = totalTagList,
@@ -91,7 +93,7 @@ fun StyleRoute(
         onAction = { action ->
             when(action) {
                 is StyleScreenAction.ShowSearch -> isShowSearch = true
-                is StyleScreenAction.ShowMoreStyle -> isShowMoreStyle = true
+                is StyleScreenAction.ShowMoreStyle -> showMoreStyle = action.style
                 is StyleScreenAction.ShowItemActivity -> {
                     val intent = Intent(activity.apply { slideIn() }, ItemActivity::class.java)
                         .putExtra("tab", ItemTab.STYLE.name)
@@ -122,6 +124,12 @@ fun StyleRoute(
         dismissText = "닫기",
         onConfirm = { isShowMoreStyle = false },
         onDismiss = { isShowMoreStyle = false }
+    )
+
+    StyleMoreDialog(
+        styleScreenModel = showMoreStyle,
+        tagTotalList = state.totalTagList,
+        onDismiss = { showMoreStyle = null },
     )
 }
 
