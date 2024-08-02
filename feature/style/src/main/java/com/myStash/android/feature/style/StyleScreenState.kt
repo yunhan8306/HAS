@@ -2,10 +2,12 @@ package com.myStash.android.feature.style
 
 import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
+import com.myStash.android.core.model.Type
 
 data class StyleScreenState(
     val styleList: List<StyleScreenModel> = emptyList(),
     val selectedStyle: StyleScreenModel? = null,
+    val totalTypeList: List<Type> = emptyList(),
     val totalTagList: List<Tag> = emptyList(),
     val selectedTagList: List<Tag> = emptyList()
 )

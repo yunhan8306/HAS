@@ -71,32 +71,33 @@ fun AddStyleHasItem(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .padding(start = 12.dp)
-                    .horizontalScroll(rememberScrollState()),
+                    .padding(start = 12.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
                 Column {
                     TypeTest(
                         name = hasType
                     )
-
-                    HasText(
-                        modifier = Modifier
-                            .padding(top = 6.dp)
-                            .fillMaxWidth(),
-                        text = pairTagText.first,
-                        fontSize = 14.dp,
-                        maxLines = 1
-                    )
-
-                    HasText(
-                        modifier = Modifier
-                            .padding(top = 2.dp)
-                            .fillMaxWidth(),
-                        text = pairTagText.second,
-                        fontSize = 14.dp,
-                        maxLines = 1
-                    )
+                    Column(
+                        modifier = Modifier.horizontalScroll(rememberScrollState())
+                    ) {
+                        HasText(
+                            modifier = Modifier
+                                .padding(top = 6.dp)
+                                .fillMaxWidth(),
+                            text = pairTagText.first,
+                            fontSize = 14.dp,
+                            maxLines = 1
+                        )
+                        HasText(
+                            modifier = Modifier
+                                .padding(top = 2.dp)
+                                .fillMaxWidth(),
+                            text = pairTagText.second,
+                            fontSize = 14.dp,
+                            maxLines = 1
+                        )
+                    }
                 }
             }
         }
