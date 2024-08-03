@@ -7,6 +7,8 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.myStash.android.data_base.converter.LongTypeListConverter
 import com.myStash.android.data_base.converter.StringTypeListConverter
+import com.myStash.android.data_base.feed.dao.FeedDao
+import com.myStash.android.data_base.feed.entity.FeedEntity
 import com.myStash.android.data_base.has.dao.HasDao
 import com.myStash.android.data_base.has.entity.HasEntity
 import com.myStash.android.data_base.style.dao.StyleDao
@@ -22,7 +24,8 @@ import com.squareup.moshi.Moshi
         HasEntity::class,
         StyleEntity::class,
         TagEntity::class,
-        TypeEntity::class
+        TypeEntity::class,
+        FeedEntity::class
     ],
     version = 1
 )
@@ -37,6 +40,8 @@ abstract class DataBase : RoomDatabase() {
 
     abstract fun TypeDao() : TypeDao
 
+    abstract fun FeedDao() : FeedDao
+
     companion object {
         private const val DATA_BASE_NAME = "myStashDataBase"
 
@@ -46,7 +51,7 @@ abstract class DataBase : RoomDatabase() {
             name = DATA_BASE_NAME
         )
             .addTypeConverter(LongTypeListConverter(moshi))
-//            .addTypeConverter(StringTypeListConverter(moshi))
+            .addTypeConverter(StringTypeListConverter(moshi))
             .fallbackToDestructiveMigration().build()
     }
 }

@@ -1,5 +1,7 @@
 package com.myStash.android.core.di
 
+import com.myStash.android.data_base.feed.datasource.FeedDataSource
+import com.myStash.android.data_base.feed.datasource.FeedDataSourceImpl
 import com.myStash.android.data_base.has.datasource.HasDataSource
 import com.myStash.android.data_base.has.datasource.HasDataSourceImpl
 import com.myStash.android.data_base.style.datasource.StyleDataSource
@@ -36,4 +38,9 @@ interface DataBaseDataSourceModule {
     fun bindsTypeDataSource(
         typeDataSource: TypeDataSourceImpl
     ): TypeDataSource
+
+    @Binds
+    fun bindsFeedDataSource(
+        feedDataSource: FeedDataSourceImpl
+    ): FeedDataSource
 }

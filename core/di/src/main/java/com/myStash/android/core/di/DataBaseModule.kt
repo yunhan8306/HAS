@@ -2,6 +2,7 @@ package com.myStash.android.core.di
 
 import android.content.Context
 import com.myStash.android.data_base.DataBase
+import com.myStash.android.data_base.feed.dao.FeedDao
 import com.myStash.android.data_base.has.dao.HasDao
 import com.myStash.android.data_base.style.dao.StyleDao
 import com.myStash.android.data_base.tag.dao.TagDao
@@ -47,4 +48,9 @@ class DaoModule {
     fun providesTypeDao(
         dataBase: DataBase
     ) : TypeDao = dataBase.TypeDao()
+
+    @Provides
+    fun providesFeedDao(
+        dataBase: DataBase
+    ): FeedDao = dataBase.FeedDao()
 }
