@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.myStash.android.data_base.converter.LocalDateTypeConverter
 import com.myStash.android.data_base.converter.LongTypeListConverter
 import com.myStash.android.data_base.converter.StringTypeListConverter
 import com.myStash.android.data_base.feed.dao.FeedDao
@@ -29,7 +30,7 @@ import com.squareup.moshi.Moshi
     ],
     version = 1
 )
-@TypeConverters(value = [LongTypeListConverter::class, StringTypeListConverter::class])
+@TypeConverters(value = [LongTypeListConverter::class, StringTypeListConverter::class, LocalDateTypeConverter::class])
 abstract class DataBase : RoomDatabase() {
 
     abstract fun HasDao() : HasDao
@@ -52,6 +53,7 @@ abstract class DataBase : RoomDatabase() {
         )
             .addTypeConverter(LongTypeListConverter(moshi))
             .addTypeConverter(StringTypeListConverter(moshi))
+            .addTypeConverter(LocalDateTypeConverter(moshi))
             .fallbackToDestructiveMigration().build()
     }
 }

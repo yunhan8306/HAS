@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.myStash.android.core.model.Feed
+import java.time.LocalDate
 
 @Entity(tableName = "feed")
 data class FeedEntity(
@@ -11,8 +12,8 @@ data class FeedEntity(
     @ColumnInfo(name = "pk")
     val id: Long? = null,
 
-//    @ColumnInfo(name = "date")
-//    val date: LocalDate = LocalDate.now(),
+    @ColumnInfo(name = "date")
+    val date: LocalDate = LocalDate.now(),
 
     @ColumnInfo(name = "images")
     val images: List<String> = emptyList(),
