@@ -2,7 +2,9 @@ package com.myStash.android.design_system.ui.component.photo
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -18,19 +20,22 @@ fun SelectPhotoItem(
     imageUri: String?,
     onClick: () -> Unit
 ) {
-    Box(
-        modifier = Modifier
-            .size(100.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .clickable { onClick.invoke() }
-    ) {
-        SubcomposeAsyncImage(
-            model = imageUri,
-            contentDescription = "select photo",
-            modifier = Modifier.aspectRatio(1f),
-            contentScale = ContentScale.Crop,
-            loading = { ShimmerLoadingAnimation() },
-            error = { ShimmerLoadingAnimation() }
-        )
+    Row {
+        Box(
+            modifier = Modifier
+                .size(100.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .clickable { onClick.invoke() }
+        ) {
+            SubcomposeAsyncImage(
+                model = imageUri,
+                contentDescription = "select photo",
+                modifier = Modifier.aspectRatio(1f),
+                contentScale = ContentScale.Crop,
+                loading = { ShimmerLoadingAnimation() },
+                error = { ShimmerLoadingAnimation() }
+            )
+        }
+        Box(modifier = Modifier.padding(end = 6.dp))
     }
 }

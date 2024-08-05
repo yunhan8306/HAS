@@ -14,6 +14,7 @@ dependencies {
     implementation(projects.core.di)
     implementation(projects.common.compose)
     implementation(projects.common.util)
+    implementation(projects.common.resource)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.compose.lifecycle.runtime)

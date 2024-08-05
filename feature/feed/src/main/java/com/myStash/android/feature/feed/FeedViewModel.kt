@@ -2,7 +2,23 @@ package com.myStash.android.feature.feed
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.myStash.android.common.util.Quadruple
+import com.myStash.android.core.data.usecase.feed.GetFeedListUseCase
+import com.myStash.android.core.data.usecase.has.GetHasListUseCase
+import com.myStash.android.core.data.usecase.style.GetStyleListUseCase
+import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
+import com.myStash.android.core.data.usecase.type.GetTypeListUseCase
+import com.myStash.android.core.model.CalenderData
+import com.myStash.android.core.model.Feed
+import com.myStash.android.core.model.filterDate
+import com.myStash.android.core.model.getFeedByDate
+import com.myStash.android.core.model.getUsedTagList
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
@@ -15,7 +31,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(
-
+    private val getFeedListUseCase: GetFeedListUseCase,
+    private val getTagListUseCase: GetTagListUseCase,
+    private val getHasListUseCase: GetHasListUseCase,
+    private val getStyleListUseCase: GetStyleListUseCase,
+    private val getTypeListUseCase: GetTypeListUseCase
 ): ContainerHost<FeedScreenState, FeedSideEffect>, ViewModel() {
     override val container: Container<FeedScreenState, FeedSideEffect> =
         container(FeedScreenState())
@@ -24,14 +44,63 @@ class FeedViewModel @Inject constructor(
         fetch()
     }
 
+    private val feedTotalList = getFeedListUseCase.feedList
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000L),
+            initialValue = emptyList()
+        )
+
+    private val tagTotalList = getTagListUseCase.tagList
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000L),
+            initialValue = emptyList()
+        )
+
+    private val hasTotalList = getHasListUseCase.hasList
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000L),
+            initialValue = emptyList()
+        )
+
+    private val styleTotalList = getStyleListUseCase.styleList
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000L),
+            initialValue = emptyList()
+        )
+
+    private val typeTotalList = getTypeListUseCase.typeList
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000L),
+            initialValue = emptyList()
+        )
+
     private fun fetch() {
         intent {
             viewModelScope.launch {
-                val date = state.calenderDate
-                reduce {
-                    state.copy(
-                        calenderDataList = setCalender(date.year, date.monthValue)
-                    )
+                combine(feedTotalList, styleTotalList, tagTotalList, typeTotalList) { feedTotalList, styleTotalList, tagTotalList, typeTotalList ->
+                    Quadruple(feedTotalList, styleTotalList, tagTotalList, typeTotalList)
+                }.collectLatest { (feedTotalList, styleTotalList, tagTotalList, typeTotalList) ->
+                    val date = state.calenderDate
+                    val feedList = feedTotalList.filterDate(date.year, date.monthValue)
+                    val calenderList = setCalender(date.year, date.monthValue, feedList)
+                    val selectedFeed = feedList.getFeedByDate(date)
+                    val selectedStyle = styleTotalList.firstOrNull { it.id == selectedFeed?.styleId }
+                    val tagList = selectedStyle?.getUsedTagList(tagTotalList) ?: emptyList()
+
+                    reduce {
+                        state.copy(
+                            calenderDataList = calenderList,
+                            selectedFeed = feedList.getFeedByDate(date),
+                            selectedFeedTagList = tagList,
+                            selectedFeedStyle = selectedStyle,
+                            typeTotalList = typeTotalList
+                        )
+                    }
                 }
             }
         }
@@ -41,11 +110,12 @@ class FeedViewModel @Inject constructor(
         intent {
             viewModelScope.launch {
                 val date = state.calenderDate.minusMonths(1)
-
+                val feedList = feedTotalList.value.filterDate(date.year, date.monthValue)
+                val calenderList = setCalender(date.year, date.monthValue, feedList)
                 reduce {
                     state.copy(
                         calenderDate = date,
-                        calenderDataList = setCalender(date.year, date.monthValue)
+                        calenderDataList = calenderList
                     )
                 }
             }
@@ -55,25 +125,32 @@ class FeedViewModel @Inject constructor(
         intent {
             viewModelScope.launch {
                 val date = state.calenderDate.plusMonths(1)
-
+                val feedList = feedTotalList.value.filterDate(date.year, date.monthValue)
+                val calenderList = setCalender(date.year, date.monthValue, feedList)
                 reduce {
                     state.copy(
                         calenderDate = date,
-                        calenderDataList = setCalender(date.year, date.monthValue)
+                        calenderDataList = calenderList
                     )
                 }
             }
         }
     }
 
-    fun onClickDay(day: String) {
+    fun onClickDay(date: LocalDate) {
         intent {
             viewModelScope.launch {
-                val date = state.calenderDate
+                val selectedFeed = feedTotalList.value.filterDate(date.year, date.monthValue).getFeedByDate(date)
+                val selectedStyle = styleTotalList.value.firstOrNull { it.id == selectedFeed?.styleId }
+                val tagList = selectedStyle?.getUsedTagList(tagTotalList.value) ?: emptyList()
 
                 reduce {
                     state.copy(
-                        selectDate = LocalDate.of(date.year, date.monthValue, day.toInt())
+                        selectedDate = date,
+                        selectedFeed = feedTotalList.value.getFeedByDate(date),
+                        selectedFeedTagList = tagList,
+                        selectedFeedStyle = selectedStyle,
+                        typeTotalList = typeTotalList.value
                     )
                 }
             }
@@ -101,7 +178,7 @@ fun MutableList<CalenderData>.addAllSpacerDay(yearMonth: YearMonth) {
     }
 }
 
-fun setCalender(currentYear: Int, currentMonth: Int): MutableList<CalenderData> {
+fun setCalender(currentYear: Int, currentMonth: Int, feedList: List<Feed> = emptyList()): MutableList<CalenderData> {
     val calenderDataList: MutableList<CalenderData> = mutableListOf()
     val yearMonth = YearMonth.of(currentYear, currentMonth)
 
@@ -114,11 +191,20 @@ fun setCalender(currentYear: Int, currentMonth: Int): MutableList<CalenderData> 
     // 날짜 데이터
     val daysInMonth = yearMonth.lengthOfMonth()
     (1..daysInMonth).forEach { day ->
-        calenderDataList.add(
-            CalenderData.Day(
-                day = day.toString()
+        feedList.firstOrNull { day == it.date.dayOfMonth }?.let { feed ->
+            calenderDataList.add(
+                CalenderData.RecodedDay(
+                    day = day.toString(),
+                    imageUri = feed.images[0]
+                )
             )
-        )
+        } ?: run {
+            calenderDataList.add(
+                CalenderData.Day(
+                    day = day.toString()
+                )
+            )
+        }
     }
 
     return calenderDataList

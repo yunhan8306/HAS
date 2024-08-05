@@ -64,6 +64,7 @@ dependencies {
     implementation(projects.feature.essential)
     implementation(projects.feature.gender)
     implementation(projects.feature.splash)
+    implementation(projects.feature.style)
     implementation(projects.feature.feed)
     implementation(projects.feature.mypage)
     implementation(projects.common.compose)

@@ -1,5 +1,6 @@
 package com.myStash.android.data_base.type.datasource
 
+import com.myStash.android.core.model.Type
 import com.myStash.android.data_base.type.entity.TypeEntity
 import kotlinx.coroutines.flow.Flow
 

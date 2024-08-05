@@ -13,6 +13,7 @@ import com.myStash.android.core.data.usecase.has.SaveHasUseCase
 import com.myStash.android.core.data.usecase.tag.CheckAvailableTagUseCase
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
 import com.myStash.android.core.data.usecase.tag.SaveTagUseCase
+import com.myStash.android.core.data.usecase.type.GetTypeListUseCase
 import com.myStash.android.core.di.DefaultDispatcher
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Tag
@@ -22,6 +23,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -40,6 +42,7 @@ class AddHasViewModel @Inject constructor(
     private val checkAvailableTagUseCase: CheckAvailableTagUseCase,
 
     private val getTagListUseCase: GetTagListUseCase,
+    private val getTypeListUseCase: GetTypeListUseCase,
 
     private val saveHasUseCase: SaveHasUseCase,
     private val saveTagUseCase: SaveTagUseCase,
@@ -81,18 +84,25 @@ class AddHasViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
+    private val typeTotalList = getTypeListUseCase.typeList
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000L),
+            initialValue = emptyList()
+        )
+
     private fun fetch() {
         intent {
             viewModelScope.launch {
                 val has = stateHandle.get<Has?>("has")
-
-                // type total list 호출
-                tagTotalList.collectLatest {
+                combine(tagTotalList, typeTotalList) { tagList, typeList ->
+                    Pair(tagList, typeList)
+                }.collectLatest { (tagList, typeList) ->
                     reduce {
                         state.copy(
-                            tagTotalList = it,
-                            typeTotalList = testWomanTypeTotalList,
-                            searchTagList = it
+                            tagTotalList = tagList,
+                            typeTotalList = typeList,
+                            searchTagList = tagList
                         )
                     }
                 }

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,7 +22,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -40,24 +38,24 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
+import com.myStash.android.common.compose.activityViewModel
 import com.myStash.android.common.util.CommonActivityResultContract
-import com.myStash.android.core.model.Has
-import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.testManTypeTotalList
 import com.myStash.android.core.model.testTagList
 import com.myStash.android.design_system.animation.slideIn
-import com.myStash.android.design_system.ui.component.dialog.HasConfirmDialog
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.component.SpacerLineBox
 import com.myStash.android.design_system.ui.component.content.ContentHeaderSearchText
+import com.myStash.android.design_system.ui.component.dialog.HasConfirmDialog
 import com.myStash.android.design_system.ui.component.has.HasMainItem
 import com.myStash.android.design_system.ui.component.tag.TagChipItem
 import com.myStash.android.design_system.ui.component.tag.TagMoreChipItem
+import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.feature.item.ItemActivity
+import com.myStash.android.feature.item.item.ItemTab
 import com.myStash.android.feature.search.SearchScreen
 import com.myStash.android.navigation.MainNavType
 import org.orbitmvi.orbit.compose.collectAsState
@@ -72,15 +70,10 @@ fun NavGraphBuilder.hasScreen() {
 
 @Composable
 fun HasRoute(
-    viewModel: HasViewModel = hiltViewModel(),
+    viewModel: HasViewModel = activityViewModel()
 ) {
 
-    val totalTypeList = viewModel.collectAsState().value.totalTypeList
-    val totalTagList = viewModel.collectAsState().value.totalTagList
-    val hasList = viewModel.collectAsState().value.hasList
-    val selectedTagList = viewModel.collectAsState().value.selectedTagList
-    val selectedType = viewModel.collectAsState().value.selectedType
-
+    val state by viewModel.collectAsState()
     val searchTextState by remember { mutableStateOf(viewModel.searchTextState) }
 
     val activity = LocalContext.current as ComponentActivity
@@ -89,25 +82,24 @@ fun HasRoute(
         onResult = {}
     )
 
-    var testSearchFlag by remember { mutableStateOf(false) }
-
+    var isShowSearch by remember { mutableStateOf(false) }
     var testConfirm by remember { mutableStateOf(false) }
 
     HasScreen(
-        totalTypeList = totalTypeList,
-        totalTagList = totalTagList,
-        hasList = hasList,
-        selectedTagList = selectedTagList,
-        selectedType = selectedType,
-        onSearch = { testSearchFlag = true },
-        onSelectType = viewModel::selectType,
-        onSelectTag = viewModel::selectTag,
-        showItemActivity = { has ->
-            val intent = Intent(activity.apply { slideIn() }, ItemActivity::class.java)
-                .putExtra("has", has)
-            itemActivityLauncher.launch(intent)
-        },
+        state = state,
+        onAction = { action ->
+             when(action) {
+                 is HasScreenAction.ShowSearch -> { isShowSearch = true }
+                 is HasScreenAction.ShowItemActivity -> {
+                     val intent = Intent(activity.apply { slideIn() }, ItemActivity::class.java)
+                         .putExtra("tab", ItemTab.HAS.name)
+                         .putExtra("has", action.has)
+                     itemActivityLauncher.launch(intent)
+                 }
 
+                 else -> viewModel.onAction(action)
+             }
+        },
         //test
         testItemAdd = viewModel::testItemAdd,
         testTagAdd = viewModel::testTagAdd,
@@ -116,14 +108,14 @@ fun HasRoute(
         deleteAllTag = viewModel::deleteAllTag,
     )
 
-    if(testSearchFlag) {
+    if(isShowSearch) {
         SearchScreen(
             searchTextState = searchTextState,
             searchText = searchTextState.text.toString(),
-            selectTagList = selectedTagList,
-            tagList = totalTagList,
+            selectTagList = state.selectedTagList,
+            tagList = state.totalTagList,
             select = viewModel::selectTag,
-            onBack = { testSearchFlag = false },
+            onBack = { isShowSearch = false },
         )
     }
 
@@ -140,15 +132,8 @@ fun HasRoute(
 
 @Composable
 fun HasScreen(
-    totalTypeList: List<Type>,
-    totalTagList: List<Tag>,
-    hasList: List<Has>,
-    selectedTagList: List<Tag>,
-    selectedType: Type,
-    onSearch: () -> Unit,
-    onSelectType: (Type) -> Unit,
-    onSelectTag: (Tag) -> Unit,
-    showItemActivity: (Has?) -> Unit,
+    state: HasScreenState,
+    onAction: (HasScreenAction) -> Unit,
     // test
     testItemAdd: () -> Unit,
     testTagAdd: () -> Unit,
@@ -161,7 +146,7 @@ fun HasScreen(
 
     var flowToggle by remember { mutableStateOf(false) }
 
-    LaunchedEffect(totalTagList) {
+    LaunchedEffect(state.totalTagList) {
         tagScrollState.scrollTo(0)
     }
 
@@ -173,12 +158,13 @@ fun HasScreen(
     ) {
         ContentHeaderSearchText(
             text = "원하는 태그를 검색해 보세요",
-            onClick = onSearch
+            onClick = { onAction.invoke(HasScreenAction.ShowSearch) }
         )
         LazyRow(
             modifier = Modifier
-                .padding(top = 12.dp)
+                .height(44.dp)
                 .fillMaxWidth()
+                .padding(top = 12.dp)
                 .drawBehind {
                     drawLine(
                         color = Color(0xFFF1F1F1),
@@ -190,13 +176,13 @@ fun HasScreen(
                 }
         ) {
             items(
-                items = totalTypeList,
+                items = state.totalTypeList,
                 key = { type -> type.name}
             ) { type ->
                 TypeItem(
                     name = type.name,
-                    isSelected = selectedType.id == type.id,
-                    onClick = { onSelectType.invoke(type) }
+                    isSelected = state.selectedType.id == type.id,
+                    onClick = { onAction.invoke(HasScreenAction.SelectType(type)) }
                 )
             }
         }
@@ -207,31 +193,32 @@ fun HasScreen(
                 .padding(top = 18.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
                 .verticalScroll(tagScrollState)
         ) {
-            totalTagList.forEachIndexed { index, tag ->
-                val isSelected by remember(selectedTagList) {
+            state.totalTagList.forEachIndexed { index, tag ->
+                val isSelected by remember(state.selectedTagList) {
                     derivedStateOf {
-                        selectedTagList.contains(tag)
+                        tag.checkSelected(state.selectedTagList)
                     }
                 }
                 if(index < 3 || flowToggle) {
                     TagChipItem(
                         name = tag.name,
                         isSelected = isSelected,
-                        onClick = { onSelectTag.invoke(tag) }
+                        onClick = { onAction.invoke(HasScreenAction.SelectTag(tag)) }
                     )
                 }
             }
-            TagMoreChipItem(
-                cnt = "${totalTagList.size - 4}",
-                isFold = !flowToggle,
-                onClick = { flowToggle = !flowToggle }
-            )
+            if(state.totalTagList.size > 3) {
+                TagMoreChipItem(
+                    cnt = "${state.totalTagList.size - 4}",
+                    isFold = !flowToggle,
+                    onClick = { flowToggle = !flowToggle }
+                )
+            }
         }
         SpacerLineBox()
         LazyVerticalGrid(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
-                .padding(top = 24.dp)
                 .weight(1f)
                 .fillMaxWidth(),
             columns = GridCells.Fixed(2),
@@ -239,14 +226,44 @@ fun HasScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(
-                items = hasList,
+                count = 2,
+                key = { it }
+            ) { index ->
+                Box(
+                    modifier = Modifier
+                        .height(44.dp)
+                        .padding(top = 24.dp, end = 4.dp),
+                    contentAlignment = Alignment.TopEnd
+                ) {
+                    if(index == 1) HasText(text = "총 ${state.hasList.size}개")
+                }
+            }
+            items(
+                items = state.hasList,
                 key = { it.id!! }
             ) { has ->
+
+                val selectedNumber by remember(state.selectedHasList) {
+                    derivedStateOf {
+                        state.selectedHasList.indexOf(has).takeIf { it != -1 }?.let { it + 1 }
+                    }
+                }
+
+                val mode by remember(state.selectedHasList) {
+                    derivedStateOf {
+                        state.selectedHasList.isNotEmpty()
+                    }
+                }
+
                 HasMainItem(
-                    imagePath = has.imagePath,
-                    tagList = has.getTagList(totalTagList),
-                    selectTagList = selectedTagList,
-                    onSelect = { showItemActivity.invoke(has) }
+                    has = has,
+                    mode = mode,
+                    selectedNumber = selectedNumber,
+                    tagList = has.getTagList(state.totalTagList),
+                    selectTagList = state.selectedTagList,
+                    onSelectHas = { onAction.invoke(HasScreenAction.SelectHas(has)) },
+                    onEditHas = { onAction.invoke(HasScreenAction.ShowItemActivity(has)) },
+                    onDeleteHas = {},
                 )
             }
         }
@@ -260,67 +277,65 @@ fun HasScreen(
             modifier = Modifier
                 .size(40.dp)
                 .background(Color.Red)
-                .clickable { showItemActivity.invoke(null) }
+                .clickable { onAction.invoke(HasScreenAction.ShowItemActivity(null)) }
         )
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomStart
-    ) {
-        Row {
-            Text(
-                modifier = Modifier
-                    .height(40.dp)
-                    .background(Color.Red)
-                    .clickable { testTagAdd.invoke() },
-                text = "test tag Add"
-            )
-            Text(
-                modifier = Modifier
-                    .height(40.dp)
-                    .background(Color.Red)
-                    .clickable { testItemAdd.invoke() },
-                text = "test Item Add"
-            )
-            Text(
-                modifier = Modifier
-                    .height(40.dp)
-                    .background(Color.Red)
-                    .clickable { deleteAllTag.invoke() },
-                text = "delete all Tag"
-            )
-            Text(
-                modifier = Modifier
-                    .height(40.dp)
-                    .background(Color.Red)
-                    .clickable { deleteAllItem.invoke() },
-                text = "delete all Item"
-            )
-            Text(
-                modifier = Modifier
-                    .height(40.dp)
-                    .background(Color.Red)
-                    .clickable { testConfirm.invoke() },
-                text = "confirm"
-            )
-        }
-    }
+//    Box(
+//        modifier = Modifier.fillMaxSize(),
+//        contentAlignment = Alignment.BottomStart
+//    ) {
+//        Row {
+//            Text(
+//                modifier = Modifier
+//                    .height(40.dp)
+//                    .background(Color.Red)
+//                    .clickable { testTagAdd.invoke() },
+//                text = "test tag Add"
+//            )
+//            Text(
+//                modifier = Modifier
+//                    .height(40.dp)
+//                    .background(Color.Red)
+//                    .clickable { testItemAdd.invoke() },
+//                text = "test Item Add"
+//            )
+//            Text(
+//                modifier = Modifier
+//                    .height(40.dp)
+//                    .background(Color.Red)
+//                    .clickable { deleteAllTag.invoke() },
+//                text = "delete all Tag"
+//            )
+//            Text(
+//                modifier = Modifier
+//                    .height(40.dp)
+//                    .background(Color.Red)
+//                    .clickable { deleteAllItem.invoke() },
+//                text = "delete all Item"
+//            )
+//            Text(
+//                modifier = Modifier
+//                    .height(40.dp)
+//                    .background(Color.Red)
+//                    .clickable { testConfirm.invoke() },
+//                text = "confirm"
+//            )
+//        }
+//    }
 }
 
 @DevicePreviews
 @Composable
 fun EssentialScreenPreview() {
     HasScreen(
-        totalTypeList = testManTypeTotalList,
-        selectedType = Type(id = 0),
-        onSelectType = {},
-        hasList = emptyList(),
-        totalTagList = testTagList,
-        selectedTagList = emptyList(),
-        onSearch = {},
-        showItemActivity = {},
-        onSelectTag = {},
+        state = HasScreenState(
+            totalTypeList = testManTypeTotalList,
+            selectedType = Type(id = 0),
+            totalTagList = testTagList,
+        ),
+        onAction = {},
+
         testItemAdd = {},
         testTagAdd = {},
         testConfirm = {},

@@ -1,9 +1,7 @@
 package com.myStash.android.core.data.usecase.style
 
 import com.myStash.android.core.data.repository.style.StyleRepository
-import com.myStash.android.core.data.repository.tag.TagRepository
 import com.myStash.android.core.model.Style
-import com.myStash.android.core.model.Tag
 import javax.inject.Inject
 
 class DeleteStyleUseCase @Inject constructor(

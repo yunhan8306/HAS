@@ -14,17 +14,15 @@ import com.myStash.android.core.data.usecase.has.SaveHasUseCase
 import com.myStash.android.core.data.usecase.tag.DeleteTagUseCase
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
 import com.myStash.android.core.data.usecase.tag.SaveTagUseCase
+import com.myStash.android.core.data.usecase.type.GetTypeListUseCase
 import com.myStash.android.core.di.DefaultDispatcher
 import com.myStash.android.core.di.IoDispatcher
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
-import com.myStash.android.core.model.testManTypeTotalList
-import com.myStash.android.core.model.testTagList
-import com.myStash.android.core.model.testWomanTypeTotalList
+import com.myStash.android.core.model.selectTag
+import com.myStash.android.core.model.selectType
 import com.myStash.android.feature.gallery.ImageRepository
-import com.myStash.android.feature.gender.GenderType
-import com.myStash.android.feature.gender.getGenderType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
@@ -32,12 +30,13 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
@@ -56,6 +55,8 @@ class HasViewModel @Inject constructor(
     private val imageRepository: ImageRepository,
     // gender
     private val getSelectedGenderUseCase: GetSelectedGenderUseCase,
+    // type
+    private val getTypeListUseCase: GetTypeListUseCase,
     // dispatcher
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
@@ -74,9 +75,8 @@ class HasViewModel @Inject constructor(
         .textAsFlow()
         .debounce(500)
         .flowOn(defaultDispatcher)
-        .mapLatest { search ->
-            testTagList.filter { it.name.contains(search) }
-        }.stateIn(
+        .map { search -> tagTotalList.value.filter { it.name.contains(search) } }
+        .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),
             initialValue = emptyList()
@@ -84,7 +84,7 @@ class HasViewModel @Inject constructor(
 
     var testImageCnt = 0
 
-    private val itemList = getHasListUseCase.hasList
+    private val hasTotalList = getHasListUseCase.hasList
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),
@@ -99,15 +99,23 @@ class HasViewModel @Inject constructor(
         )
 
     private val selectedTagList = mutableListOf<Tag>()
+    private val selectedHasList = mutableListOf<Has>()
 
-    private val typeTotalList = getSelectedGenderUseCase.gender
-        .mapLatest {
-            when(it.getGenderType()) {
-                GenderType.MAN -> testManTypeTotalList
-                GenderType.WOMAN -> testWomanTypeTotalList
-                else -> emptyList()
-            }
-        }.stateIn(
+//    private val typeTotalList = getSelectedGenderUseCase.gender
+//        .mapLatest {
+//            when(it.getGenderType()) {
+//                GenderType.MAN -> testManTypeTotalList
+//                GenderType.WOMAN -> testWomanTypeTotalList
+//                else -> emptyList()
+//            }
+//        }.stateIn(
+//            scope = viewModelScope,
+//            started = SharingStarted.WhileSubscribed(5_000L),
+//            initialValue = emptyList()
+//        )
+
+    private val typeTotalList = getTypeListUseCase.typeList
+        .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),
             initialValue = emptyList()
@@ -116,7 +124,7 @@ class HasViewModel @Inject constructor(
     private fun fetch() {
         intent {
             viewModelScope.launch {
-                combine(typeTotalList, itemList, tagTotalList) { typeTotalList, itemList, tagTotalList ->
+                combine(typeTotalList, hasTotalList, tagTotalList) { typeTotalList, itemList, tagTotalList ->
                     Triple(typeTotalList, itemList, tagTotalList)
                 }.collectLatest { (typeTotalList, itemList, tagTotalList) ->
                     reduce {
@@ -143,6 +151,16 @@ class HasViewModel @Inject constructor(
         }
     }
 
+    fun onAction(action: HasScreenAction) {
+        when(action) {
+            is HasScreenAction.SelectType -> selectType(action.type)
+            is HasScreenAction.SelectTag -> selectTag(action.tag)
+            is HasScreenAction.SelectHas -> selectHas(action.has)
+            is HasScreenAction.ResetSelectHas -> resetSelectHas()
+            else -> Unit
+        }
+    }
+
     fun selectTag(tag: Tag) {
         intent {
             viewModelScope.launch {
@@ -150,19 +168,47 @@ class HasViewModel @Inject constructor(
 
                 reduce {
                     state.copy(
-                        selectedTagList = selectedTagList.toList()
+                        selectedTagList = selectedTagList.toList(),
+                        hasList = hasTotalList.value.selectTag(selectedTagList)
                     )
                 }
             }
         }
     }
 
-    fun selectType(type: Type) {
+    private fun selectType(type: Type) {
         intent {
             viewModelScope.launch {
                 reduce {
                     state.copy(
+                        hasList = hasTotalList.value.selectType(type),
                         selectedType = type
+                    )
+                }
+            }
+        }
+    }
+
+    private fun selectHas(has: Has) {
+        intent {
+            viewModelScope.launch {
+                selectedHasList.offerOrRemove(has) { it.id == has.id }
+                reduce {
+                    state.copy(
+                        selectedHasList = selectedHasList.toList()
+                    )
+                }
+            }
+        }
+    }
+
+    private fun resetSelectHas() {
+        intent {
+            viewModelScope.launch {
+                selectedHasList.clear()
+                reduce {
+                    state.copy(
+                        selectedHasList = selectedHasList.toList()
                     )
                 }
             }
@@ -214,7 +260,7 @@ class HasViewModel @Inject constructor(
 
     fun deleteAllItem() {
         viewModelScope.launch {
-            itemList.value.forEach {
+            hasTotalList.value.forEach {
                 deleteHasUseCase.invoke(it)
             }
         }

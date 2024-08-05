@@ -6,8 +6,11 @@ data class Tag(
     val createTime: Long = System.currentTimeMillis(),
     val isRemove: Boolean = false
 ) {
-    override fun equals(other: Any?): Boolean {
-        return id == (other as Tag).id
+    fun checkSelected(tagList: List<Tag>): Boolean {
+        tagList.forEach { tag ->
+            if(id == tag.id) return true
+        }
+        return false
     }
 }
 

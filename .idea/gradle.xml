@@ -45,6 +45,7 @@
             <option value="$PROJECT_DIR$/feature/navigation" />
             <option value="$PROJECT_DIR$/feature/search" />
             <option value="$PROJECT_DIR$/feature/splash" />
+            <option value="$PROJECT_DIR$/feature/style" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

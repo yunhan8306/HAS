@@ -30,7 +30,7 @@ fun HasConfirmDialog(
     confirmText: String,
     dismissText: String? = null,
     onConfirm: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit = {}
 ) {
     if(isShow) {
         Dialog(

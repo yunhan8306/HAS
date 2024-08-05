@@ -15,6 +15,8 @@ fun getPhotoList(context: Context): List<Image> {
     val projection = arrayOf(
         MediaStore.Images.Media._ID,
         MediaStore.Images.Media.DISPLAY_NAME,
+        MediaStore.Images.ImageColumns.BUCKET_ID,
+        MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME
     )
 
     val sortOrder = "${MediaStore.Images.Media.DATE_TAKEN} DESC"
@@ -27,14 +29,20 @@ fun getPhotoList(context: Context): List<Image> {
         null,
         sortOrder
     )?.use { cursor ->
+        val imageList = mutableListOf<Image>()
         val idColumn = cursor.getColumnIndex(MediaStore.Images.Media._ID)
         val nameColumn = cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
+        val folderId = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.BUCKET_ID)
+        val folderColumn = cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
+
         while (cursor.moveToNext()) {
             val id = cursor.getLong(idColumn)
             val name = cursor.getString(nameColumn)
             val uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+            val folderId = cursor.getLong(folderId)
+            val folder = cursor.getString(folderColumn)
 
-            images.add(Image(id, name, uri))
+            imageList.add(Image(id, name, uri, folderId, folder))
         }
         images
     } ?: emptyList()
@@ -58,10 +66,11 @@ class ImageRepository @Inject constructor(
     fun loadImages() {
         val projection = arrayOf(
             MediaStore.Images.Media._ID,
-            MediaStore.Images.Media.DISPLAY_NAME
+            MediaStore.Images.Media.DISPLAY_NAME,
+            MediaStore.Images.ImageColumns.BUCKET_ID,
+            MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
         )
         val sortOrder = "${MediaStore.Images.Media.DATE_TAKEN} DESC"
-
         val imageList = context.contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             projection,
@@ -70,14 +79,21 @@ class ImageRepository @Inject constructor(
             sortOrder
         )?.use { cursor ->
             val imageList = mutableListOf<Image>()
-            val idColumn = cursor.getColumnIndex(MediaStore.Images.Media._ID)
-            val nameColumn = cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
+            val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+            val nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
+            val folderIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.BUCKET_ID)
+            val folderColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
+
+            if(idColumn.checkIndex() || nameColumn.checkIndex() || folderIdColumn.checkIndex() || folderColumn.checkIndex()) return@use emptyList()
 
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(idColumn)
                 val name = cursor.getString(nameColumn)
                 val uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
-                imageList.add(Image(id, name, uri))
+                val folderId = cursor.getLong(folderIdColumn)
+                val folder = cursor.getString(folderColumn)
+
+                imageList.add(Image(id, name, uri, folderId, folder))
             }
             imageList
         } ?: emptyList()
@@ -96,4 +112,6 @@ class ImageRepository @Inject constructor(
     fun cleanup() {
         context.contentResolver.unregisterContentObserver(contentObserver)
     }
+
+    private fun Int.checkIndex() = equals(-1)
 }

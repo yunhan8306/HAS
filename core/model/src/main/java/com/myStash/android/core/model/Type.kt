@@ -6,14 +6,13 @@ class Type(
     val order: Long? = 99,
     val createTime: Long = System.currentTimeMillis(),
     val isRemove: Boolean = false
-) {
-    override fun equals(other: Any?): Boolean {
-        return name == (other as Type?)?.name
-    }
-}
+)
+
+fun getTotalType() = Type(id = null, name = "전체")
+
+fun getTotalTypeList() = listOf(getTotalType())
 
 val testManTypeTotalList = listOf(
-    Type(id = 0,name = "전체"),
     Type(id = 1,name = "상의"),
     Type(id = 2,name = "아우터"),
     Type(id = 3,name = "팬츠"),
@@ -21,7 +20,6 @@ val testManTypeTotalList = listOf(
 )
 
 val testWomanTypeTotalList = listOf(
-    Type(id = 0,name = "전체"),
     Type(id = 1,name = "상의"),
     Type(id = 7,name = "스커트"),
     Type(id = 8,name = "원피스"),

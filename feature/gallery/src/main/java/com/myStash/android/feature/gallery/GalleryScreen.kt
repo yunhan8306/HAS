@@ -1,77 +1,132 @@
 package com.myStash.android.feature.gallery
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.BottomSheetScaffoldState
+import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.SubcomposeAsyncImage
+import com.myStash.android.common.resource.R
 import com.myStash.android.core.model.Image
+import com.myStash.android.core.model.ImageFolder
 import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.component.header.HasHeader
+import com.myStash.android.design_system.ui.component.snackbar.HasSnackBar
+import com.myStash.android.design_system.ui.component.text.HasText
+import com.myStash.android.design_system.ui.theme.clickableNoRipple
+import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 
 @Composable
 fun GalleryScreen(
-    imageList: List<Image>,
-    selectedImageList: List<Image>,
-    onEvent: (GalleryEvent) -> Unit,
-    complete: () -> Unit,
+    scaffoldState: BottomSheetScaffoldState,
+    focusImage: Image?,
+    selectedFolder: ImageFolder,
+    isShowFolderWindow: Boolean,
+    onSelectFolder: () -> Unit,
+    onAction: (GalleryAction) -> Unit,
+    onBack: () -> Unit,
+    sheetContent: @Composable (ColumnScope.() -> Unit),
 ) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+    val sheetPeekHeight = screenHeight - screenWidth
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black)
-    ) {
-        Box(
-            contentAlignment = Alignment.CenterEnd
+    BottomSheetScaffold(
+        sheetContent = sheetContent,
+        scaffoldState = scaffoldState,
+        snackbarHost = { HasSnackBar(it) },
+        sheetPeekHeight = sheetPeekHeight,
+        sheetBackgroundColor = Color.White,
+        sheetElevation = 0.dp,
+        backgroundColor = Color.Transparent,
+        contentColor = Color.White
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .background(Color.Black)
+                .fillMaxSize()
+                .padding(paddingValues)
         ) {
-            Text(
-                modifier = Modifier
-                    .size(30.dp)
-                    .background(Color.Yellow)
-                    .clickable { complete.invoke() },
-                text = "complete",
-                textAlign = TextAlign.Center,
-            )
-        }
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            items(
-                items = imageList,
-                key = { image -> image.uri }
-            ) { image ->
-
-                val selectedNumber: Int? by remember(selectedImageList) {
-                    derivedStateOf {
-                        val index = selectedImageList.indexOfFirst { it.uri == image.uri }
-                        if(index != -1) index + 1 else null
+            HasHeader(
+                modifier = Modifier.background(Color.Black),
+                centerContent = {
+                    Box(
+                        modifier = Modifier
+                            .height(26.dp)
+                            .background(
+                                color = Color(0xFF202020),
+                                shape = RoundedCornerShape(size = 13.dp)
+                            )
+                            .clip(shape = RoundedCornerShape(size = 13.dp))
+                            .clickable { onSelectFolder.invoke() },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(start = 12.dp, end = 8.dp),
+                        ) {
+                            HasText(
+                                text = selectedFolder.name,
+                                color = Color.White,
+                                fontSize = 16.dp
+                            )
+                            Image(
+                                modifier = Modifier.size(20.dp),
+                                painter = painterResource(id = if(isShowFolderWindow) R.drawable.btn_gallery_up else R.drawable.btn_gallery_down),
+                                contentDescription = "gallery folder toggle"
+                            )
+                        }
                     }
-                }
-
-                GalleryItem(
-                    imageUri = image.uri,
-                    selectedNumber = selectedNumber,
-                    onClick = { onEvent.invoke(GalleryEvent.OnClick(image)) },
-                    zoom = { onEvent.invoke(GalleryEvent.Zoom(image)) }
-                )
-            }
+                },
+                endContent = {
+                    if(!isShowFolderWindow) {
+                        Box(
+                            modifier = Modifier
+                                .padding(4.dp)
+                                .clickableNoRipple { onAction.invoke(GalleryAction.Complete) }
+                        ) {
+                            HasText(
+                                text = "등록",
+                                color = Color(0xFFE4F562),
+                                fontSize = 16.dp
+                            )
+                        }
+                    }
+                },
+                onBack = onBack
+            )
+            Box(modifier = Modifier.height(12.dp))
+            SubcomposeAsyncImage(
+                model = focusImage?.uri,
+                contentDescription = "gallery image",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(screenWidth),
+                contentScale = ContentScale.Crop,
+                loading = { ShimmerLoadingAnimation() },
+                error = { ShimmerLoadingAnimation() }
+            )
         }
     }
 }
@@ -80,9 +135,13 @@ fun GalleryScreen(
 @Composable
 fun GalleryScreenPreview() {
     GalleryScreen(
-        imageList = emptyList(),
-        selectedImageList = emptyList(),
-        onEvent = {},
-        complete = {},
+        scaffoldState = rememberBottomSheetScaffoldState(),
+        focusImage = null,
+        selectedFolder = ImageFolder(),
+        isShowFolderWindow = false,
+        onSelectFolder = {},
+        onAction = {},
+        onBack = {},
+        sheetContent = {}
     )
 }

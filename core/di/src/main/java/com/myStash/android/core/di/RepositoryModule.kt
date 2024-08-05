@@ -1,5 +1,7 @@
 package com.myStash.android.core.di
 
+import com.myStash.android.core.data.repository.feed.FeedRepository
+import com.myStash.android.core.data.repository.feed.FeedRepositoryImpl
 import com.myStash.android.core.data.repository.gender.GenderRepository
 import com.myStash.android.core.data.repository.gender.GenderRepositoryImpl
 import com.myStash.android.core.data.repository.init.InitRepository
@@ -10,6 +12,8 @@ import com.myStash.android.core.data.repository.style.StyleRepository
 import com.myStash.android.core.data.repository.style.StyleRepositoryImpl
 import com.myStash.android.core.data.repository.tag.TagRepository
 import com.myStash.android.core.data.repository.tag.TagRepositoryImpl
+import com.myStash.android.core.data.repository.type.TypeRepository
+import com.myStash.android.core.data.repository.type.TypeRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,6 +37,16 @@ interface RepositoryModule {
     fun bindsTagRepository(
         tagRepository: TagRepositoryImpl
     ): TagRepository
+
+    @Binds
+    fun bindsTypeRepository(
+        typeRepository: TypeRepositoryImpl
+    ): TypeRepository
+
+    @Binds
+    fun bindsFeedRepository(
+        feedRepository: FeedRepositoryImpl
+    ): FeedRepository
 
     @Binds
     fun bindsGenderRepository(

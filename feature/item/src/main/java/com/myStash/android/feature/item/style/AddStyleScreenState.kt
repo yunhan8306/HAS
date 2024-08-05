@@ -1,16 +1,14 @@
 package com.myStash.android.feature.item.style
 
 import com.myStash.android.core.model.Has
-import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
+import com.myStash.android.core.model.getTotalType
 
 data class AddStyleScreenState(
-    val hasList: List<Has> = emptyList(),
     val typeTotalList: List<Type> = emptyList(),
-    val selectedType: Type? = null,
-    val tagTotalList: List<Tag> = emptyList(),
-    val selectedTagList: List<Tag> = emptyList(),
-    val searchTagList: List<Tag> = emptyList()
+    val hasList: List<Has> = emptyList(),
+    val selectedType: Type = getTotalType(),
+    val selectedHasList: List<Has> = emptyList()
 )
 
 sealed interface AddStyleSideEffect {
