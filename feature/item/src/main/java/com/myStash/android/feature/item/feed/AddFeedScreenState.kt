@@ -31,4 +31,6 @@ sealed interface AddFeedScreenAction {
     data class SelectStyle(val style: StyleScreenModel?): AddFeedScreenAction
     object DeleteSearchText: AddFeedScreenAction
     data class SelectTag(val tag: Tag): AddFeedScreenAction
+    data class SelectDate(val date: LocalDate): AddFeedScreenAction
+    object SaveFeed: AddFeedScreenAction
 }

@@ -30,7 +30,7 @@ data class FeedEntity(
     companion object {
         fun FeedEntity.toFeed() = Feed(
             id = id,
-//            date = date,
+            date = date,
             images = images,
             styleId = styleId,
             createTime = createTime,
@@ -39,7 +39,7 @@ data class FeedEntity(
 
         fun Feed.toEntity() = FeedEntity(
             id = id,
-//            date = date,
+            date = date,
             images = images,
             styleId = styleId,
             createTime = createTime,

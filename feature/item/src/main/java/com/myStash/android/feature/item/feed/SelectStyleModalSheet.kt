@@ -69,7 +69,7 @@ fun SelectStyleModalSheet(
     searchTagList: List<Tag>,
     onBack: () -> Unit,
 
-    onAction: (AddFeedScreenAction) -> Unit = {}
+    onAction: (AddFeedScreenAction) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     val imeState = rememberImeState()

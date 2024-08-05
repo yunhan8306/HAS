@@ -8,8 +8,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.common.util.Quadruple
+import com.myStash.android.common.util.isNotNull
 import com.myStash.android.common.util.offerOrRemove
 import com.myStash.android.common.util.removeBlank
+import com.myStash.android.core.data.usecase.feed.GetFeedListUseCase
+import com.myStash.android.core.data.usecase.feed.SaveFeedUseCase
 import com.myStash.android.core.data.usecase.has.GetHasListUseCase
 import com.myStash.android.core.data.usecase.has.SaveHasUseCase
 import com.myStash.android.core.data.usecase.style.GetStyleListUseCase
@@ -18,6 +21,7 @@ import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
 import com.myStash.android.core.data.usecase.tag.SaveTagUseCase
 import com.myStash.android.core.data.usecase.type.GetTypeListUseCase
 import com.myStash.android.core.di.DefaultDispatcher
+import com.myStash.android.core.model.Feed
 import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.filterSelectTag
@@ -36,8 +40,10 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -50,7 +56,7 @@ class AddFeedViewModel @Inject constructor(
     private val getStyleListUseCase: GetStyleListUseCase,
     private val getHasListUseCase: GetHasListUseCase,
 
-    private val saveHasUseCase: SaveHasUseCase,
+    private val saveFeedUseCase: SaveFeedUseCase,
     private val saveTagUseCase: SaveTagUseCase,
     private val stateHandle: SavedStateHandle,
     // dispatcher
@@ -144,6 +150,8 @@ class AddFeedViewModel @Inject constructor(
             is AddFeedScreenAction.SelectStyle -> selectStyle(action.style)
             is AddFeedScreenAction.DeleteSearchText -> deleteSearchText()
             is AddFeedScreenAction.SelectTag -> selectTag(action.tag)
+            is AddFeedScreenAction.SelectDate -> selectDate(action.date)
+            is AddFeedScreenAction.SaveFeed -> saveFeed()
         }
     }
 
@@ -173,6 +181,34 @@ class AddFeedViewModel @Inject constructor(
                         selectedTagList = selectedTagList.toList(),
                         styleList = styleTotalList.value.filterSelectTag(selectedTagList)
                     )
+                }
+            }
+        }
+    }
+
+    private fun selectDate(date: LocalDate) {
+        intent {
+            viewModelScope.launch {
+                reduce {
+                    state.copy(
+                        date = date
+                    )
+                }
+            }
+        }
+    }
+
+    private fun saveFeed() {
+        intent {
+            viewModelScope.launch {
+                val saveFeed = Feed(
+                    images = state.selectedImageList,
+                    date = state.date,
+                    styleId = state.selectedStyle?.id!!,
+                )
+                val savedId = saveFeedUseCase.invoke(saveFeed)
+                if(savedId.isNotNull()) {
+                    postSideEffect(AddFeedSideEffect.Finish)
                 }
             }
         }

@@ -81,6 +81,11 @@ fun AddFeedRoute(
         showStyleSheet = {
             scope.launch { selectStyleModalState.show() }
         },
+        onAction = { action ->
+            when(action) {
+                else -> viewModel.onAction(action)
+            }
+        },
         sheetContent = {
             SelectStyleModalSheet(
                 selectStyleModalState = selectStyleModalState,

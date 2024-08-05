@@ -41,6 +41,19 @@ fun List<StyleScreenModel>.filterSelectTag(
     }
 }
 
+fun StyleScreenModel.getUsedTagList(tagTotalList: List<Tag>): List<Tag> {
+    return tagTotalList.filter { tag ->
+        var isUsed = false
+        hasList.forEach {
+            if(it.tags.contains(tag.id)) {
+                isUsed = true
+                return@forEach
+            }
+        }
+        isUsed
+    }
+}
+
 fun Long?.getStyleScreenModel(styleList: List<StyleScreenModel>): StyleScreenModel? {
     return styleList.firstOrNull { it.id == this }
 }

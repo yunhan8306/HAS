@@ -1,5 +1,7 @@
 package com.myStash.android.core.di
 
+import com.myStash.android.core.data.repository.feed.FeedRepository
+import com.myStash.android.core.data.repository.feed.FeedRepositoryImpl
 import com.myStash.android.core.data.repository.gender.GenderRepository
 import com.myStash.android.core.data.repository.gender.GenderRepositoryImpl
 import com.myStash.android.core.data.repository.init.InitRepository
@@ -40,6 +42,11 @@ interface RepositoryModule {
     fun bindsTypeRepository(
         typeRepository: TypeRepositoryImpl
     ): TypeRepository
+
+    @Binds
+    fun bindsFeedRepository(
+        feedRepository: FeedRepositoryImpl
+    ): FeedRepository
 
     @Binds
     fun bindsGenderRepository(

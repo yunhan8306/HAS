@@ -1,13 +1,17 @@
 package com.myStash.android.design_system.ui.component.calender
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -28,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontVariation.width
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -43,71 +48,117 @@ import java.time.LocalDate
 
 @Composable
 fun HasCalender(
+    modifier: Modifier = Modifier,
     year: Int,
     month: Int,
     selectDate: LocalDate,
     calenderDataList: List<CalenderData>,
     onClickAgoCalender: () -> Unit,
     onClickNextCalender: () -> Unit,
-    onClickDay: (String) -> Unit,
+    onClickDay: (LocalDate) -> Unit,
 ) {
 
     var isShowDatePicker by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier
-            .height(268.dp)
-            .width(360.dp)
-            .padding(horizontal = 16.dp)
-            .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 12.dp))
+    Box(
+        modifier = modifier
     ) {
-        Box(modifier = Modifier.height(22.dp))
-        Row(
-            modifier = Modifier.clickable { isShowDatePicker = !isShowDatePicker },
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(280.dp)
+                .padding(horizontal = 16.dp)
         ) {
-            HasText(
-                text = "$year.$month",
-                fontSize = 16.dp,
-                fontWeight = HasFontWeight.Bold
-            )
-            Box(modifier = Modifier.size(12.dp).background(Color.Blue))
-        }
-        Box(modifier = Modifier.height(14.dp))
-        LazyVerticalGrid(
-            modifier = Modifier.fillMaxWidth(),
-            columns = GridCells.Fixed(7),
-            userScrollEnabled = false
-        ) {
-            items(calenderDataList) { calenderData ->
-                when(calenderData) {
-                    is CalenderData.DayOfWeek -> FeedCalenderDayOfWeekItem(dayOfWeek = calenderData.name)
-                    is CalenderData.Spacer -> FeedCalenderSpacerItem()
-                    is CalenderData.Day -> {
-                        val isSelect by remember(selectDate, year, month) {
-                            derivedStateOf {
-                                year == selectDate.year && month == selectDate.monthValue && calenderData.day == selectDate.dayOfMonth.toString()
+            Box(modifier = Modifier.height(22.dp))
+            Row(
+                modifier = Modifier.clickable { isShowDatePicker = !isShowDatePicker },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                HasText(
+                    text = "$year.$month",
+                    fontSize = 16.dp,
+                    fontWeight = HasFontWeight.Bold
+                )
+                Box(modifier = Modifier
+                    .size(12.dp)
+                    .background(Color.Blue))
+            }
+            Box(modifier = Modifier.height(14.dp))
+            LazyVerticalGrid(
+                modifier = Modifier.fillMaxWidth(),
+                columns = GridCells.Fixed(7),
+                userScrollEnabled = false
+            ) {
+                items(calenderDataList) { calenderData ->
+                    when(calenderData) {
+                        is CalenderData.DayOfWeek -> FeedCalenderDayOfWeekItem(dayOfWeek = calenderData.name)
+                        is CalenderData.Spacer -> FeedCalenderSpacerItem()
+                        is CalenderData.Day -> {
+                            val isSelect by remember(selectDate, year, month) {
+                                derivedStateOf {
+                                    year == selectDate.year && month == selectDate.monthValue && calenderData.day == selectDate.dayOfMonth.toString()
+                                }
                             }
-                        }
 
-                        FeedCalenderDayItem(
-                            day = calenderData.day,
-                            isSelect = isSelect,
-                            onClick = onClickDay
-                        )
+                            FeedCalenderDayItem(
+                                day = calenderData.day,
+                                isSelect = isSelect,
+                                onClick = { onClickDay.invoke(LocalDate.of(year, month, calenderData.day.toInt())) }
+                            )
+                        }
+                        is CalenderData.RecodedDay -> {
+                            val isSelect by remember(selectDate, year, month) {
+                                derivedStateOf {
+                                    year == selectDate.year && month == selectDate.monthValue && calenderData.day == selectDate.dayOfMonth.toString()
+                                }
+                            }
+
+                            FeedCalenderRecordDayItem(
+                                isSelect = isSelect,
+                                day = calenderData.day,
+                                imageUri = calenderData.imageUri,
+                                onClick = { onClickDay.invoke(LocalDate.of(year, month, calenderData.day.toInt())) }
+                            )
+                        }
                     }
-                    is CalenderData.RecodedDay -> FeedCalenderRecordDayItem(
-                        day = calenderData.day,
-                        imageUri = calenderData.imageUri,
-                        onClick = onClickDay
-                    )
                 }
             }
         }
-    }
 
-    if(isShowDatePicker) {
-        // 피커 작업 필요
+        if(isShowDatePicker) {
+            // 피커 작업 필요
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(20.dp)
+                        .background(Color.Black)
+                        .clickable { onClickAgoCalender.invoke() }
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = "$year.$month",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        lineHeight = 16.sp,
+                        fontWeight = FontWeight(600),
+                        color = Color(0xFF202020),
+                    )
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Box(
+                    modifier = Modifier
+                        .size(20.dp)
+                        .background(Color.Black)
+                        .clickable { onClickNextCalender.invoke() }
+                )
+            }
+            BackHandler { isShowDatePicker = false }
+        }
     }
 }
 
@@ -179,6 +230,7 @@ fun FeedCalenderDayItem(
 
 @Composable
 fun FeedCalenderRecordDayItem(
+    isSelect: Boolean,
     day: String,
     imageUri: String,
     onClick: (String) -> Unit,
@@ -194,6 +246,7 @@ fun FeedCalenderRecordDayItem(
             modifier = Modifier
                 .size(36.dp)
                 .clip(RoundedCornerShape(18.dp))
+                .border(width = if(isSelect) 1.dp else (-1).dp, color = Color(0xFF202020), shape = RoundedCornerShape(size = 18.dp))
         ) {
             SubcomposeAsyncImage(
                 model = imageUri,
@@ -213,6 +266,11 @@ fun FeedCalenderRecordDayItem(
                 color = Color(0xFF909090),
                 textAlign = TextAlign.Center,
             )
+        )
+        HasText(
+            text = day,
+            fontSize = 12.dp,
+            color = if(isSelect) Color(0xFF202020) else Color(0xFFFFFFFF)
         )
     }
 }

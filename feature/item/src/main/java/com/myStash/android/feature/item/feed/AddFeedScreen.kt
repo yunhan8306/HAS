@@ -11,11 +11,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -26,6 +28,7 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,12 +37,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.myStash.android.common.resource.R
+import com.myStash.android.common.util.isNotNull
+import com.myStash.android.common.util.isNotNullAndNotEmpty
 import com.myStash.android.core.model.setCalender
 import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.component.button.HasButton
 import com.myStash.android.design_system.ui.component.calender.HasCalender
 import com.myStash.android.design_system.ui.component.photo.SelectPhotoItem
 import com.myStash.android.design_system.ui.component.photo.UnselectPhotoItem
@@ -62,6 +69,7 @@ fun AddFeedScreen(
 //    saveItem: () -> Unit,
     showGalleryActivity: () -> Unit,
 //    onBack: () -> Unit,
+    onAction: (AddFeedScreenAction) -> Unit,
     showStyleSheet: () -> Unit,
     sheetContent: @Composable (ColumnScope.() -> Unit),
 ) {
@@ -71,17 +79,24 @@ fun AddFeedScreen(
 
     val dateFadeIn by animateFloatAsState(
         targetValue = if(isShowDate) 1f else 0f,
-        animationSpec = tween(1000),
+        animationSpec = tween(400),
         label = "header fade ani"
     )
 
     val dateHeight by animateDpAsState(
-        targetValue = if(isShowDate) 268.dp else 0.dp,
-        animationSpec = tween(1000),
+        targetValue = if(isShowDate) 280.dp else 0.dp,
+        animationSpec = tween(400),
         label = "date height"
     )
 
     val scrollState = rememberScrollState()
+    
+    val isComplete by remember(state) {
+        derivedStateOf {
+            state.selectedStyle.isNotNull() && state.selectedImageList.isNotEmpty()
+        }
+    }
+    
 
     ModalBottomSheetLayout(
         sheetState = searchModalState,
@@ -150,13 +165,14 @@ fun AddFeedScreen(
                         .alpha(dateFadeIn)
                 ) {
                     HasCalender(
+                        modifier = Modifier.width(360.dp),
                         year = state.date.year,
                         month = state.date.monthValue,
                         selectDate = state.date,
                         calenderDataList = setCalender(state.date.year, state.date.monthValue),
                         onClickAgoCalender = {},
                         onClickNextCalender = {},
-                        onClickDay = {},
+                        onClickDay = { onAction.invoke(AddFeedScreenAction.SelectDate(it)) },
                     )
                 }
 
@@ -197,7 +213,31 @@ fun AddFeedScreen(
                                 tagTotalList = state.tagTotalList
                             )
                         }
+                        if(isComplete) item { Box(modifier = Modifier.height(48.dp)) }
                     }
+                }
+            }
+        }
+
+        if(isComplete) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                Box(
+                    modifier = Modifier
+                        .padding(top = 12.dp, bottom = 12.dp, start = 16.dp, end = 16.dp)
+                        .shadow(
+                            elevation = 10.dp,
+                            spotColor = Color(0x14000000),
+                            ambientColor = Color(0x14000000)
+                        )
+                ) {
+                    HasButton(
+                        text = "등록하기",
+                        isComplete = isComplete,
+                        onClick = { onAction.invoke(AddFeedScreenAction.SaveFeed) }
+                    )
                 }
             }
         }
@@ -212,6 +252,7 @@ fun AddFeedScreenPreview() {
         state = AddFeedScreenState(),
         showGalleryActivity = {},
         showStyleSheet = {},
+        onAction = {},
         sheetContent = {}
     )
 }
