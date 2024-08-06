@@ -15,6 +15,7 @@ dependencies {
     implementation(projects.core.di)
     implementation(projects.common.compose)
     implementation(projects.common.util)
+    implementation(projects.common.resource)
     implementation(projects.feature.navigation)
     implementation(projects.feature.gender)
 

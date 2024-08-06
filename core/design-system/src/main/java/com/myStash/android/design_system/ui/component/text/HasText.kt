@@ -10,6 +10,7 @@ import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -24,6 +25,7 @@ fun HasText(
     letterSpacing: Dp = 0.dp,
     lineHeight: Dp = 0.dp,
     maxLines: Int = Int.MAX_VALUE,
+    textDecoration: TextDecoration? = null
 ) {
     val fontSizeSp = with(LocalDensity.current) { fontSize.toSp() }
     val letterSpacingSp = with(LocalDensity.current) { letterSpacing.toSp() }
@@ -43,7 +45,8 @@ fun HasText(
             letterSpacing = letterSpacingSp,
             textAlign = textAlign,
             lineHeight = lineHeightSp,
-            platformStyle = PlatformTextStyle(includeFontPadding = false)
+            platformStyle = PlatformTextStyle(includeFontPadding = false),
+            textDecoration = textDecoration
         ),
         maxLines = maxLines,
     )
