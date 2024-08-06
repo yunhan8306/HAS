@@ -12,7 +12,7 @@ sealed interface CalenderData {
     ): CalenderData
 }
 
-fun setCalender(currentYear: Int, currentMonth: Int): MutableList<CalenderData> {
+fun setCalender(currentYear: Int, currentMonth: Int, feedList: List<Feed> = emptyList()): MutableList<CalenderData> {
     val calenderDataList: MutableList<CalenderData> = mutableListOf()
     val yearMonth = YearMonth.of(currentYear, currentMonth)
 
@@ -25,11 +25,20 @@ fun setCalender(currentYear: Int, currentMonth: Int): MutableList<CalenderData> 
     // 날짜 데이터
     val daysInMonth = yearMonth.lengthOfMonth()
     (1..daysInMonth).forEach { day ->
-        calenderDataList.add(
-            CalenderData.Day(
-                day = day.toString()
+        feedList.firstOrNull { day == it.date.dayOfMonth }?.let { feed ->
+            calenderDataList.add(
+                CalenderData.RecodedDay(
+                    day = day.toString(),
+                    imageUri = feed.images[0]
+                )
             )
-        )
+        } ?: run {
+            calenderDataList.add(
+                CalenderData.Day(
+                    day = day.toString()
+                )
+            )
+        }
     }
 
     return calenderDataList

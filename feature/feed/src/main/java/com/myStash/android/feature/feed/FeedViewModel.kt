@@ -8,16 +8,14 @@ import com.myStash.android.core.data.usecase.has.GetHasListUseCase
 import com.myStash.android.core.data.usecase.style.GetStyleListUseCase
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
 import com.myStash.android.core.data.usecase.type.GetTypeListUseCase
-import com.myStash.android.core.model.CalenderData
-import com.myStash.android.core.model.Feed
 import com.myStash.android.core.model.filterDate
 import com.myStash.android.core.model.getFeedByDate
 import com.myStash.android.core.model.getUsedTagList
+import com.myStash.android.core.model.setCalender
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
@@ -26,7 +24,6 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import java.time.LocalDate
-import java.time.YearMonth
 import javax.inject.Inject
 
 @HiltViewModel
@@ -106,7 +103,17 @@ class FeedViewModel @Inject constructor(
         }
     }
 
-    fun onClickAgoCalender() {
+    fun onAction(action: FeedScreenAction) {
+        viewModelScope.launch {
+            when(action) {
+                is FeedScreenAction.AgoCalender -> agoCalender()
+                is FeedScreenAction.NextCalender -> nextCalender()
+                is FeedScreenAction.SelectDay -> selectDay(action.date)
+            }
+        }
+    }
+
+    private fun agoCalender() {
         intent {
             viewModelScope.launch {
                 val date = state.calenderDate.minusMonths(1)
@@ -121,7 +128,7 @@ class FeedViewModel @Inject constructor(
             }
         }
     }
-    fun onClickNextCalender() {
+    private fun nextCalender() {
         intent {
             viewModelScope.launch {
                 val date = state.calenderDate.plusMonths(1)
@@ -137,7 +144,7 @@ class FeedViewModel @Inject constructor(
         }
     }
 
-    fun onClickDay(date: LocalDate) {
+    private fun selectDay(date: LocalDate) {
         intent {
             viewModelScope.launch {
                 val selectedFeed = feedTotalList.value.filterDate(date.year, date.monthValue).getFeedByDate(date)
@@ -156,56 +163,4 @@ class FeedViewModel @Inject constructor(
             }
         }
     }
-}
-
-fun MutableList<CalenderData>.addAllDayOfWeek() {
-    val dayOfWeekList = mutableListOf(
-        CalenderData.DayOfWeek("일"),
-        CalenderData.DayOfWeek("월"),
-        CalenderData.DayOfWeek("화"),
-        CalenderData.DayOfWeek("수"),
-        CalenderData.DayOfWeek("목"),
-        CalenderData.DayOfWeek("금"),
-        CalenderData.DayOfWeek("토"),
-    )
-    addAll(dayOfWeekList)
-}
-
-fun MutableList<CalenderData>.addAllSpacerDay(yearMonth: YearMonth) {
-    val firstDayOfMonth = yearMonth.atDay(1).dayOfWeek.value % 7 // Sunday as 0
-    repeat(firstDayOfMonth) {
-        add(CalenderData.Spacer)
-    }
-}
-
-fun setCalender(currentYear: Int, currentMonth: Int, feedList: List<Feed> = emptyList()): MutableList<CalenderData> {
-    val calenderDataList: MutableList<CalenderData> = mutableListOf()
-    val yearMonth = YearMonth.of(currentYear, currentMonth)
-
-    // 요일 데이터
-    calenderDataList.addAllDayOfWeek()
-
-    // 공백 데이터
-    calenderDataList.addAllSpacerDay(yearMonth)
-
-    // 날짜 데이터
-    val daysInMonth = yearMonth.lengthOfMonth()
-    (1..daysInMonth).forEach { day ->
-        feedList.firstOrNull { day == it.date.dayOfMonth }?.let { feed ->
-            calenderDataList.add(
-                CalenderData.RecodedDay(
-                    day = day.toString(),
-                    imageUri = feed.images[0]
-                )
-            )
-        } ?: run {
-            calenderDataList.add(
-                CalenderData.Day(
-                    day = day.toString()
-                )
-            )
-        }
-    }
-
-    return calenderDataList
 }

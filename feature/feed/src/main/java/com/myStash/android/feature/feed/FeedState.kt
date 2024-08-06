@@ -18,3 +18,9 @@ data class FeedScreenState(
 )
 
 sealed interface FeedSideEffect
+
+sealed interface FeedScreenAction {
+    object AgoCalender: FeedScreenAction
+    object NextCalender: FeedScreenAction
+    data class SelectDay(val date: LocalDate): FeedScreenAction
+}

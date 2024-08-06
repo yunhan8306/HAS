@@ -17,6 +17,6 @@ class GetStyleListUseCase @Inject constructor(
     val styleList: Flow<List<StyleScreenModel>> =
         styleRepository.selectAll().map { styleList ->
             val hasList = getHasListUseCase.hasList.first()
-            styleList.map { style -> style.toStyleScreenModel(hasList) }
+            styleList.reversed().map { style -> style.toStyleScreenModel(hasList) }
         }
 }

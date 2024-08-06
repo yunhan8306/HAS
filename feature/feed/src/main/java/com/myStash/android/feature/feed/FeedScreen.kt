@@ -1,10 +1,8 @@
 package com.myStash.android.feature.feed
 
-import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -44,7 +42,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import coil.compose.SubcomposeAsyncImage
 import com.google.accompanist.navigation.animation.composable
-import com.myStash.android.core.model.CalenderData
 import com.myStash.android.design_system.ui.component.calender.HasCalender
 import com.myStash.android.design_system.ui.component.tag.TagChipItem
 import com.myStash.android.design_system.ui.component.tag.TagMoreChipItem
@@ -56,7 +53,6 @@ import com.myStash.android.feature.item.feed.AddStyleHasItem
 import com.myStash.android.navigation.MainNavType
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
-import java.time.LocalDate
 
 fun NavGraphBuilder.feedScreen() {
     composable(
@@ -70,44 +66,26 @@ fun NavGraphBuilder.feedScreen() {
 fun FeedRoute(
     viewModel: FeedViewModel = hiltViewModel()
 ) {
-
     val state by viewModel.collectAsState()
-    val currentDate = viewModel.collectAsState().value.calenderDate
-    val calenderDataList = viewModel.collectAsState().value.calenderDataList
-    val selectDate = viewModel.collectAsState().value.selectedDate
 
     FeedScreen(
         state = state,
-        year = currentDate.year,
-        month = currentDate.monthValue,
-        selectDate = selectDate,
-        calenderDataList = calenderDataList,
-        onClickAgoCalender = viewModel::onClickAgoCalender,
-        onClickNextCalender = viewModel::onClickNextCalender,
-        onClickDay = viewModel::onClickDay,
+        onAction = viewModel::onAction
     )
 }
 
 @Composable
 fun FeedScreen(
     state: FeedScreenState,
-    year: Int,
-    month: Int,
-    selectDate: LocalDate,
-    calenderDataList: List<CalenderData>,
-    onClickAgoCalender: () -> Unit,
-    onClickNextCalender: () -> Unit,
-    onClickDay: (LocalDate) -> Unit,
+    onAction: (FeedScreenAction) -> Unit,
 ) {
 
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
     val tagScrollState = rememberScrollState()
     var flowToggle by remember { mutableStateOf(false) }
-
     var yPosition by remember { mutableIntStateOf(0) }
     val headerToggle by remember(yPosition) { derivedStateOf { yPosition < 140 } }
-
     val headerCalenderFade by animateFloatAsState(
         targetValue = if(headerToggle) 1f else 0f,
         animationSpec = tween(400),
@@ -144,9 +122,9 @@ fun FeedScreen(
                     month = state.calenderDate.monthValue,
                     selectDate = state.selectedDate,
                     calenderDataList = state.calenderDataList,
-                    onClickAgoCalender = onClickAgoCalender,
-                    onClickNextCalender = onClickNextCalender,
-                    onClickDay = onClickDay,
+                    onClickAgoCalender = { onAction.invoke(FeedScreenAction.AgoCalender) },
+                    onClickNextCalender = { onAction.invoke(FeedScreenAction.NextCalender) },
+                    onClickDay = { onAction.invoke(FeedScreenAction.SelectDay(it)) },
                 )
             }
             Box(
