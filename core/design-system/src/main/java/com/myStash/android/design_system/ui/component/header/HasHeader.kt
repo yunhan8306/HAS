@@ -1,7 +1,6 @@
 package com.myStash.android.design_system.ui.component.header
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.myStash.android.common.resource.R
@@ -23,6 +21,7 @@ import com.myStash.android.design_system.ui.component.text.TextConstant.HAS_TEXT
 @Composable
 fun HasHeader(
     modifier: Modifier = Modifier,
+    isBack: Boolean = true,
     text: String = HAS_TEXT_EMPTY,
     centerContent: @Composable () -> Unit = {},
     endContent: @Composable () -> Unit = {},
@@ -35,13 +34,15 @@ fun HasHeader(
             .padding(horizontal = 12.dp),
         contentAlignment = Alignment.CenterStart
     ) {
-        Image(
-            modifier = Modifier
-                .size(24.dp)
-                .clickable { onBack.invoke() },
-            painter = painterResource(id = R.drawable.btn_back),
-            contentDescription = "back",
-        )
+        if(isBack) {
+            Image(
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable { onBack.invoke() },
+                painter = painterResource(id = R.drawable.btn_back),
+                contentDescription = "back",
+            )
+        }
         Box(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center

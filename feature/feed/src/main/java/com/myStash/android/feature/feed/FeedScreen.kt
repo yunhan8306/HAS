@@ -43,6 +43,7 @@ import androidx.navigation.NavGraphBuilder
 import coil.compose.SubcomposeAsyncImage
 import com.google.accompanist.navigation.animation.composable
 import com.myStash.android.design_system.ui.component.calender.HasCalender
+import com.myStash.android.design_system.ui.component.header.HasLogoHeader
 import com.myStash.android.design_system.ui.component.tag.TagChipItem
 import com.myStash.android.design_system.ui.component.tag.TagMoreChipItem
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
@@ -95,7 +96,7 @@ fun FeedScreen(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        FeedHeader()
+        HasLogoHeader()
         Column(
             modifier = Modifier
                 .fillMaxWidth()
