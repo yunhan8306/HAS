@@ -1,6 +1,10 @@
 package com.myStash.android.feature.feed
 
+import android.util.Log
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -24,9 +28,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -44,9 +50,11 @@ import com.myStash.android.design_system.ui.component.tag.TagChipItem
 import com.myStash.android.design_system.ui.component.tag.TagMoreChipItem
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
+import com.myStash.android.design_system.ui.theme.clickableNoRipple
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 import com.myStash.android.feature.item.feed.AddStyleHasItem
 import com.myStash.android.navigation.MainNavType
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import java.time.LocalDate
 
@@ -92,12 +100,19 @@ fun FeedScreen(
     onClickDay: (LocalDate) -> Unit,
 ) {
 
+    val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
     val tagScrollState = rememberScrollState()
     var flowToggle by remember { mutableStateOf(false) }
 
     var yPosition by remember { mutableIntStateOf(0) }
-    val headerToggle by remember(yPosition) { derivedStateOf { yPosition < 280 } }
+    val headerToggle by remember(yPosition) { derivedStateOf { yPosition < 140 } }
+
+    val headerCalenderFade by animateFloatAsState(
+        targetValue = if(headerToggle) 1f else 0f,
+        animationSpec = tween(400),
+        label = "header calender fade ani"
+    )
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -135,12 +150,7 @@ fun FeedScreen(
                 )
             }
             Box(
-                modifier = Modifier
-                    .padding(vertical = 16.dp)
-                    .onGloballyPositioned { coordinates ->
-                        // Get the Y position of the Box
-                        yPosition = coordinates.positionInWindow().y.toInt()
-                    }
+                modifier = Modifier.padding(vertical = 16.dp)
             ) {
                 Row(
                     modifier = Modifier
@@ -149,7 +159,10 @@ fun FeedScreen(
                         .background(
                             color = Color(0xFFFFFFFF),
                             shape = RoundedCornerShape(size = 12.dp)
-                        ),
+                        )
+                        .onGloballyPositioned { coordinates ->
+                            yPosition = coordinates.positionInWindow().y.toInt()
+                        },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     HasText(
@@ -158,10 +171,12 @@ fun FeedScreen(
                             .padding(start = 16.dp),
                         text = "${state.selectedDate.monthValue}.${state.selectedDate.dayOfMonth}"
                     )
-                    Box(modifier = Modifier
-                        .background(Color.Blue)
-                        .size(20.dp)
-                        .padding(end = 10.dp))
+                    Box(
+                        modifier = Modifier
+                            .background(Color.Blue)
+                            .size(20.dp)
+                            .padding(end = 10.dp)
+                    )
                 }
             }
             
@@ -250,14 +265,18 @@ fun FeedScreen(
             }
         }
     }
-    if(headerToggle) {
-        Column {
-            FeedHeader()
+    if(headerCalenderFade > 0f) {
+        Column(
+            modifier = Modifier.alpha(headerCalenderFade)
+        ) {
+            Box(modifier = Modifier.height(40.dp))
             Row(
                 modifier = Modifier
                     .background(Color.White)
                     .fillMaxWidth()
                     .height(44.dp)
+                    .clickableNoRipple { scope.launch { scrollState.animateScrollTo(0) } },
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 HasText(
                     modifier = Modifier
@@ -265,10 +284,12 @@ fun FeedScreen(
                         .padding(start = 16.dp),
                     text = "${state.selectedDate.monthValue}.${state.selectedDate.dayOfMonth}"
                 )
-                Box(modifier = Modifier
-                    .background(Color.Blue)
-                    .size(20.dp)
-                    .padding(end = 10.dp))
+                Box(
+                    modifier = Modifier
+                        .background(Color.Blue)
+                        .size(20.dp)
+                        .padding(end = 10.dp)
+                )
             }
         }
     }
