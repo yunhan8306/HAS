@@ -2,6 +2,7 @@ package com.myStash.android.feature.style
 
 import android.app.Application
 import androidx.compose.foundation.text2.input.TextFieldState
+import androidx.compose.foundation.text2.input.clearText
 import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -146,5 +147,9 @@ class StyleViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun deleteSearchText() {
+        searchTextState.clearText()
     }
 }

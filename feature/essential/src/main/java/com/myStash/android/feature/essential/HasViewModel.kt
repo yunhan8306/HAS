@@ -3,10 +3,13 @@ package com.myStash.android.feature.essential
 import android.app.Application
 import android.util.Log
 import androidx.compose.foundation.text2.input.TextFieldState
+import androidx.compose.foundation.text2.input.clearText
+import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.common.util.offerOrRemove
+import com.myStash.android.common.util.removeBlank
 import com.myStash.android.core.data.usecase.gender.GetSelectedGenderUseCase
 import com.myStash.android.core.data.usecase.has.DeleteHasUseCase
 import com.myStash.android.core.data.usecase.has.GetHasListUseCase
@@ -28,15 +31,14 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
-import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
@@ -73,8 +75,8 @@ class HasViewModel @Inject constructor(
     val searchTextState = TextFieldState()
     private val searchTagList = searchTextState
         .textAsFlow()
-        .debounce(500)
         .flowOn(defaultDispatcher)
+        .onEach { text -> searchTextState.setTextAndPlaceCursorAtEnd(text.removeBlank()) }
         .map { search -> tagTotalList.value.filter { it.name.contains(search) } }
         .stateIn(
             scope = viewModelScope,
@@ -131,7 +133,8 @@ class HasViewModel @Inject constructor(
                         state.copy(
                             hasList = itemList,
                             totalTagList = tagTotalList,
-                            totalTypeList = typeTotalList
+                            totalTypeList = typeTotalList,
+                            searchTagList = tagTotalList
                         )
                     }
                 }
@@ -144,7 +147,7 @@ class HasViewModel @Inject constructor(
             viewModelScope.launch {
                 searchTagList.collectLatest {
                     reduce {
-                        state.copy(totalTagList = it.toList())
+                        state.copy(searchTagList = it.toList())
                     }
                 }
             }
@@ -213,6 +216,10 @@ class HasViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun deleteSearchText() {
+        searchTextState.clearText()
     }
 
     private fun initGalleryImages() {

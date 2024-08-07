@@ -9,6 +9,7 @@ data class StyleScreenState(
     val selectedStyle: StyleScreenModel? = null,
     val totalTypeList: List<Type> = emptyList(),
     val totalTagList: List<Tag> = emptyList(),
+    val searchTagList: List<Tag> = emptyList(),
     val selectedTagList: List<Tag> = emptyList()
 )
 

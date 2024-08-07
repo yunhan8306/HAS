@@ -1,7 +1,6 @@
 package com.myStash.android.feature.essential
 
 import com.myStash.android.core.model.Has
-import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
 
@@ -11,6 +10,7 @@ data class HasScreenState(
     val selectedType: Type = Type(0),
     val totalTagList: List<Tag> = emptyList(),
     val selectedTagList: List<Tag> = emptyList(),
+    val searchTagList: List<Tag> = emptyList(),
     val selectedHasList: List<Has> = emptyList()
 )
 

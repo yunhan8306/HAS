@@ -105,10 +105,13 @@ fun StyleRoute(
     if(isShowSearch) {
         SearchScreen(
             searchTextState = searchTextState,
-            searchText = searchTextState.text.toString(),
-            selectTagList = selectedTagList,
-            tagList = totalTagList,
-            select = viewModel::selectTag,
+            totalTagList = state.totalTagList,
+            selectTagList = state.selectedTagList,
+            searchTagList = state.searchTagList,
+            selectedHasCnt = 0,
+            onSelect = viewModel::selectTag,
+            onConfirm = { isShowSearch = false },
+            onDelete = viewModel::deleteSearchText,
             onBack = { isShowSearch = false },
         )
     }
