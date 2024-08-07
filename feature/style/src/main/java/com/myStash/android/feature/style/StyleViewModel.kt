@@ -3,10 +3,12 @@ package com.myStash.android.feature.style
 import android.app.Application
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.text2.input.clearText
+import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.common.util.offerOrRemove
+import com.myStash.android.common.util.removeBlank
 import com.myStash.android.core.data.usecase.style.GetStyleListUseCase
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
 import com.myStash.android.core.data.usecase.type.GetTypeListUseCase
@@ -20,9 +22,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
@@ -52,8 +54,8 @@ class StyleViewModel @Inject constructor(
     val searchTextState = TextFieldState()
     private val searchTagList = searchTextState
         .textAsFlow()
-        .debounce(500)
         .flowOn(defaultDispatcher)
+        .onEach { text -> searchTextState.setTextAndPlaceCursorAtEnd(text.removeBlank()) }
         .map { search -> tagTotalList.value.filter { it.name.contains(search) } }
         .stateIn(
             scope = viewModelScope,
@@ -108,7 +110,7 @@ class StyleViewModel @Inject constructor(
             viewModelScope.launch {
                 searchTagList.collectLatest {
                     reduce {
-                        state.copy(totalTagList = it.toList())
+                        state.copy(searchTagList = it.toList())
                     }
                 }
             }
