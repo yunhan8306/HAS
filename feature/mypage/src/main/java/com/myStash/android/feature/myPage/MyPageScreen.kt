@@ -37,6 +37,7 @@ import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.design_system.ui.theme.clickableNoRipple
 import com.myStash.android.feature.webview.WebView
+import com.myStash.android.feature.webview.WebViewConstants
 import com.myStash.android.navigation.MainNavType
 
 fun NavGraphBuilder.myPageScreen() {
