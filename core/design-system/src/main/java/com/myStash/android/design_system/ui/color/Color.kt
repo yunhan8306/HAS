@@ -1,0 +1,56 @@
+package com.myStash.android.design_system.ui.color
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+
+
+val Black = Color(0xFF202020)
+val White = Color(0xFFFFFFFF)
+
+
+val BackgroundLight = Color(0xFFFFFFFF)
+val BackgroundDark = Color(0xFF1A1A1A)
+val LightGray = Color(0xFFF5F5F5)
+val DarkGray = Color(0xFF1A1A1A)
+val HeaderBackgroundLight = Color(0xFFFFFFFF)
+val HeaderBackgroundDark = Color(0xFF303030)
+val BottomSheetBackgroundLight = Color(0xFFFFFFFF)
+val BottomSheetBackgroundDark = Color(0xFF1A1A1A)
+val CategoryTipBackgroundLight = Color(0xFF707070)
+val CategoryTipBackgroundDark = Color(0xFFA4A4A4)
+val InputBoxBackgroundLight = Color(0xFFF1F1F1)
+val InputBoxBackgroundDark = Color(0xFF303030)
+val InputDefaultLineLight = Color(0xFFE1E1E1)
+val InputDefaultLineDark = Color(0xFF505050)
+val InputFocusLineLight = Color(0xFF202020)
+val InputFocusLineDark = Color(0xFFFFFFFF)
+val InputBackgroundLight = Color(0xFFFFFFFF)
+val InputBackgroundDark = Color(0xFF202020)
+val PlaceholderLight = Color(0xFFA4A4A4)
+val PlaceholderDark = Color(0xFF707070)
+val TextLight = Color(0xFF202020)
+val TextDark = Color(0xFFFFFFFF)
+val SecondaryTextLight = Color(0xFF505050)
+val SecondaryTextDark = Color(0xFFA4A4A4)
+val AccentTextLight = Color(0xFF8A9918)
+val AccentTextDark = Color(0xFFE4F562)
+val LineLight = Color(0xFFF1F1F1)
+val LineDark = Color(0xFF303030)
+val SecondaryLineLight = Color(0xFFE1E1E1)
+val SecondaryLineDark = Color(0xFF707070)
+val TagBackgroundLight = Color(0xFFF1F1F1)
+val TagBackgroundDark = Color(0xFF505050)
+val TagTextLight = Color(0xFF202020)
+val TagTextDark = Color(0xFFC8C8C8)
+val DimBackgroundLight = Color(0x66000000) // 40% opacity
+val DimBackgroundDark = Color(0x99000000) // 60% opacity
+val ButtonActiveBackgroundLight = Color(0xFF202020)
+val ButtonActiveBackgroundDark = Color(0xFFE4F562)
+val ButtonActiveTextLight = Color(0xFFE4F562)
+val ButtonActiveTextDark = Color(0xFF202020)
+val ButtonDisabledBackgroundLight = Color(0xFFD4D4D4)
+val ButtonDisabledBackgroundDark = Color(0xFF404040)
+val ButtonDisabledTextLight = Color(0xFFFFFFFF)
+val ButtonDisabledTextDark = Color(0xFF707070)
+val ToastBackgroundLight = Color(0xFF85867C)
+val ToastBackgroundDark = Color(0xFF505050)
