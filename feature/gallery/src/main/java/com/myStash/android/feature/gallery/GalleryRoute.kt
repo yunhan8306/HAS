@@ -1,5 +1,6 @@
 package com.myStash.android.feature.gallery
 
+import android.app.Activity
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.material.BottomSheetValue
@@ -40,7 +41,7 @@ fun GalleryRoute(
             }
             is GallerySideEffect.Complete -> {
                 activity.apply {
-                    setResult(ComponentActivity.RESULT_OK, sideEffect.intent)
+                    setResult(Activity.RESULT_OK, sideEffect.intent)
                     finish()
                 }
             }

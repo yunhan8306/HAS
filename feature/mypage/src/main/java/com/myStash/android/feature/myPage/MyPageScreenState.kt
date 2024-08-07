@@ -6,4 +6,6 @@ data class MyPageScreenState(
 
 sealed interface MyPageSideEffect
 
-sealed interface MyPageScreenAction
+sealed interface MyPageScreenAction {
+    data class ShowWebView(val url: String) : MyPageScreenAction
+}

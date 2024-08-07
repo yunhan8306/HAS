@@ -17,6 +17,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,6 +36,7 @@ import com.myStash.android.design_system.ui.component.header.HasLogoHeader
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.design_system.ui.theme.clickableNoRipple
+import com.myStash.android.feature.webview.WebView
 import com.myStash.android.navigation.MainNavType
 
 fun NavGraphBuilder.myPageScreen() {
@@ -53,14 +58,31 @@ fun MyPageRoute(
         onResult = {}
     )
 
+    var webViewUrl by remember { mutableStateOf("") }
+
     MyPageScreen(
         state = MyPageScreenState(nickName = "Test"),
-        onAction = {},
+        onAction = { action ->
+            when(action) {
+                is MyPageScreenAction.ShowWebView -> {
+                    webViewUrl = action.url
+                }
+                else -> Unit
+            }
+        },
 //        showGenderActivity = {
 //            val intent = Intent(activity, GenderActivity::class.java)
 //            itemActivityLauncher.launch(intent)
 //        }
     )
+
+
+    if(webViewUrl.isNotEmpty()) {
+        WebView(
+            url = webViewUrl,
+            onDismiss = { webViewUrl = "" }
+        )
+    }
 }
 
 @Composable
@@ -104,19 +126,19 @@ fun MyPageScreen(
         ) {
             MyPageItem(
                 text = "Manage Categories / Tags",
-                onClick = {}
+                onClick = {  }
             )
             MyPageItem(
                 text = "Notice",
-                onClick = {}
+                onClick = { onAction.invoke(MyPageScreenAction.ShowWebView(WebViewConstants.URL_NOTICE)) }
             )
             MyPageItem(
                 text = "Contact us",
-                onClick = {}
+                onClick = {  }
             )
             MyPageItem(
                 text = "FAQ",
-                onClick = {}
+                onClick = { onAction.invoke(MyPageScreenAction.ShowWebView(WebViewConstants.URL_FAQ)) }
             )
         }
 
@@ -167,7 +189,7 @@ fun MyPageScreen(
         HasText(
             modifier = Modifier
                 .padding(top = 33.dp)
-                .clickableNoRipple {  },
+                .clickableNoRipple { onAction.invoke(MyPageScreenAction.ShowWebView(WebViewConstants.URL_TERMS)) },
             text = "Terms of Service",
             fontSize = 14.dp,
             color = Color(0xFF707070),
