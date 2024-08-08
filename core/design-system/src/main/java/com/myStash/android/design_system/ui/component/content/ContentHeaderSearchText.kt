@@ -17,6 +17,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.myStash.android.common.resource.R
 import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.color.ColorFamilyGray200AndGray600
+import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray600
+import com.myStash.android.design_system.ui.color.Gray900
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.design_system.util.clickableRipple
 
@@ -32,7 +35,7 @@ fun ContentHeaderSearchText(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(44.dp)
-                .background(color = Color(0xFFF1F1F1), shape = RoundedCornerShape(size = 10.dp))
+                .background(color = ColorFamilyGray200AndGray600, shape = RoundedCornerShape(size = 10.dp))
                 .clickableRipple(onClick = onClick)
                 .padding(start = 12.dp, end = 8.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -40,7 +43,7 @@ fun ContentHeaderSearchText(
             HasText(
                 modifier = Modifier.weight(1f),
                 text = text,
-                color = Color(0xFFA4A4A4)
+                color = Gray900
             )
             Image(
                 modifier = Modifier.size(24.dp),

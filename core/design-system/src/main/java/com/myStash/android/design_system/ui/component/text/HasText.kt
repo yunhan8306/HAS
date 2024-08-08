@@ -13,12 +13,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
 
 @Composable
 fun HasText(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = Color(0xFF202020),
+    color: Color = ColorFamilyBlackAndWhite,
     fontSize: Dp = 15.dp,
     fontWeight: HasFontWeight = HasFontWeight.Medium,
     textAlign: TextAlign = TextAlign.Start,

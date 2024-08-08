@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.myStash.android.common.util.CommonActivityResultContract
+import com.myStash.android.design_system.ui.theme.HasDefaultTheme
 import com.myStash.android.feature.gender.GenderActivity
 import com.myStash.android.feature.item.ItemActivity
 import com.myStash.android.feature.item.item.ItemTab
@@ -40,37 +41,39 @@ fun MainRoute(
         }
     }
 
-    Scaffold(
-        bottomBar = {
-            MainNavigation(navHostController)
+    HasDefaultTheme {
+        Scaffold(
+            bottomBar = {
+                MainNavigation(navHostController)
+            }
+        ) { paddingValues ->
+            Surface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                MainNavHost(
+                    navHostController = navHostController,
+                )
+            }
         }
-    ) { paddingValues ->
-        Surface(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            MainNavHost(
-                navHostController = navHostController,
-            )
-        }
-    }
 
-    MainBottomModal(
-        navHostController = navHostController,
-        showAddStyleItemActivity = { hasList ->
-            val intent = Intent(activity, ItemActivity::class.java).apply {
-                putExtra("tab", ItemTab.STYLE.name)
-                putExtra("style", hasList.map { it.id }.toTypedArray())
+        MainBottomModal(
+            navHostController = navHostController,
+            showAddStyleItemActivity = { hasList ->
+                val intent = Intent(activity, ItemActivity::class.java).apply {
+                    putExtra("tab", ItemTab.STYLE.name)
+                    putExtra("style", hasList.map { it.id }.toTypedArray())
+                }
+                itemActivityLauncher.launch(intent)
+            },
+            showAddFeedItemActivity = { style ->
+                val intent = Intent(activity, ItemActivity::class.java).apply {
+                    putExtra("tab", ItemTab.FEED.name)
+                    putExtra(ItemTab.FEED.name, style.id)
+                }
+                itemActivityLauncher.launch(intent)
             }
-            itemActivityLauncher.launch(intent)
-        },
-        showAddFeedItemActivity = { style ->
-            val intent = Intent(activity, ItemActivity::class.java).apply {
-                putExtra("tab", ItemTab.FEED.name)
-                putExtra(ItemTab.FEED.name, style.id)
-            }
-            itemActivityLauncher.launch(intent)
-        }
-    )
+        )
+    }
 }

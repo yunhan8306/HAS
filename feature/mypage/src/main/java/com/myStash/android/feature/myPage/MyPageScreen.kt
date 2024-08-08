@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -89,8 +90,7 @@ fun MyPageRoute(
 @Composable
 fun MyPageScreen(
     state: MyPageScreenState,
-    onAction: (MyPageScreenAction) -> Unit,
-//    showGenderActivity: () -> Unit
+    onAction: (MyPageScreenAction) -> Unit
 ) {
 
     val scrollState = rememberScrollState()
@@ -98,6 +98,7 @@ fun MyPageScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colors.background)
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

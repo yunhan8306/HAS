@@ -32,6 +32,8 @@ import com.myStash.android.common.resource.R
 import com.myStash.android.common.util.isNotNull
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Tag
+import com.myStash.android.design_system.ui.color.ColorFamilyGray300AndGray400
+import com.myStash.android.design_system.ui.color.Purple
 import com.myStash.android.design_system.ui.component.tag.TagHasChipItem
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
@@ -62,7 +64,7 @@ fun HasMainItem(
         modifier = Modifier
             .border(
                 width = if(selectedNumber.isNotNull()) 2.dp else 1.dp,
-                color = if(selectedNumber.isNotNull()) Color(0xFF716DF6) else Color(0xFFE1E1E1),
+                color = if(selectedNumber.isNotNull()) Purple else ColorFamilyGray300AndGray400,
                 shape = RoundedCornerShape(size = 12.dp)
             )
             .clip(shape = RoundedCornerShape(size = 12.dp))
@@ -75,7 +77,6 @@ fun HasMainItem(
         SubcomposeAsyncImage(
             modifier = Modifier
                 .aspectRatio(158f / 210f)
-                .background(color = Color(0x66000000), shape = RoundedCornerShape(size = 12.dp))
                 .fillMaxSize()
                 .alpha(if (shortClick) 0.4f else 1f),
             loading = { ShimmerLoadingAnimation() },

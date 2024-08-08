@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.myStash.android.design_system.ui.color.ColorFamilyGray200AndGray600
 
 @Composable
 fun SpacerLineBox() {
@@ -15,6 +15,6 @@ fun SpacerLineBox() {
         modifier = Modifier
             .fillMaxWidth()
             .height(8.dp)
-            .background(Color(0xFFF1F1F1))
+            .background(ColorFamilyGray200AndGray600)
     )
 }

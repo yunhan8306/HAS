@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -47,6 +48,8 @@ import com.myStash.android.core.model.testManTypeTotalList
 import com.myStash.android.core.model.testTagList
 import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.color.ColorFamilyGray200AndGray600
+import com.myStash.android.design_system.ui.color.ColorFamilyGray500AndGray900
 import com.myStash.android.design_system.ui.component.SpacerLineBox
 import com.myStash.android.design_system.ui.component.content.ContentHeaderSearchText
 import com.myStash.android.design_system.ui.component.dialog.HasConfirmDialog
@@ -99,13 +102,7 @@ fun HasRoute(
 
                  else -> viewModel.onAction(action)
              }
-        },
-        //test
-        testItemAdd = viewModel::testItemAdd,
-        testTagAdd = viewModel::testTagAdd,
-        testConfirm = { testConfirm = true},
-        deleteAllItem = viewModel::deleteAllItem,
-        deleteAllTag = viewModel::deleteAllTag,
+        }
     )
 
     if(isShowSearch) {
@@ -137,17 +134,11 @@ fun HasRoute(
 fun HasScreen(
     state: HasScreenState,
     onAction: (HasScreenAction) -> Unit,
-    // test
-    testItemAdd: () -> Unit,
-    testTagAdd: () -> Unit,
-    testConfirm: () -> Unit,
-    deleteAllItem: () -> Unit,
-    deleteAllTag: () -> Unit,
 ) {
 
     val tagScrollState = rememberScrollState()
-
     var flowToggle by remember { mutableStateOf(false) }
+    val drawLineColor = ColorFamilyGray200AndGray600
 
     LaunchedEffect(state.totalTagList) {
         tagScrollState.scrollTo(0)
@@ -156,7 +147,8 @@ fun HasScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White),
+            .background(MaterialTheme.colors.background)
+            .padding(top = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ContentHeaderSearchText(
@@ -170,7 +162,7 @@ fun HasScreen(
                 .padding(top = 12.dp)
                 .drawBehind {
                     drawLine(
-                        color = Color(0xFFF1F1F1),
+                        color = drawLineColor,
                         start = Offset(x = 0f, y = size.height),
                         end = Offset(x = size.width, y = size.height),
                         strokeWidth = 1.dp.toPx(),
@@ -238,7 +230,12 @@ fun HasScreen(
                         .padding(top = 24.dp, end = 4.dp),
                     contentAlignment = Alignment.TopEnd
                 ) {
-                    if(index == 1) HasText(text = "총 ${state.hasList.size}개")
+                    if(index == 1) {
+                        HasText(
+                            text = "총 ${state.hasList.size}개",
+                            color = ColorFamilyGray500AndGray900
+                        )
+                    }
                 }
             }
             items(
@@ -283,54 +280,11 @@ fun HasScreen(
                 .clickable { onAction.invoke(HasScreenAction.ShowItemActivity(null)) }
         )
     }
-
-//    Box(
-//        modifier = Modifier.fillMaxSize(),
-//        contentAlignment = Alignment.BottomStart
-//    ) {
-//        Row {
-//            Text(
-//                modifier = Modifier
-//                    .height(40.dp)
-//                    .background(Color.Red)
-//                    .clickable { testTagAdd.invoke() },
-//                text = "test tag Add"
-//            )
-//            Text(
-//                modifier = Modifier
-//                    .height(40.dp)
-//                    .background(Color.Red)
-//                    .clickable { testItemAdd.invoke() },
-//                text = "test Item Add"
-//            )
-//            Text(
-//                modifier = Modifier
-//                    .height(40.dp)
-//                    .background(Color.Red)
-//                    .clickable { deleteAllTag.invoke() },
-//                text = "delete all Tag"
-//            )
-//            Text(
-//                modifier = Modifier
-//                    .height(40.dp)
-//                    .background(Color.Red)
-//                    .clickable { deleteAllItem.invoke() },
-//                text = "delete all Item"
-//            )
-//            Text(
-//                modifier = Modifier
-//                    .height(40.dp)
-//                    .background(Color.Red)
-//                    .clickable { testConfirm.invoke() },
-//                text = "confirm"
-//            )
-//        }
-//    }
 }
 
 @DevicePreviews
 @Composable
-fun EssentialScreenPreview() {
+fun HasScreenPreview() {
     HasScreen(
         state = HasScreenState(
             totalTypeList = testManTypeTotalList,
@@ -338,11 +292,5 @@ fun EssentialScreenPreview() {
             totalTagList = testTagList,
         ),
         onAction = {},
-
-        testItemAdd = {},
-        testTagAdd = {},
-        testConfirm = {},
-        deleteAllItem = {},
-        deleteAllTag = {},
     )
 }

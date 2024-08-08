@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -64,14 +65,14 @@ fun SearchScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MaterialTheme.colors.background)
             .clickableNoRipple {}
             .addFocusCleaner(focusManager),
     ) {
         Column(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
-                .padding(top = 32.dp)
+                .padding(top = 12.dp)
         ) {
             ContentTextField(
                 textState = searchTextState,
