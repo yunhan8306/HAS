@@ -11,7 +11,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
-import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray600
+import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
 
@@ -21,10 +21,11 @@ fun TypeItem(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    val drawLineColor = ColorFamilyWhiteAndGray600
+    val drawLineColor = ColorFamilyBlackAndWhite
 
     Box(
         modifier = Modifier
+            .padding(bottom = 2.dp)
             .drawBehind {
                 if (isSelected) {
                     drawLine(
@@ -32,7 +33,7 @@ fun TypeItem(
                         start = Offset(x = 0f + 30, y = size.height),
                         end = Offset(x = size.width - 30, y = size.height),
                         strokeWidth = 4.dp.toPx(),
-                        cap = StrokeCap.Round
+                        cap = StrokeCap.Square
                     )
                 }
             }
