@@ -1,7 +1,6 @@
 package com.myStash.android.design_system.ui.component.has
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -23,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -34,6 +32,7 @@ import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Tag
 import com.myStash.android.design_system.ui.color.ColorFamilyGray300AndGray400
 import com.myStash.android.design_system.ui.color.Purple
+import com.myStash.android.design_system.ui.color.White
 import com.myStash.android.design_system.ui.component.tag.TagHasChipItem
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
@@ -43,7 +42,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun HasMainItem(
     has: Has,
-    mode: Boolean,
+    isSelectedMode: Boolean,
     selectedNumber: Int?,
     tagList: List<Tag>,
     selectTagList: List<Tag>,
@@ -69,8 +68,8 @@ fun HasMainItem(
             )
             .clip(shape = RoundedCornerShape(size = 12.dp))
             .combinedClickable(
-                onLongClick = { onSelectHas.invoke(has) },
-                onClick = { shortClick = !shortClick },
+                onLongClick = { if(isSelectedMode) shortClick = !shortClick else onSelectHas.invoke(has) },
+                onClick = { if(isSelectedMode) onSelectHas.invoke(has) else shortClick = !shortClick },
             ),
         contentAlignment = Alignment.Center
     ) {
@@ -101,7 +100,7 @@ fun HasMainItem(
         }
     }
 
-    if(mode) {
+    if(isSelectedMode) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -123,7 +122,7 @@ fun HasMainItem(
                     )
                     HasText(
                         text = selectedNumber.toString(),
-                        color = Color.White,
+                        color = White,
                         fontSize = 12.dp,
                         fontWeight = HasFontWeight.Bold
                     )

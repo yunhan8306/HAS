@@ -249,7 +249,7 @@ fun HasScreen(
                     }
                 }
 
-                val mode by remember(state.selectedHasList) {
+                val isSelectedMode by remember(state.selectedHasList) {
                     derivedStateOf {
                         state.selectedHasList.isNotEmpty()
                     }
@@ -257,7 +257,7 @@ fun HasScreen(
 
                 HasMainItem(
                     has = has,
-                    mode = mode,
+                    isSelectedMode = isSelectedMode,
                     selectedNumber = selectedNumber,
                     tagList = has.getTagList(state.totalTagList),
                     selectTagList = state.selectedTagList,
