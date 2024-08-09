@@ -122,6 +122,21 @@ class AddHasViewModel @Inject constructor(
         }
     }
 
+    fun onAction(action: AddHasScreenAction) {
+        when(action) {
+            is AddHasScreenAction.SelectType -> {
+                selectType(action.type)
+            }
+            is AddHasScreenAction.SelectTag -> {
+                selectTag(action.tag)
+            }
+            is AddHasScreenAction.Save -> {
+                saveItem()
+            }
+            else -> Unit
+        }
+    }
+
     fun deleteSearchText() {
         searchTextState.clearText()
     }
@@ -146,7 +161,7 @@ class AddHasViewModel @Inject constructor(
         }
     }
 
-    fun selectType(type: Type?) {
+    private fun selectType(type: Type?) {
         intent {
             viewModelScope.launch {
                 reduce {
@@ -172,7 +187,7 @@ class AddHasViewModel @Inject constructor(
         }
     }
 
-    fun saveItem() {
+    private fun saveItem() {
         intent {
             viewModelScope.launch {
                 val tagIdList = selectedTagList.map { tag ->

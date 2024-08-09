@@ -10,14 +10,12 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExposedDropdownMenuBox
@@ -35,15 +33,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import com.myStash.android.common.resource.R
 import com.myStash.android.common.util.isNotNull
 import com.myStash.android.common.util.isNotNullAndNotEmpty
-import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.testManTypeTotalList
 import com.myStash.android.core.model.testTagList
@@ -56,23 +51,15 @@ import com.myStash.android.design_system.ui.component.tag.TagDeleteChipItem
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.design_system.util.clickableRipple
-import com.myStash.android.feature.item.component.ItemTitleText
 import com.myStash.android.feature.item.component.AddItemAware
+import com.myStash.android.feature.item.component.ItemTitleText
 import kotlinx.coroutines.launch
 
 @Composable
 fun AddHasScreen(
     searchModalState: ModalBottomSheetState,
-    imageUri: String?,
-    selectedType: Type?,
-    typeTotalList: List<Type>,
-    selectType: (Type) -> Unit,
-    selectedTagList: List<Tag>,
-    selectTag: (Tag) -> Unit,
-    search: () -> Unit,
-    saveItem: () -> Unit,
-    showGalleryActivity: () -> Unit,
-    onBack: () -> Unit,
+    state: AddHasScreenState,
+    onAction: (AddHasScreenAction) -> Unit,
     sheetContent: @Composable (ColumnScope.() -> Unit),
 ) {
     val scope = rememberCoroutineScope()
@@ -84,7 +71,6 @@ fun AddHasScreen(
         animationSpec = tween(800),
         label = "header fade ani"
     )
-
 
     ModalBottomSheetLayout(
         sheetState = searchModalState,
@@ -106,13 +92,13 @@ fun AddHasScreen(
                     modifier = Modifier.padding(bottom = 16.dp),
                     text = "사진"
                 )
-                imageUri?.let {
+                state.imageUri?.let {
                     SelectPhotoItem(
-                        imageUri = imageUri,
-                        onClick = showGalleryActivity
+                        imageUri = it,
+                        onClick = { onAction.invoke(AddHasScreenAction.ShowGalleryActivity) }
                     )
                 } ?: run {
-                    UnselectPhotoItem(onClick = showGalleryActivity)
+                    UnselectPhotoItem(onClick = { onAction.invoke(AddHasScreenAction.ShowGalleryActivity) })
                 }
                 ItemTitleText(
                     modifier = Modifier.padding(top = 36.dp, bottom = 16.dp),
@@ -124,8 +110,8 @@ fun AddHasScreen(
                 ) {
                     Column {
                         ContentText(
-                            text = selectedType?.name ?: "카테고리 선택",
-                            textColor = if(selectedType != null) Color(0xFF202020) else Color(0xFFA4A4A4),
+                            text = state.selectedType?.name ?: "카테고리 선택",
+                            textColor = if(state.selectedType != null) Color(0xFF202020) else Color(0xFFA4A4A4),
                             borderColor = if(dropDownExpanded) Color(0xFF202020) else Color(0xFFE1E1E1),
                             onClick = {},
                             endContent = {
@@ -145,10 +131,10 @@ fun AddHasScreen(
                             expanded = dropDownExpanded,
                             onDismissRequest = { dropDownExpanded = false },
                         ) {
-                            typeTotalList.forEach { type ->
+                            state.typeTotalList.forEach { type ->
                                 val isSelected by remember {
                                     derivedStateOf {
-                                        selectedType?.name == type.name
+                                        state.selectedType?.name == type.name
                                     }
                                 }
 
@@ -164,7 +150,7 @@ fun AddHasScreen(
                                         )
                                     },
                                     onClick = {
-                                        selectType.invoke(type)
+                                        onAction.invoke(AddHasScreenAction.SelectType(type))
                                         dropDownExpanded = false
                                     },
                                 )
@@ -189,17 +175,17 @@ fun AddHasScreen(
                 }
                 ContentText(
                     text = "브랜드, 분위기, 계절, 컬러",
-                    onClick = search
+                    onClick = { onAction.invoke(AddHasScreenAction.ShowSearch) }
                 )
                 FlowRow(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 12.dp),
                 ) {
-                    selectedTagList.forEach { tag ->
+                    state.selectedTagList.forEach { tag ->
                         TagDeleteChipItem(
                             name = tag.name,
-                            onClick = { selectTag.invoke(tag) }
+                            onClick = { onAction.invoke(AddHasScreenAction.SelectTag(tag)) }
                         )
                     }
                 }
@@ -212,8 +198,8 @@ fun AddHasScreen(
             ) {
                 HasButton(
                     text = "등록하기",
-                    isComplete = imageUri.isNotNullAndNotEmpty() && selectedType.isNotNull() && selectedTagList.isNotEmpty(),
-                    onClick = saveItem
+                    isComplete = state.imageUri.isNotNullAndNotEmpty() && state.selectedType.isNotNull() && state.selectedTagList.isNotEmpty(),
+                    onClick = { onAction.invoke(AddHasScreenAction.Save) }
                 )
             }
         }
@@ -236,22 +222,6 @@ fun AddHasScreen(
             }
         }
     }
-
-//    Box(
-//        modifier = Modifier.fillMaxSize(),
-//        contentAlignment = Alignment.BottomCenter
-//    ) {
-//        Box(
-//            modifier = Modifier.padding(bottom = 12.dp, start = 16.dp, end = 16.dp).zIndex(1f),
-//        ) {
-//            HasButton(
-//                modifier = Modifier.shadow(elevation = 10.dp, shape = RoundedCornerShape(size = 10.dp)),
-//                text = "등록하기",
-//                isComplete = true,
-//                onClick = saveItem
-//            )
-//        }
-//    }
 }
 
 @DevicePreviews
@@ -259,16 +229,12 @@ fun AddHasScreen(
 fun ItemEssentialScreenPreview() {
     AddHasScreen(
         searchModalState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
-        imageUri = null,
-        selectedType = Type(id = 1, name = "상의"),
-        typeTotalList = testManTypeTotalList,
-        selectType = {},
-        selectedTagList = testTagList,
-        selectTag = {},
-        search = {},
-        showGalleryActivity = {},
-        saveItem = {},
-        onBack = {},
+        state = AddHasScreenState(
+            typeTotalList = testManTypeTotalList,
+            selectedType = Type(id = 1, name = "상의"),
+            selectedTagList = testTagList,
+        ),
+        onAction = {},
         sheetContent = {}
     )
 }

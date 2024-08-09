@@ -67,26 +67,28 @@ fun AddHasRoute(
     }
 
     AddHasScreen(
-        imageUri = state.imageUri,
-        selectedType = state.selectedType,
-        typeTotalList = state.typeTotalList,
-        selectType = viewModel::selectType,
-        selectedTagList = state.selectedTagList,
-        selectTag = viewModel::selectTag,
-        search = {
-            viewModel.deleteSearchText()
-            scope.launch { searchModalState.show() }
-        },
-        saveItem = viewModel::saveItem,
-        showGalleryActivity = {
-            activity.galleryPermissionCheck(
-                permissions = GalleryPermission.GALLERY_PERMISSIONS,
-                requestPermissionLauncher = requestPermissionLauncher,
-                onPermissionDenied = { isShowPermissionRequestConfirm = true }
-            )
-        },
-        onBack = finishActivity,
         searchModalState = searchModalState,
+        state = state,
+        onAction = { action ->
+            when(action) {
+                is AddHasScreenAction.ShowSearch -> {
+                    viewModel.deleteSearchText()
+                    scope.launch { searchModalState.show() }
+                }
+                is AddHasScreenAction.Back -> {
+                    finishActivity.invoke()
+                }
+                is AddHasScreenAction.ShowGalleryActivity -> {
+                    activity.galleryPermissionCheck(
+                        permissions = GalleryPermission.GALLERY_PERMISSIONS,
+                        requestPermissionLauncher = requestPermissionLauncher,
+                        onPermissionDenied = { isShowPermissionRequestConfirm = true }
+                    )
+                }
+                else -> viewModel.onAction(action)
+            }
+        },
+
         sheetContent = {
             TagSearchBottomSheetLayout(
                 searchModalState = searchModalState,
@@ -98,8 +100,7 @@ fun AddHasRoute(
                 onSelect = viewModel::selectTag,
                 onConfirm = { scope.launch { searchModalState.hide() } },
                 onDelete = viewModel::deleteSearchText,
-                onBack = { scope.launch { searchModalState.hide() }
-                }
+                onBack = { scope.launch { searchModalState.hide() } }
             )
         }
     )

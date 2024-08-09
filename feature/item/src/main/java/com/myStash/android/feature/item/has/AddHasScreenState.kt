@@ -15,3 +15,12 @@ data class AddHasScreenState(
 sealed interface AddHasSideEffect {
     object Finish: AddHasSideEffect
 }
+
+sealed interface AddHasScreenAction {
+    data class SelectType(val type: Type): AddHasScreenAction
+    data class SelectTag(val tag: Tag): AddHasScreenAction
+    object ShowSearch: AddHasScreenAction
+    object Save: AddHasScreenAction
+    object Back: AddHasScreenAction
+    object ShowGalleryActivity: AddHasScreenAction
+}
