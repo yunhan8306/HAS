@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -60,7 +61,10 @@ fun MyPageRoute(
         onResult = {}
     )
 
+    var dialogType by remember { mutableStateOf<MyPageDialogType?>(null) }
+
     var webViewUrl by remember { mutableStateOf("") }
+    var isShowContact by remember { mutableStateOf(false) }
 
     MyPageScreen(
         state = MyPageScreenState(nickName = "Test"),
@@ -68,6 +72,11 @@ fun MyPageRoute(
             when(action) {
                 is MyPageScreenAction.ShowWebView -> {
                     webViewUrl = action.url
+                    dialogType = MyPageDialogType.WebView(action.url)
+                }
+                is MyPageScreenAction.ShowContact -> {
+                    isShowContact = true
+                    dialogType = MyPageDialogType.Contact
                 }
                 else -> Unit
             }
@@ -77,6 +86,24 @@ fun MyPageRoute(
 //            itemActivityLauncher.launch(intent)
 //        }
     )
+
+    when(val type = dialogType) {
+        is MyPageDialogType.WebView -> {
+            WebView(
+                url = type.url,
+                onDismiss = { dialogType = null }
+            )
+        }
+        is MyPageDialogType.Contact -> {
+            ContactDialog(
+                state = ContactDialogState(),
+                contentTextState = TextFieldState(),
+                onAction = {},
+                onDismiss = { dialogType = null }
+            )
+        }
+        else -> Unit
+    }
 
 
     if(webViewUrl.isNotEmpty()) {
@@ -136,7 +163,7 @@ fun MyPageScreen(
             )
             MyPageItem(
                 text = "Contact us",
-                onClick = {  }
+                onClick = { onAction.invoke(MyPageScreenAction.ShowContact) }
             )
             MyPageItem(
                 text = "FAQ",
