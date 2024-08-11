@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.myStash.android.feature.item">
+    package="com.myStash.android.feature.contact">
 
     <application>
         <activity
-            android:name="com.myStash.android.feature.item.ItemActivity"
+            android:name="com.myStach.android.feature.contact.ContactActivity"
             android:exported="false"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.MyStash"/>
     </application>
-
 </manifest>

@@ -36,6 +36,7 @@
             <option value="$PROJECT_DIR$/core/di" />
             <option value="$PROJECT_DIR$/core/model" />
             <option value="$PROJECT_DIR$/feature" />
+            <option value="$PROJECT_DIR$/feature/contact" />
             <option value="$PROJECT_DIR$/feature/essential" />
             <option value="$PROJECT_DIR$/feature/feed" />
             <option value="$PROJECT_DIR$/feature/gallery" />
@@ -46,6 +47,7 @@
             <option value="$PROJECT_DIR$/feature/search" />
             <option value="$PROJECT_DIR$/feature/splash" />
             <option value="$PROJECT_DIR$/feature/style" />
+            <option value="$PROJECT_DIR$/feature/webview" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

@@ -1,5 +1,6 @@
 package com.myStash.android.feature.myPage
 
+import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.Image
@@ -15,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -32,7 +32,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
+import com.myStach.android.feature.contact.ContactActivity
 import com.myStash.android.common.util.CommonActivityResultContract
+import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.design_system.ui.component.SpacerLineBox
 import com.myStash.android.design_system.ui.component.header.HasLogoHeader
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
@@ -56,15 +58,15 @@ fun MyPageRoute(
 ) {
 
     val activity = LocalContext.current as ComponentActivity
-    val itemActivityLauncher = rememberLauncherForActivityResult(
-        contract = CommonActivityResultContract(),
-        onResult = {}
-    )
-
-    var dialogType by remember { mutableStateOf<MyPageDialogType?>(null) }
+    var menuType by remember { mutableStateOf<MyPageMenuType?>(null) }
 
     var webViewUrl by remember { mutableStateOf("") }
     var isShowContact by remember { mutableStateOf(false) }
+
+    val contactActivityLauncher = rememberLauncherForActivityResult(
+        contract = CommonActivityResultContract(),
+        onResult = { menuType = null }
+    )
 
     MyPageScreen(
         state = MyPageScreenState(nickName = "Test"),
@@ -72,45 +74,29 @@ fun MyPageRoute(
             when(action) {
                 is MyPageScreenAction.ShowWebView -> {
                     webViewUrl = action.url
-                    dialogType = MyPageDialogType.WebView(action.url)
+                    menuType = MyPageMenuType.WebView(action.url)
                 }
                 is MyPageScreenAction.ShowContact -> {
-                    isShowContact = true
-                    dialogType = MyPageDialogType.Contact
+                    menuType = MyPageMenuType.Contact
                 }
                 else -> Unit
             }
-        },
-//        showGenderActivity = {
-//            val intent = Intent(activity, GenderActivity::class.java)
-//            itemActivityLauncher.launch(intent)
-//        }
+        }
     )
 
-    when(val type = dialogType) {
-        is MyPageDialogType.WebView -> {
+    when(val type = menuType) {
+        is MyPageMenuType.WebView -> {
             WebView(
                 url = type.url,
-                onDismiss = { dialogType = null }
+                onDismiss = { menuType = null }
             )
         }
-        is MyPageDialogType.Contact -> {
-            ContactDialog(
-                state = ContactDialogState(),
-                contentTextState = TextFieldState(),
-                onAction = {},
-                onDismiss = { dialogType = null }
-            )
+        is MyPageMenuType.Contact -> {
+            val intent = Intent(activity, ContactActivity::class.java)
+            contactActivityLauncher.launch(intent)
+            activity.slideIn()
         }
         else -> Unit
-    }
-
-
-    if(webViewUrl.isNotEmpty()) {
-        WebView(
-            url = webViewUrl,
-            onDismiss = { webViewUrl = "" }
-        )
     }
 }
 

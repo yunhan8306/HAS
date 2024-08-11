@@ -43,6 +43,10 @@ import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.testManTypeTotalList
 import com.myStash.android.core.model.testTagList
 import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
+import com.myStash.android.design_system.ui.color.ColorFamilyLime100AndGray550
+import com.myStash.android.design_system.ui.color.ColorFamilyLime700AndLime300
+import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray600
 import com.myStash.android.design_system.ui.component.button.HasButton
 import com.myStash.android.design_system.ui.component.content.ContentText
 import com.myStash.android.design_system.ui.component.photo.SelectPhotoItem
@@ -111,8 +115,8 @@ fun AddHasScreen(
                     Column {
                         ContentText(
                             text = state.selectedType?.name ?: "카테고리 선택",
-                            textColor = if(state.selectedType != null) Color(0xFF202020) else Color(0xFFA4A4A4),
-                            borderColor = if(dropDownExpanded) Color(0xFF202020) else Color(0xFFE1E1E1),
+                            isTextFocus = state.selectedType != null,
+                            isBorderFocus = dropDownExpanded,
                             onClick = {},
                             endContent = {
                                 Image(
@@ -126,6 +130,7 @@ fun AddHasScreen(
                         ExposedDropdownMenu(
                             modifier = Modifier
                                 .exposedDropdownSize()
+                                .background(ColorFamilyWhiteAndGray600)
                                 .height(220.dp)
                                 .verticalScroll(dropDownScrollState),
                             expanded = dropDownExpanded,
@@ -141,11 +146,11 @@ fun AddHasScreen(
                                 DropdownMenuItem(
                                     modifier = Modifier
                                         .width(1000.dp)
-                                        .background(if (isSelected) Color(0xFFFCFFE7) else Color.White),
+                                        .background(if (isSelected) ColorFamilyLime100AndGray550 else ColorFamilyWhiteAndGray600),
                                     content = {
                                         HasText(
                                             text = type.name,
-                                            color = if(isSelected) Color(0xFF8A9918) else Color(0xFF202020),
+                                            color = if(isSelected) ColorFamilyLime700AndLime300 else ColorFamilyBlackAndWhite,
                                             fontWeight = if(isSelected) HasFontWeight.Bold else HasFontWeight.Medium,
                                         )
                                     },

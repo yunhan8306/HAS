@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.myStash.android.feature.myPage"
+    namespace = "com.myStash.android.feature.contact"
 }
 
 dependencies {
@@ -17,9 +17,7 @@ dependencies {
     implementation(projects.common.util)
     implementation(projects.common.resource)
     implementation(projects.feature.navigation)
-    implementation(projects.feature.gender)
-    implementation(projects.feature.webview)
-    implementation(projects.feature.contact)
+    implementation(projects.feature.gallery)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.compose.lifecycle.runtime)

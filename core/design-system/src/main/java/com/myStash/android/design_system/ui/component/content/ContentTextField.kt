@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -32,6 +33,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.myStash.android.common.resource.R
 import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
+import com.myStash.android.design_system.ui.color.ColorFamilyGray300AndGray600
+import com.myStash.android.design_system.ui.color.ColorFamilyGray900AndGray400
+import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndBlack
 import com.myStash.android.design_system.ui.component.text.HasText
 
 @Composable
@@ -49,18 +54,15 @@ fun ContentTextField(
 
     BasicTextField2(
         modifier = Modifier
-            .border(
-                width = 1.dp,
-                color = if(isFocused) Color(0xFF202020) else Color(0xFFE1E1E1),
-                shape = RoundedCornerShape(size = 10.dp)
-            )
+            .border(width = 1.dp, color = if (isFocused) ColorFamilyBlackAndWhite else ColorFamilyGray300AndGray600, shape = RoundedCornerShape(size = 10.dp))
+            .clip(shape = RoundedCornerShape(size = 10.dp))
             .fillMaxWidth()
             .height(44.dp)
-            .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 10.dp))
+            .background(ColorFamilyWhiteAndBlack)
             .padding(start = 12.dp, end = 10.dp),
         state = textState,
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-        textStyle = TextStyle(color = Color(0xFF202020), fontSize = fontSizeSp, fontWeight = FontWeight.Medium,),
+        textStyle = TextStyle(color = ColorFamilyBlackAndWhite, fontSize = fontSizeSp, fontWeight = FontWeight.Medium),
         decorator = { innerTextField ->
             Box(
                 contentAlignment = Alignment.CenterStart
@@ -82,7 +84,7 @@ fun ContentTextField(
                     if(textState.text.isEmpty()) {
                         HasText(
                             text = hint,
-                            color = Color(0xFFA4A4A4)
+                            color = ColorFamilyGray900AndGray400
                         )
                     } else {
                         innerTextField()
