@@ -13,6 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndLime100
+import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndLime300
+import com.myStash.android.design_system.ui.color.ColorFamilyLime100AndBlack
+import com.myStash.android.design_system.ui.color.ColorFamilyLime300AndBlack
+import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray400
+import com.myStash.android.design_system.ui.color.ColorGray50AndGray550
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
 
@@ -28,7 +34,7 @@ fun HasButton(
             .fillMaxWidth()
             .height(48.dp)
             .background(
-                color = if(isComplete) Color(0xFF202020) else Color(0xFFD4D4D4),
+                color = if(isComplete) ColorFamilyBlackAndLime300 else ColorGray50AndGray550,
                 shape = RoundedCornerShape(size = 10.dp)
             )
             .clickable { if(isComplete) onClick.invoke() },
@@ -36,7 +42,7 @@ fun HasButton(
     ) {
         HasText(
             text = text,
-            color = if(isComplete) Color(0xFFE4F562) else Color(0xFFFFFFFF),
+            color = if(isComplete) ColorFamilyLime300AndBlack else ColorFamilyWhiteAndGray400,
             fontSize = 16.dp,
             fontWeight = HasFontWeight.Bold,
         )

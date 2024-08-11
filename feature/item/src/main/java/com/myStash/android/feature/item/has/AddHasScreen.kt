@@ -19,6 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExposedDropdownMenuBox
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
@@ -88,7 +89,7 @@ fun AddHasScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .background(Color.White)
+                    .background(MaterialTheme.colors.background)
                     .padding(horizontal = 16.dp)
                     .padding(top = 24.dp)
             ) {
@@ -198,7 +199,7 @@ fun AddHasScreen(
             }
             Box(
                 modifier = Modifier
-                    .background(Color.White)
+                    .background(MaterialTheme.colors.background)
                     .padding(bottom = 12.dp, start = 16.dp, end = 16.dp)
             ) {
                 HasButton(
@@ -214,7 +215,7 @@ fun AddHasScreen(
                     .alpha(headerFadeAni)
                     .fillMaxWidth()
                     .height(90.dp)
-                    .background(Color.White)
+                    .background(MaterialTheme.colors.surface)
                     .padding(start = 12.dp, top = 8.dp)
             ) {
                 Image(

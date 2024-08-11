@@ -93,10 +93,11 @@ fun StyleRoute(
                 is StyleScreenAction.ShowSearch -> isShowSearch = true
                 is StyleScreenAction.ShowMoreStyle -> showMoreStyle = action.style
                 is StyleScreenAction.ShowItemActivity -> {
-                    val intent = Intent(activity.apply { slideIn() }, ItemActivity::class.java)
+                    val intent = Intent(activity, ItemActivity::class.java)
                         .putExtra("tab", ItemTab.STYLE.name)
                         .putExtra("style", action.style.hasList.map { it.id }.toTypedArray())
                     itemActivityLauncher.launch(intent)
+                    activity.slideIn()
                 }
                 else -> viewModel.onAction(action)
             }

@@ -81,7 +81,7 @@ fun ContactScreen(
             .addFocusCleaner(focusManager)
     ) {
         HasHeader(
-            modifier = Modifier.background(ColorFamilyWhiteAndGray600),
+            modifier = Modifier.background(MaterialTheme.colors.surface),
             text = "Contact Us",
             onBack = { onAction.invoke(ContactAction.Finish) }
         )

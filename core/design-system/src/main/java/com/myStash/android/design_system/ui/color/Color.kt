@@ -10,9 +10,11 @@ val Lime = Color(0xFFE4F562)
 val Purple = Color(0xFF716DF6)
 
 
+val Gray50 = Color(0xFFD4D4D4) // Light Gray
 val Gray100 = Color(0xFFF5F5F5) // Light Gray
 val Gray200 = Color(0xFFF1F1F1) // Lighter Gray
 val Gray300 = Color(0xFFE1E1E1) // Placeholder Gray
+val Gray350 = Color(0xFF909090) // Medium Gray
 val Gray400 = Color(0xFF707070) // Medium Gray
 val Gray500 = Color(0xFF505050) // Dark Gray
 val Gray550 = Color(0xFF404040) // Dark Gray2

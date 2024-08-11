@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +29,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.myStash.android.common.resource.R
 import com.myStash.android.core.model.Has
+import com.myStash.android.design_system.ui.color.ColorFamilyGray500AndGray900
+import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray800
 import com.myStash.android.design_system.ui.component.button.HasButton
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
@@ -48,10 +51,9 @@ fun AddStyleScreen(
         BottomSheetScaffold(
             sheetPeekHeight = sheetPeekHeight,
             sheetContent = sheetContent,
-            sheetBackgroundColor = Color.White,
+            sheetBackgroundColor = ColorFamilyWhiteAndGray800,
             sheetElevation = 0.dp,
-            backgroundColor = Color.Transparent,
-            contentColor = Color.White
+            backgroundColor = MaterialTheme.colors.background,
         ) { paddingValues ->
             Column(
                 modifier = Modifier
@@ -77,7 +79,7 @@ fun AddStyleScreen(
                             HasText(
                                 modifier = Modifier.padding(top = 16.dp),
                                 text = "원하는 코디를 완성해 보세요.",
-                                color = Color(0xFF505050),
+                                color = ColorFamilyGray500AndGray900,
                             )
                         }
                     }

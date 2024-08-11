@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.myStash.android.common.util.CommonActivityResultContract
+import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.design_system.ui.theme.HasDefaultTheme
 import com.myStash.android.feature.gender.GenderActivity
 import com.myStash.android.feature.item.ItemActivity
@@ -66,6 +67,7 @@ fun MainRoute(
                     putExtra("style", hasList.map { it.id }.toTypedArray())
                 }
                 itemActivityLauncher.launch(intent)
+                activity.slideIn()
             },
             showAddFeedItemActivity = { style ->
                 val intent = Intent(activity, ItemActivity::class.java).apply {
@@ -73,6 +75,7 @@ fun MainRoute(
                     putExtra(ItemTab.FEED.name, style.id)
                 }
                 itemActivityLauncher.launch(intent)
+                activity.slideIn()
             }
         )
     }

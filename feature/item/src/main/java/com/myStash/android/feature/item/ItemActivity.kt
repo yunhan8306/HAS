@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.myStash.android.design_system.animation.slideOut
+import com.myStash.android.design_system.ui.theme.HasMoreTheme
 import com.myStash.android.feature.item.item.AddItemRoute
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -14,9 +15,11 @@ class ItemActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            AddItemRoute(
-                onBack = ::finish
-            )
+            HasMoreTheme {
+                AddItemRoute(
+                    onBack = ::finish
+                )
+            }
         }
     }
 

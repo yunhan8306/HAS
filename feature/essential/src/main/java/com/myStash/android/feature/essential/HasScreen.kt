@@ -94,10 +94,11 @@ fun HasRoute(
              when(action) {
                  is HasScreenAction.ShowSearch -> { isShowSearch = true }
                  is HasScreenAction.ShowItemActivity -> {
-                     val intent = Intent(activity.apply { slideIn() }, ItemActivity::class.java)
+                     val intent = Intent(activity, ItemActivity::class.java)
                          .putExtra("tab", ItemTab.HAS.name)
                          .putExtra("has", action.has)
                      itemActivityLauncher.launch(intent)
+                     activity.slideIn()
                  }
 
                  else -> viewModel.onAction(action)

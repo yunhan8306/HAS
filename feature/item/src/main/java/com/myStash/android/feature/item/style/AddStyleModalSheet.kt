@@ -42,6 +42,11 @@ import coil.compose.SubcomposeAsyncImage
 import com.myStash.android.common.resource.R
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Type
+import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
+import com.myStash.android.design_system.ui.color.ColorFamilyGray200AndGray600
+import com.myStash.android.design_system.ui.color.ColorFamilyGray300AndGray400
+import com.myStash.android.design_system.ui.color.ColorFamilyLime700AndLime300
+import com.myStash.android.design_system.ui.color.Purple
 import com.myStash.android.design_system.ui.component.SpacerBox
 import com.myStash.android.design_system.ui.component.content.ContentTextField
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
@@ -94,7 +99,7 @@ fun AddStyleModalSheet(
                 ) {
                     HasText(
                         text = type.name,
-                        color = if(type == state.selectedType) Color(0xFF8A9918) else Color(0xFF202020),
+                        color = if(type == state.selectedType) ColorFamilyLime700AndLime300 else ColorFamilyBlackAndWhite,
                         fontWeight = if(type == state.selectedType) HasFontWeight.Bold else HasFontWeight.Medium
                     )
                 }
@@ -105,7 +110,7 @@ fun AddStyleModalSheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(1.dp)
-                .background(color = Color(0xFFF1F1F1))
+                .background(color = ColorFamilyGray200AndGray600)
         )
 
         Column(
@@ -146,9 +151,9 @@ fun AddStyleModalSheet(
 
                     Box(
                         modifier = if(isSelected) {
-                            Modifier.border(width = 2.dp, color = Color(0xFF716DF6), shape = RoundedCornerShape(size = 8.dp))
+                            Modifier.border(width = 2.dp, color = Purple, shape = RoundedCornerShape(size = 8.dp))
                         } else {
-                            Modifier
+                            Modifier.border(width = 1.dp, color = ColorFamilyGray300AndGray400, shape = RoundedCornerShape(size = 8.dp))
                         }
                     ) {
                         SubcomposeAsyncImage(
@@ -195,7 +200,7 @@ fun AddStyleModalSheet(
                         }
                     }
                 }
-                item { SpacerBox(72.dp) }
+                items(3) { SpacerBox(72.dp) }
             }
         }
     }
