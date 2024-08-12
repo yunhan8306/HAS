@@ -9,9 +9,7 @@ import androidx.compose.runtime.SideEffect
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.myStash.android.design_system.ui.color.Black
 import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray600
-import com.myStash.android.design_system.ui.color.Gray100
 import com.myStash.android.design_system.ui.color.Gray600
-import com.myStash.android.design_system.ui.color.Gray900
 import com.myStash.android.design_system.ui.color.Lime
 import com.myStash.android.design_system.ui.color.White
 

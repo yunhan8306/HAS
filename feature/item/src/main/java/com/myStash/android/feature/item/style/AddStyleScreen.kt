@@ -31,6 +31,7 @@ import com.myStash.android.common.resource.R
 import com.myStash.android.core.model.Has
 import com.myStash.android.design_system.ui.color.ColorFamilyGray500AndGray900
 import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray800
+import com.myStash.android.design_system.ui.color.White
 import com.myStash.android.design_system.ui.component.button.HasButton
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
@@ -113,7 +114,7 @@ fun AddStyleScreen(
                                 )
                                 HasText(
                                     text = (index + 1).toString(),
-                                    color = Color.White,
+                                    color = White,
                                     fontSize = 12.dp,
                                     fontWeight = HasFontWeight.Bold
                                 )
@@ -125,7 +126,6 @@ fun AddStyleScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
-                        .background(Color.White)
                 )
             }
         }

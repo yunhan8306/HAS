@@ -47,6 +47,7 @@ import com.myStash.android.design_system.ui.color.ColorFamilyGray200AndGray600
 import com.myStash.android.design_system.ui.color.ColorFamilyGray300AndGray400
 import com.myStash.android.design_system.ui.color.ColorFamilyLime700AndLime300
 import com.myStash.android.design_system.ui.color.Purple
+import com.myStash.android.design_system.ui.color.White
 import com.myStash.android.design_system.ui.component.SpacerBox
 import com.myStash.android.design_system.ui.component.content.ContentTextField
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
@@ -185,7 +186,7 @@ fun AddStyleModalSheet(
                                     )
                                     HasText(
                                         text = selectedNumber.toString(),
-                                        color = Color.White,
+                                        color = White,
                                         fontSize = 12.dp,
                                         fontWeight = HasFontWeight.Bold
                                     )
@@ -200,7 +201,7 @@ fun AddStyleModalSheet(
                         }
                     }
                 }
-                items(3) { SpacerBox(72.dp) }
+                items(3) { SpacerBox(52.dp) }
             }
         }
     }
