@@ -7,8 +7,7 @@
             android:name="com.myStash.android.feature.item.ItemActivity"
             android:exported="false"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.MyStash"/>
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
