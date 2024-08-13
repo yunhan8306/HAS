@@ -1,5 +1,6 @@
 package com.myStash.android.feature.item.has
 
+import android.content.Intent
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
 
@@ -13,7 +14,7 @@ data class AddHasScreenState(
 )
 
 sealed interface AddHasSideEffect {
-    object Finish: AddHasSideEffect
+    data class Finish(val intent: Intent? = null): AddHasSideEffect
 }
 
 sealed interface AddHasScreenAction {

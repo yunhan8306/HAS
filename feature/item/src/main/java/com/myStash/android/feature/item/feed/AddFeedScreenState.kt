@@ -1,5 +1,6 @@
 package com.myStash.android.feature.item.feed
 
+import android.content.Intent
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
@@ -24,7 +25,7 @@ data class AddFeedScreenState(
 )
 
 sealed interface AddFeedSideEffect {
-    object Finish: AddFeedSideEffect
+    data class Finish(val intent: Intent?): AddFeedSideEffect
 }
 
 sealed interface AddFeedScreenAction {

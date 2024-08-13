@@ -1,5 +1,6 @@
 package com.myStash.android.feature.item.has
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
@@ -30,8 +31,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 fun AddHasRoute(
-    viewModel: AddHasViewModel = hiltViewModel(),
-    finishActivity: () -> Unit
+    viewModel: AddHasViewModel = hiltViewModel()
 ) {
 
     val activity = LocalContext.current as ComponentActivity
@@ -61,7 +61,12 @@ fun AddHasRoute(
 
     viewModel.collectSideEffect { sideEffect ->
         when(sideEffect) {
-            AddHasSideEffect.Finish -> finishActivity.invoke()
+            is AddHasSideEffect.Finish -> {
+                activity.apply {
+                    setResult(Activity.RESULT_OK, sideEffect.intent)
+                    finish()
+                }
+            }
             else -> Unit
         }
     }
@@ -76,7 +81,7 @@ fun AddHasRoute(
                     scope.launch { searchModalState.show() }
                 }
                 is AddHasScreenAction.Back -> {
-                    finishActivity.invoke()
+                    activity.finish()
                 }
                 is AddHasScreenAction.ShowGalleryActivity -> {
                     activity.galleryPermissionCheck(

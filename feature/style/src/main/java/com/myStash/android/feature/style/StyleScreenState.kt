@@ -18,7 +18,7 @@ sealed interface StyleSideEffect
 sealed interface StyleScreenAction {
     data class SelectStyle(val style: StyleScreenModel?) : StyleScreenAction
     data class SelectTag(val tag: Tag) : StyleScreenAction
-    object ShowSearch : StyleScreenAction
     data class ShowMoreStyle(val style: StyleScreenModel): StyleScreenAction
-    data class ShowItemActivity(val style: StyleScreenModel): StyleScreenAction
+    object ShowSearch : StyleScreenAction
+    object ResetSelectStyle: StyleScreenAction
 }

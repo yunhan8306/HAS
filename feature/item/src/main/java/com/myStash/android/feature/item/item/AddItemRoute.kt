@@ -22,13 +22,13 @@ fun AddItemRoute(
         content = {
             when(state.selectedTab) {
                 ItemTab.HAS -> {
-                    AddHasRoute(finishActivity = onBack)
+                    AddHasRoute()
                 }
                 ItemTab.STYLE -> {
-                    AddStyleRoute(finishActivity = onBack)
+                    AddStyleRoute()
                 }
                 ItemTab.FEED -> {
-                    AddFeedRoute(finishActivity = onBack)
+                    AddFeedRoute()
                 }
             }
         }

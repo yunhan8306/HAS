@@ -121,6 +121,7 @@ class StyleViewModel @Inject constructor(
         when(action) {
             is StyleScreenAction.SelectStyle -> selectStyle(action.style)
             is StyleScreenAction.SelectTag -> selectTag(action.tag)
+            is StyleScreenAction.ResetSelectStyle -> resetSelectStyle()
             else -> Unit
         }
     }
@@ -145,6 +146,18 @@ class StyleViewModel @Inject constructor(
                 reduce {
                     state.copy(
                         selectedStyle = if(state.selectedStyle == style) null else style
+                    )
+                }
+            }
+        }
+    }
+
+    private fun resetSelectStyle() {
+        intent {
+            viewModelScope.launch {
+                reduce {
+                    state.copy(
+                        selectedStyle = null
                     )
                 }
             }

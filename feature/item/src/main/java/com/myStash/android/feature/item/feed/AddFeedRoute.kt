@@ -1,5 +1,6 @@
 package com.myStash.android.feature.item.feed
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
@@ -29,8 +30,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 fun AddFeedRoute(
-    viewModel: AddFeedViewModel = hiltViewModel(),
-    finishActivity: () -> Unit
+    viewModel: AddFeedViewModel = hiltViewModel()
 ) {
 
     val activity = LocalContext.current as ComponentActivity
@@ -61,7 +61,12 @@ fun AddFeedRoute(
 
     viewModel.collectSideEffect { sideEffect ->
         when(sideEffect) {
-            AddFeedSideEffect.Finish -> finishActivity.invoke()
+            is AddFeedSideEffect.Finish -> {
+                activity.apply {
+                    setResult(Activity.RESULT_OK, sideEffect.intent)
+                    finish()
+                }
+            }
             else -> Unit
         }
     }

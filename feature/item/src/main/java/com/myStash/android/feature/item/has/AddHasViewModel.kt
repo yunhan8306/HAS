@@ -1,5 +1,6 @@
 package com.myStash.android.feature.item.has
 
+import android.content.Intent
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.text2.input.clearText
 import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
@@ -19,6 +20,9 @@ import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.testWomanTypeTotalList
+import com.myStash.android.feature.gallery.GalleryConstants
+import com.myStash.android.feature.gallery.GallerySideEffect
+import com.myStash.android.feature.item.ItemConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
@@ -211,7 +215,10 @@ class AddHasViewModel @Inject constructor(
 
                 saveHasUseCase.invoke(saveHas)
 
-                postSideEffect(AddHasSideEffect.Finish)
+                Intent().apply {
+                    putExtra(ItemConstants.CMD_COMPLETE, ItemConstants.CMD_HAS)
+                    postSideEffect(AddHasSideEffect.Finish(this))
+                }
             }
         }
     }

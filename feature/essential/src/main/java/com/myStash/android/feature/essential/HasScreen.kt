@@ -2,6 +2,7 @@ package com.myStash.android.feature.essential
 
 import android.content.Intent
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -129,6 +130,12 @@ fun HasRoute(
         onConfirm = { testConfirm = false },
         onDismiss = { testConfirm = false }
     )
+
+    if(state.selectedHasList.isNotEmpty()) {
+        BackHandler {
+            viewModel.onAction(HasScreenAction.ResetSelectHas)
+        }
+    }
 }
 
 @Composable

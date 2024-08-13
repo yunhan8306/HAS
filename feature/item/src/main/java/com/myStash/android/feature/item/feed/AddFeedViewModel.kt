@@ -1,5 +1,6 @@
 package com.myStash.android.feature.item.feed
 
+import android.content.Intent
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.text2.input.clearText
 import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
@@ -26,6 +27,8 @@ import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.filterSelectTag
 import com.myStash.android.core.model.getStyleScreenModel
+import com.myStash.android.feature.item.ItemConstants
+import com.myStash.android.feature.item.has.AddHasSideEffect
 import com.myStash.android.feature.item.item.ItemTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -123,7 +126,7 @@ class AddFeedViewModel @Inject constructor(
                         state.copy(
                             styleList = styleList,
                             tagList = tagList,
-                            selectedStyle = stateHandle.get<Long?>(ItemTab.FEED.name).getStyleScreenModel(styleList),
+                            selectedStyle = stateHandle.get<Long?>(ItemConstants.CMD_FEED).getStyleScreenModel(styleList),
                             typeTotalList = typeList,
                             tagTotalList = tagList
                         )
@@ -208,7 +211,10 @@ class AddFeedViewModel @Inject constructor(
                 )
                 val savedId = saveFeedUseCase.invoke(saveFeed)
                 if(savedId.isNotNull()) {
-                    postSideEffect(AddFeedSideEffect.Finish)
+                    Intent().apply {
+                        putExtra(ItemConstants.CMD_COMPLETE, ItemConstants.CMD_FEED)
+                        postSideEffect(AddFeedSideEffect.Finish(this))
+                    }
                 }
             }
         }

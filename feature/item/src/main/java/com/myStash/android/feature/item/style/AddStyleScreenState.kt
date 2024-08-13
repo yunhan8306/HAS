@@ -1,5 +1,6 @@
 package com.myStash.android.feature.item.style
 
+import android.content.Intent
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.getTotalType
@@ -12,5 +13,5 @@ data class AddStyleScreenState(
 )
 
 sealed interface AddStyleSideEffect {
-    object Finish: AddStyleSideEffect
+    data class Finish(val intent: Intent?): AddStyleSideEffect
 }

@@ -50,7 +50,7 @@ import com.myStash.android.core.model.selectOrNull
 import com.myStash.android.design_system.ui.component.SpacerLineBox
 import com.myStash.android.design_system.ui.component.button.HasButton
 import com.myStash.android.design_system.ui.component.content.ContentTextField
-import com.myStash.android.design_system.ui.component.modal.StyleBottomModel
+import com.myStash.android.design_system.ui.component.modal.StyleBottomModal
 import com.myStash.android.design_system.ui.component.style.StyleMainItem
 import com.myStash.android.design_system.ui.component.tag.TagChipItem
 import com.myStash.android.design_system.ui.component.tag.TagDeleteChipItem
@@ -305,7 +305,7 @@ fun SelectStyleModalSheet(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.BottomCenter
                 ) {
-                    StyleBottomModel(
+                    StyleBottomModal(
                         selectedStyle = selectedStyle,
                         onSelect = { onAction.invoke(AddFeedScreenAction.SelectStyle(selectedStyle)) },
                         onCancel = { selectedStyle = null },

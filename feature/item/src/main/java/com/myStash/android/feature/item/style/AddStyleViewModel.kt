@@ -1,5 +1,6 @@
 package com.myStash.android.feature.item.style
 
+import android.content.Intent
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.text2.input.textAsFlow
@@ -20,6 +21,8 @@ import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.getTotalType
 import com.myStash.android.core.model.getTotalTypeList
 import com.myStash.android.core.model.searchSelectedTypeHasList
+import com.myStash.android.feature.item.ItemConstants
+import com.myStash.android.feature.item.has.AddHasSideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
@@ -161,7 +164,11 @@ class AddStyleViewModel @Inject constructor(
                     hass = state.selectedHasList.map { it.id!! }
                 )
                 saveStyleUseCase.invoke(saveStyle)
-                postSideEffect(AddStyleSideEffect.Finish)
+
+                Intent().apply {
+                    putExtra(ItemConstants.CMD_COMPLETE, ItemConstants.CMD_STYLE)
+                    postSideEffect(AddStyleSideEffect.Finish(this))
+                }
             }
         }
     }
