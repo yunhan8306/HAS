@@ -4,7 +4,6 @@ import android.app.Activity
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.material.BottomSheetValue
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,9 +13,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.lifecycleScope
 import com.myStash.android.common.compose.LifecycleEventObserver
-import com.myStash.android.feature.gallery.permission.GalleryPermission
+import com.myStash.android.common.util.constants.PermissionConstants
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -62,7 +60,7 @@ fun GalleryRoute(
             GalleryModalSheet(
                 state = state,
                 onAction = viewModel::onAction,
-                onRequestPermission = { activity.requestPermissions(GalleryPermission.GALLERY_PERMISSIONS, 0) }
+                onRequestPermission = { activity.requestPermissions(PermissionConstants.GALLERY_PERMISSIONS, 0) }
             )
         }
     )

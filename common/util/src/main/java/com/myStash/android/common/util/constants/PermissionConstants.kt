@@ -1,9 +1,9 @@
-package com.myStash.android.feature.gallery.permission
+package com.myStash.android.common.util.constants
 
 import android.Manifest
 import android.os.Build
 
-object GalleryPermission {
+object PermissionConstants {
     val GALLERY_PERMISSIONS = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
         arrayOf(
             Manifest.permission.READ_MEDIA_IMAGES,

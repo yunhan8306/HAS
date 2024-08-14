@@ -6,7 +6,6 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -22,8 +21,8 @@ import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.design_system.ui.component.dialog.HasConfirmDialog
 import com.myStash.android.feature.gallery.GalleryActivity
 import com.myStash.android.feature.gallery.GalleryConstants
-import com.myStash.android.feature.gallery.permission.GalleryPermission
-import com.myStash.android.feature.gallery.permission.PermissionUtil.galleryPermissionCheck
+import com.myStash.android.common.util.constants.PermissionConstants
+import com.myStash.android.design_system.util.rememberPermissionLauncher
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -46,18 +45,20 @@ fun AddFeedRoute(
         }
     )
 
-    val requestPermissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
+    val requestPermissionLauncher = rememberPermissionLauncher(
+        activity = activity,
+        scope = scope,
+        grant = {
             val intent = Intent(activity.apply { slideIn() }, GalleryActivity::class.java).apply {
-                putExtra(GalleryConstants.TYPE, GalleryConstants.MULTI
-                )
+                putExtra(GalleryConstants.TYPE, GalleryConstants.MULTI)
                 putExtra(GalleryConstants.AGO_IMAGE_URI_ARRAY, state.selectedImageList.toTypedArray())
             }
             galleryActivityLauncher.launch(intent)
+        },
+        denied = {
+            isShowPermissionRequestConfirm = true
         }
-    }
+    )
 
     viewModel.collectSideEffect { sideEffect ->
         when(sideEffect) {
@@ -77,11 +78,7 @@ fun AddFeedRoute(
 //        selectedHasList = state.selectedHasList,
 //        saveItem = viewModel::saveFeed,
         showGalleryActivity = {
-            activity.galleryPermissionCheck(
-                permissions = GalleryPermission.GALLERY_PERMISSIONS,
-                requestPermissionLauncher = requestPermissionLauncher,
-                onPermissionDenied = { isShowPermissionRequestConfirm = true }
-            )
+            requestPermissionLauncher.launch(PermissionConstants.GALLERY_PERMISSIONS)
         },
         showStyleSheet = {
             scope.launch { selectStyleModalState.show() }
