@@ -17,6 +17,7 @@ import com.myStash.android.core.di.IoDispatcher
 import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.filterSelectTag
+import com.myStash.android.core.model.sortSelectedTagList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
@@ -122,6 +123,7 @@ class StyleViewModel @Inject constructor(
             is StyleScreenAction.SelectStyle -> selectStyle(action.style)
             is StyleScreenAction.SelectTag -> selectTag(action.tag)
             is StyleScreenAction.ResetSelectStyle -> resetSelectStyle()
+            is StyleScreenAction.TagToggle -> toggleTag()
             else -> Unit
         }
     }
@@ -158,6 +160,19 @@ class StyleViewModel @Inject constructor(
                 reduce {
                     state.copy(
                         selectedStyle = null
+                    )
+                }
+            }
+        }
+    }
+
+    private fun toggleTag() {
+        intent {
+            viewModelScope.launch {
+                reduce {
+                    state.copy(
+                        isFoldTag = !state.isFoldTag,
+                        totalTagList = state.totalTagList.sortSelectedTagList(selectedTagList, state.isFoldTag),
                     )
                 }
             }

@@ -32,7 +32,6 @@ import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
 import com.myStash.android.common.compose.activityViewModel
 import com.myStash.android.core.model.StyleScreenModel
-import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.testTagList
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.component.SpacerLineBox
@@ -59,10 +58,6 @@ fun StyleRoute(
 ) {
 
     val state by viewModel.collectAsState()
-    val totalTagList = viewModel.collectAsState().value.totalTagList
-    val selectedTagList = viewModel.collectAsState().value.selectedTagList
-    val styleList = viewModel.collectAsState().value.styleList
-    val selectedStyle = viewModel.collectAsState().value.selectedStyle
 
     val searchTextState by remember { mutableStateOf(viewModel.searchTextState) }
 
@@ -70,10 +65,7 @@ fun StyleRoute(
     var showMoreStyle: StyleScreenModel? by remember { mutableStateOf(null) }
 
     StyleScreen(
-        totalTagList = totalTagList,
-        selectedTagList = selectedTagList,
-        styleList = styleList,
-        selectedStyle = selectedStyle,
+        state = state,
         onAction = { action ->
             when(action) {
                 is StyleScreenAction.ShowSearch -> isShowSearch = true
@@ -113,17 +105,13 @@ fun StyleRoute(
 
 @Composable
 fun StyleScreen(
-    totalTagList: List<Tag>,
-    selectedTagList: List<Tag>,
-    styleList: List<StyleScreenModel>,
-    selectedStyle: StyleScreenModel?,
+    state: StyleScreenState,
     onAction: (StyleScreenAction) -> Unit,
 ) {
 
     val tagScrollState = rememberScrollState()
-    var flowToggle by remember { mutableStateOf(false) }
 
-    LaunchedEffect(totalTagList) {
+    LaunchedEffect(state.totalTagList) {
         tagScrollState.scrollTo(0)
     }
 
@@ -140,18 +128,18 @@ fun StyleScreen(
         )
         FlowRow(
             modifier = Modifier
-                .heightIn(max = if (flowToggle) 200.dp else Dp.Unspecified)
+                .heightIn(max = if (state.isFoldTag) 200.dp else Dp.Unspecified)
                 .fillMaxWidth()
                 .padding(top = 16.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
                 .verticalScroll(tagScrollState)
         ) {
-            totalTagList.forEachIndexed { index, tag ->
-                val isSelected by remember(selectedTagList) {
+            state.totalTagList.forEachIndexed { index, tag ->
+                val isSelected by remember(state.selectedTagList, state.totalTagList) {
                     derivedStateOf {
-                        tag.checkSelected(selectedTagList)
+                        tag.checkSelected(state.selectedTagList)
                     }
                 }
-                if(index < 3 || flowToggle) {
+                if(index < 3 || state.isFoldTag) {
                     TagChipItem(
                         name = tag.name,
                         isSelected = isSelected,
@@ -160,9 +148,9 @@ fun StyleScreen(
                 }
             }
             TagMoreChipItem(
-                cnt = "${totalTagList.size - 4}",
-                isFold = !flowToggle,
-                onClick = { flowToggle = !flowToggle }
+                cnt = "${state.totalTagList.size - 4}",
+                isFold = state.isFoldTag,
+                onClick = { onAction.invoke(StyleScreenAction.TagToggle) }
             )
         }
         SpacerLineBox()
@@ -185,17 +173,17 @@ fun StyleScreen(
                         .padding(top = 24.dp, end = 4.dp),
                     contentAlignment = Alignment.TopEnd
                 ) {
-                    if(index == 1) HasText(text = "총 ${styleList.size}개")
+                    if(index == 1) HasText(text = "총 ${state.styleList.size}개")
                 }
             }
 
             items(
-                items = styleList,
+                items = state.styleList,
                 key = { it.id }
             ) { style ->
-                val isSelected by remember(selectedStyle) {
+                val isSelected by remember(state.selectedStyle) {
                     derivedStateOf {
-                        selectedStyle?.id == style.id
+                        state.selectedStyle?.id == style.id
                     }
                 }
 
@@ -214,10 +202,12 @@ fun StyleScreen(
 @Composable
 fun EssentialScreenPreview() {
     StyleScreen(
-        styleList = emptyList(),
-        totalTagList = testTagList,
-        selectedTagList = emptyList(),
-        selectedStyle = null,
+        state = StyleScreenState(
+            styleList = emptyList(),
+            totalTagList = testTagList,
+            selectedTagList = emptyList(),
+            selectedStyle = null,
+        ),
         onAction = {},
     )
 }

@@ -7,6 +7,7 @@ import com.myStash.android.core.model.Type
 data class StyleScreenState(
     val styleList: List<StyleScreenModel> = emptyList(),
     val selectedStyle: StyleScreenModel? = null,
+    val isFoldTag: Boolean = false,
     val totalTypeList: List<Type> = emptyList(),
     val totalTagList: List<Tag> = emptyList(),
     val searchTagList: List<Tag> = emptyList(),
@@ -21,4 +22,5 @@ sealed interface StyleScreenAction {
     data class ShowMoreStyle(val style: StyleScreenModel): StyleScreenAction
     object ShowSearch : StyleScreenAction
     object ResetSelectStyle: StyleScreenAction
+    object TagToggle: StyleScreenAction
 }
