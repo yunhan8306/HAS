@@ -25,6 +25,7 @@ import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.selectTag
 import com.myStash.android.core.model.selectType
+import com.myStash.android.core.model.sortSelectedTagList
 import com.myStash.android.feature.gallery.ImageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -160,6 +161,7 @@ class HasViewModel @Inject constructor(
             is HasScreenAction.SelectTag -> selectTag(action.tag)
             is HasScreenAction.SelectHas -> selectHas(action.has)
             is HasScreenAction.ResetSelectHas -> resetSelectHas()
+            is HasScreenAction.TagToggle -> toggleTag()
             else -> Unit
         }
     }
@@ -212,6 +214,19 @@ class HasViewModel @Inject constructor(
                 reduce {
                     state.copy(
                         selectedHasList = selectedHasList.toList()
+                    )
+                }
+            }
+        }
+    }
+
+    private fun toggleTag() {
+        intent {
+            viewModelScope.launch {
+                reduce {
+                    state.copy(
+                        isFoldTag = !state.isFoldTag,
+                        totalTagList = state.totalTagList.sortSelectedTagList(selectedTagList, state.isFoldTag),
                     )
                 }
             }

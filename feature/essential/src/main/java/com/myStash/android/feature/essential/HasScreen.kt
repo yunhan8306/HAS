@@ -145,7 +145,6 @@ fun HasScreen(
 ) {
 
     val tagScrollState = rememberScrollState()
-    var flowToggle by remember { mutableStateOf(false) }
     val drawLineColor = ColorFamilyGray200AndGray600
 
     LaunchedEffect(state.totalTagList) {
@@ -191,18 +190,18 @@ fun HasScreen(
         }
         FlowRow(
             modifier = Modifier
-                .heightIn(max = if (flowToggle) 200.dp else Dp.Unspecified)
+                .heightIn(max = if (state.isFoldTag) 200.dp else Dp.Unspecified)
                 .fillMaxWidth()
                 .padding(top = 18.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
                 .verticalScroll(tagScrollState)
         ) {
             state.totalTagList.forEachIndexed { index, tag ->
-                val isSelected by remember(state.selectedTagList) {
+                val isSelected by remember(state.selectedTagList, state.totalTagList) {
                     derivedStateOf {
                         tag.checkSelected(state.selectedTagList)
                     }
                 }
-                if(index < 3 || flowToggle) {
+                if(index < 3 || state.isFoldTag) {
                     TagChipItem(
                         name = tag.name,
                         isSelected = isSelected,
@@ -213,8 +212,8 @@ fun HasScreen(
             if(state.totalTagList.size > 3) {
                 TagMoreChipItem(
                     cnt = "${state.totalTagList.size - 4}",
-                    isFold = !flowToggle,
-                    onClick = { flowToggle = !flowToggle }
+                    isFold = state.isFoldTag,
+                    onClick = { onAction.invoke(HasScreenAction.TagToggle) }
                 )
             }
         }

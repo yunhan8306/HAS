@@ -14,6 +14,14 @@ data class Tag(
     }
 }
 
+fun List<Tag>.sortSelectedTagList(selectedTagList: List<Tag>, isFold: Boolean): List<Tag> {
+    return if(isFold) {
+        selectedTagList + filter { !it.checkSelected(selectedTagList) }
+    } else {
+        this
+    }
+}
+
 val testTagList = listOf(
     Tag(name = "nike"),
     Tag(name = "needles"),
