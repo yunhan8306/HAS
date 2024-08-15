@@ -1,5 +1,7 @@
 package com.myStach.android.feature.contact
 
+import android.content.Intent
+
 data class ContactState(
     val typeList: List<String> = emptyList(),
     var selectedType: String? = null,
@@ -9,6 +11,7 @@ data class ContactState(
 )
 
 sealed interface ContactSideEffect {
+    data class SendEmail(val intent: Intent): ContactSideEffect
     object Finish: ContactSideEffect
 }
 

@@ -1,5 +1,6 @@
 package com.myStach.android.feature.contact
 
+import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.text2.input.clearText
@@ -83,8 +84,17 @@ class ContactViewModel @Inject constructor(
     private fun confirm() {
         intent {
             viewModelScope.launch {
-                // 완료 처리
-                postSideEffect(ContactSideEffect.Finish)
+                Intent(Intent.ACTION_SEND_MULTIPLE).apply {
+                    type = "message/rfc822"
+                    putExtra(Intent.EXTRA_EMAIL, arrayOf("dbsgks17@gamil.com"))
+                    putExtra(Intent.EXTRA_SUBJECT, state.selectedType)
+                    putExtra(Intent.EXTRA_TEXT, "receive email : ${emailTextState.text}\n"
+                            + state.content.replace("\n", ""))
+                    putExtra(Intent.EXTRA_STREAM, state.selectedImages.toTypedArray())
+
+                    Log.d("qwe123", "intent : $this")
+                    postSideEffect(ContactSideEffect.SendEmail(this))
+                }
             }
         }
     }
