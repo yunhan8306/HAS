@@ -57,7 +57,7 @@ fun HasText(
 fun HasText(
     text: AnnotatedString,
     modifier: Modifier = Modifier,
-    color: Color = Color(0xFF202020),
+    color: Color = ColorFamilyBlackAndWhite,
     fontSize: Dp = 15.dp,
     fontWeight: HasFontWeight = HasFontWeight.Medium,
     textAlign: TextAlign = TextAlign.Start,

@@ -14,12 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.myStash.android.design_system.ui.DevicePreviews
-import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndLime100
-import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
+import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndGray450
+import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndLime300
 import com.myStash.android.design_system.ui.color.ColorFamilyGray200AndBlack
 import com.myStash.android.design_system.ui.color.ColorFamilyGray200AndGray400
-import com.myStash.android.design_system.ui.color.ColorFamilyLime100AndBlack
-import com.myStash.android.design_system.ui.color.Lime
+import com.myStash.android.design_system.ui.color.ColorFamilyLime300AndBlack
+import com.myStash.android.design_system.ui.color.Lime300
 import com.myStash.android.design_system.ui.component.text.HasText
 
 @Composable
@@ -35,8 +35,8 @@ fun TagChipItem(
             modifier = Modifier
                 .height(28.dp)
                 .clip(shape = RoundedCornerShape(size = 15.dp))
-                .background(color = if(isSelected) ColorFamilyLime100AndBlack else ColorFamilyGray200AndBlack)
-                .border(width = 1.dp, color = if(isSelected) Lime else ColorFamilyGray200AndGray400, shape = RoundedCornerShape(size = 15.dp))
+                .background(color = if(isSelected) ColorFamilyLime300AndBlack else ColorFamilyGray200AndBlack)
+                .border(width = 1.dp, color = if(isSelected) Lime300 else ColorFamilyGray200AndGray400, shape = RoundedCornerShape(size = 15.dp))
                 .padding(horizontal = 12.dp)
                 .clickable { onClick.invoke() },
             contentAlignment = Alignment.Center
@@ -44,7 +44,7 @@ fun TagChipItem(
             HasText(
                 text = name,
                 fontSize = 14.dp,
-                color = if(isSelected) ColorFamilyBlackAndLime100 else ColorFamilyBlackAndWhite
+                color = if(isSelected) ColorFamilyBlackAndLime300 else ColorFamilyBlackAndGray450
             )
         }
     }

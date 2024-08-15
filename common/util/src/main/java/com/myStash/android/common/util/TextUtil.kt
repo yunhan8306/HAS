@@ -6,7 +6,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 
-fun highlightTextBuilder(fullText: String, highlightText: String, highlightColor: Color = Color(0xFF95A70F)): AnnotatedString {
+fun highlightTextBuilder(fullText: String, highlightText: String, highlightColor: Color): AnnotatedString {
     return buildAnnotatedString {
         when(highlightText.length) {
             0 -> {

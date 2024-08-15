@@ -10,12 +10,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.myStash.android.design_system.ui.DevicePreviews
-import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndLime100
 import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndLime300
-import com.myStash.android.design_system.ui.color.ColorFamilyLime100AndBlack
 import com.myStash.android.design_system.ui.color.ColorFamilyLime300AndBlack
 import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray400
 import com.myStash.android.design_system.ui.color.ColorGray50AndGray550
