@@ -12,11 +12,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.myStash.android.common.resource.R
 import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.color.ColorFamilyGray200AndGray600
+import com.myStash.android.design_system.ui.color.ColorFamilyGray900AndGray400
 import com.myStash.android.design_system.ui.component.text.HasText
 
 @Composable
@@ -27,7 +28,7 @@ fun UnselectPhotoItem(
         Box(
             modifier = Modifier
                 .size(100.dp)
-                .background(color = Color(0xFFF1F1F1), shape = RoundedCornerShape(size = 10.dp))
+                .background(color = ColorFamilyGray200AndGray600, shape = RoundedCornerShape(size = 10.dp))
                 .clickable { onClick.invoke() },
             contentAlignment = Alignment.Center
         ) {
@@ -40,7 +41,7 @@ fun UnselectPhotoItem(
                 HasText(
                     modifier = Modifier.padding(top = 8.dp),
                     text = "Photo",
-                    color = Color(0xFFA4A4A4),
+                    color = ColorFamilyGray900AndGray400,
                     fontSize = 12.dp
                 )
             }
