@@ -22,7 +22,6 @@ import com.myStash.android.core.model.getTotalType
 import com.myStash.android.core.model.getTotalTypeList
 import com.myStash.android.core.model.searchSelectedTypeHasList
 import com.myStash.android.feature.item.ItemConstants
-import com.myStash.android.feature.item.has.AddHasSideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
@@ -109,7 +108,6 @@ class AddStyleViewModel @Inject constructor(
                         state.copy(
                             typeTotalList = typeList,
                             hasList = hasList,
-                            selectedType = selectedType,
                             selectedHasList = hasList.filter { selectedHasIdList.contains(it.id) }
                         )
                     }

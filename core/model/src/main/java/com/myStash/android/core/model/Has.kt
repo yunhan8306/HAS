@@ -60,3 +60,7 @@ fun String.searchSelectedTypeHasList(tagTotalList: List<Tag>, hasTotalList: List
         else -> emptyList()
     }
 }
+
+fun List<Has>.getSelectedTypeAndTagHasList(selectedType: Type, selectedTags: List<Tag>): List<Has> {
+    return filter { it.type == selectedType.id || selectedType.id == null }.selectTag(selectedTags)
+}

@@ -23,8 +23,8 @@ import com.myStash.android.core.di.IoDispatcher
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
-import com.myStash.android.core.model.selectTag
-import com.myStash.android.core.model.selectType
+import com.myStash.android.core.model.getSelectedTypeAndTagHasList
+import com.myStash.android.core.model.getTotalTypeList
 import com.myStash.android.core.model.sortSelectedTagList
 import com.myStash.android.feature.gallery.ImageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -118,6 +118,7 @@ class HasViewModel @Inject constructor(
 //        )
 
     private val typeTotalList = getTypeListUseCase.typeList
+        .map { getTotalTypeList() + it }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),
@@ -174,7 +175,7 @@ class HasViewModel @Inject constructor(
                 reduce {
                     state.copy(
                         selectedTagList = selectedTagList.toList(),
-                        hasList = hasTotalList.value.selectTag(selectedTagList)
+                        hasList = hasTotalList.value.getSelectedTypeAndTagHasList(state.selectedType, selectedTagList)
                     )
                 }
             }
@@ -186,7 +187,7 @@ class HasViewModel @Inject constructor(
             viewModelScope.launch {
                 reduce {
                     state.copy(
-                        hasList = hasTotalList.value.selectType(type),
+                        hasList = hasTotalList.value.getSelectedTypeAndTagHasList(type, selectedTagList),
                         selectedType = type
                     )
                 }

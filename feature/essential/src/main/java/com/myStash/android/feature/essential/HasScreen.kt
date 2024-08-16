@@ -44,7 +44,7 @@ import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
 import com.myStash.android.common.compose.activityViewModel
 import com.myStash.android.common.util.CommonActivityResultContract
-import com.myStash.android.core.model.Type
+import com.myStash.android.core.model.getTotalType
 import com.myStash.android.core.model.testManTypeTotalList
 import com.myStash.android.core.model.testTagList
 import com.myStash.android.design_system.animation.slideIn
@@ -295,7 +295,7 @@ fun HasScreenPreview() {
     HasScreen(
         state = HasScreenState(
             totalTypeList = testManTypeTotalList,
-            selectedType = Type(id = 0),
+            selectedType = getTotalType(),
             totalTagList = testTagList,
         ),
         onAction = {},

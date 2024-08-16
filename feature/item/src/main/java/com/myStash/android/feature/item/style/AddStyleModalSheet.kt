@@ -32,7 +32,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
@@ -100,8 +99,8 @@ fun AddStyleModalSheet(
                 ) {
                     HasText(
                         text = type.name,
-                        color = if(type == state.selectedType) ColorFamilyLime700AndLime300 else ColorFamilyBlackAndWhite,
-                        fontWeight = if(type == state.selectedType) HasFontWeight.Bold else HasFontWeight.Medium
+                        color = if(type.id == state.selectedType.id) ColorFamilyLime700AndLime300 else ColorFamilyBlackAndWhite,
+                        fontWeight = if(type.id == state.selectedType.id) HasFontWeight.Bold else HasFontWeight.Medium
                     )
                 }
             }

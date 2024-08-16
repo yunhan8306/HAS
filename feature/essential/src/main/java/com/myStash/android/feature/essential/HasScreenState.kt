@@ -3,11 +3,12 @@ package com.myStash.android.feature.essential
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
+import com.myStash.android.core.model.getTotalType
 
 data class HasScreenState(
     val hasList: List<Has> = emptyList(),
     val totalTypeList: List<Type> = emptyList(),
-    val selectedType: Type = Type(0),
+    val selectedType: Type = getTotalType(),
     val isFoldTag: Boolean = false,
     val totalTagList: List<Tag> = emptyList(),
     val selectedTagList: List<Tag> = emptyList(),
