@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -19,7 +18,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -31,16 +30,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontVariation.width
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import com.myStash.android.core.model.CalenderData
 import com.myStash.android.core.model.setCalender
 import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.color.Black
+import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
+import com.myStash.android.design_system.ui.color.Gray350
+import com.myStash.android.design_system.ui.color.Lime300
+import com.myStash.android.design_system.ui.color.White
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
@@ -61,7 +60,7 @@ fun HasCalender(
     var isShowDatePicker by remember { mutableStateOf(false) }
 
     Box(
-        modifier = modifier
+        modifier = modifier.background(MaterialTheme.colors.background)
     ) {
         Column(
             modifier = Modifier
@@ -140,14 +139,11 @@ fun HasCalender(
                         .clickable { onClickAgoCalender.invoke() }
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                Text(
+                HasText(
                     text = "$year.$month",
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        lineHeight = 16.sp,
-                        fontWeight = FontWeight(600),
-                        color = Color(0xFF202020),
-                    )
+                    fontSize = 16.dp,
+                    color = ColorFamilyBlackAndWhite,
+                    fontWeight = HasFontWeight.Bold,
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Box(
@@ -172,15 +168,10 @@ fun FeedCalenderDayOfWeekItem(
             .height(36.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(
+        HasText(
             text = dayOfWeek,
-            style = TextStyle(
-                fontSize = 12.sp,
-                lineHeight = 12.sp,
-                fontWeight = FontWeight(500),
-                color = Color(0xFF909090),
-                textAlign = TextAlign.Center,
-            )
+            fontSize = 12.dp,
+            color = Gray350
         )
     }
 }
@@ -209,20 +200,15 @@ fun FeedCalenderDayItem(
     ) {
         Box(
             modifier = Modifier
-                .size(36.dp)
+                .size(28.dp)
                 .clip(RoundedCornerShape(18.dp))
-                .background(if (isSelect) Color(0xFFE4F562) else Color.White),
+                .background(if (isSelect) Lime300 else MaterialTheme.colors.background),
             contentAlignment = Alignment.Center
         ) {
-            Text(
+            HasText(
                 text = day,
-                style = TextStyle(
-                    fontSize = 12.sp,
-                    lineHeight = 12.sp,
-                    fontWeight = FontWeight(500),
-                    color = Color(0xFF909090),
-                    textAlign = TextAlign.Center,
-                )
+                fontSize = 12.dp,
+                color = Gray350
             )
         }
     }
@@ -246,7 +232,11 @@ fun FeedCalenderRecordDayItem(
             modifier = Modifier
                 .size(36.dp)
                 .clip(RoundedCornerShape(18.dp))
-                .border(width = if(isSelect) 1.dp else (-1).dp, color = Color(0xFF202020), shape = RoundedCornerShape(size = 18.dp))
+                .border(
+                    width = if (isSelect) 1.dp else (-1).dp,
+                    color = Black,
+                    shape = RoundedCornerShape(size = 18.dp)
+                )
         ) {
             SubcomposeAsyncImage(
                 model = imageUri,
@@ -257,20 +247,10 @@ fun FeedCalenderRecordDayItem(
                 error = { ShimmerLoadingAnimation() }
             )
         }
-        Text(
-            text = day,
-            style = TextStyle(
-                fontSize = 12.sp,
-                lineHeight = 12.sp,
-                fontWeight = FontWeight(500),
-                color = Color(0xFF909090),
-                textAlign = TextAlign.Center,
-            )
-        )
         HasText(
             text = day,
             fontSize = 12.dp,
-            color = if(isSelect) Color(0xFF202020) else Color(0xFFFFFFFF)
+            color = if(isSelect) Black else White
         )
     }
 }
