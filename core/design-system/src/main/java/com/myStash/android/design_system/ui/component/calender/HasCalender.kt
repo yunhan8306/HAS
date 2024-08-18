@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -42,6 +41,7 @@ import com.myStash.android.design_system.ui.color.Lime300
 import com.myStash.android.design_system.ui.color.White
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
+import com.myStash.android.design_system.ui.theme.clickableNoRipple
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 import java.time.LocalDate
 
@@ -65,8 +65,7 @@ fun HasCalender(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(280.dp)
-                .padding(horizontal = 16.dp)
+                .padding(start = 16.dp, end = 16.dp, bottom = 20.dp)
         ) {
             Box(modifier = Modifier.height(22.dp))
             Row(
@@ -163,9 +162,7 @@ fun FeedCalenderDayOfWeekItem(
     dayOfWeek: String,
 ) {
     Box(
-        modifier = Modifier
-            .width(44.dp)
-            .height(36.dp),
+        modifier = Modifier.size(44.dp),
         contentAlignment = Alignment.Center
     ) {
         HasText(
@@ -179,9 +176,7 @@ fun FeedCalenderDayOfWeekItem(
 @Composable
 fun FeedCalenderSpacerItem() {
     Box(
-        modifier = Modifier
-            .width(44.dp)
-            .height(36.dp)
+        modifier = Modifier.size(44.dp)
     )
 }
 
@@ -193,16 +188,15 @@ fun FeedCalenderDayItem(
 ) {
     Box(
         modifier = Modifier
-            .width(44.dp)
-            .height(36.dp)
-            .clickable { onClick.invoke(day) },
+            .size(44.dp)
+            .clickableNoRipple { onClick.invoke(day) },
         contentAlignment = Alignment.Center
     ) {
         Box(
             modifier = Modifier
                 .size(28.dp)
                 .clip(RoundedCornerShape(18.dp))
-                .background(if (isSelect) Lime300 else MaterialTheme.colors.background),
+                .background(if(isSelect) Lime300 else MaterialTheme.colors.background),
             contentAlignment = Alignment.Center
         ) {
             HasText(
@@ -223,9 +217,8 @@ fun FeedCalenderRecordDayItem(
 ) {
     Box(
         modifier = Modifier
-            .width(44.dp)
-            .height(36.dp)
-            .clickable { onClick.invoke(day) },
+            .size(44.dp)
+            .clickableNoRipple { onClick.invoke(day) },
         contentAlignment = Alignment.Center
     ) {
         Box(

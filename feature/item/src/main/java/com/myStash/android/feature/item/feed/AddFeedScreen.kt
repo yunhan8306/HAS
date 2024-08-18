@@ -92,7 +92,7 @@ fun AddFeedScreen(
     )
 
     val dateHeight by animateDpAsState(
-        targetValue = if(isShowDate) 280.dp else 0.dp,
+        targetValue = if(isShowDate) 340.dp else 0.dp,
         animationSpec = tween(400),
         label = "date height"
     )

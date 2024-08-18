@@ -119,10 +119,7 @@ fun FeedScreen(
                 HasCalender(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(
-                            color = Color(0xFFFFFFFF),
-                            shape = RoundedCornerShape(size = 12.dp)
-                        ),
+                        .clip(shape = RoundedCornerShape(size = 12.dp)),
                     year = state.calenderDate.year,
                     month = state.calenderDate.monthValue,
                     selectDate = state.selectedDate,
@@ -139,10 +136,8 @@ fun FeedScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(44.dp)
-                        .background(
-                            color = Color(0xFFFFFFFF),
-                            shape = RoundedCornerShape(size = 12.dp)
-                        )
+                        .clip(shape = RoundedCornerShape(size = 12.dp))
+                        .background(MaterialTheme.colors.background)
                         .onGloballyPositioned { coordinates ->
                             yPosition = coordinates.positionInWindow().y.toInt()
                         },
@@ -180,10 +175,8 @@ fun FeedScreen(
                 Box(modifier = Modifier.height(16.dp))
                 Column(
                     modifier = Modifier
-                        .background(
-                            color = Color(0xFFFFFFFF),
-                            shape = RoundedCornerShape(size = 12.dp)
-                        )
+                        .clip(shape = RoundedCornerShape(size = 12.dp))
+                        .background(MaterialTheme.colors.background)
                         .padding(top = 16.dp, bottom = 16.dp, start = 20.dp, end = 20.dp)
                         .heightIn(max = 300.dp)
                 ) {
@@ -221,10 +214,8 @@ fun FeedScreen(
                 state.selectedFeedStyle?.let { style ->
                     Column(
                         modifier = Modifier
-                            .background(
-                                color = Color(0xFFFFFFFF),
-                                shape = RoundedCornerShape(size = 12.dp)
-                            )
+                            .clip(shape = RoundedCornerShape(size = 12.dp))
+                            .background(MaterialTheme.colors.background)
                             .padding(top = 16.dp, bottom = 16.dp, start = 20.dp, end = 20.dp)
                     ) {
                         LazyColumn(
@@ -255,7 +246,7 @@ fun FeedScreen(
             Box(modifier = Modifier.height(40.dp))
             Row(
                 modifier = Modifier
-                    .background(Color.White)
+                    .background(MaterialTheme.colors.background)
                     .fillMaxWidth()
                     .height(44.dp)
                     .clickableNoRipple { scope.launch { scrollState.animateScrollTo(0) } },
