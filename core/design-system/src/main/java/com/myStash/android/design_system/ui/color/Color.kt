@@ -26,6 +26,7 @@ val Gray800 = Color(0xFF1A1A1A) // Darkest Gray
 val Gray900 = Color(0xFFA4A4A4) // Additional Gray
 
 val Lime100 = Color(0xFFFCFFE7) // Light Lime
+val Lime200 = Color(0xFFBFD320)
 val Lime300 = Color(0xFFE4F562) // Lime Green
 val Lime500 = Color(0xFF95A70F) // Medium Lime
 val Lime700 = Color(0xFF8A9918) // Dark Lime

@@ -38,21 +38,28 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.myStash.android.common.resource.R
 import com.myStash.android.common.util.isNotNull
-import com.myStash.android.common.util.isNotNullAndNotEmpty
 import com.myStash.android.core.model.setCalender
 import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
+import com.myStash.android.design_system.ui.color.ColorFamilyGray200AndGray600
+import com.myStash.android.design_system.ui.color.ColorFamilyLime100AndGray600
+import com.myStash.android.design_system.ui.color.ColorFamilyLime700AndLime200
+import com.myStash.android.design_system.ui.color.Gray350
+import com.myStash.android.design_system.ui.color.Lime200
 import com.myStash.android.design_system.ui.component.button.HasButton
 import com.myStash.android.design_system.ui.component.calender.HasCalender
 import com.myStash.android.design_system.ui.component.photo.SelectPhotoItem
 import com.myStash.android.design_system.ui.component.photo.UnselectPhotoItem
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
+import com.myStash.android.design_system.ui.theme.clickableNoRipple
 import com.myStash.android.feature.item.component.AddItemAware
 import com.myStash.android.feature.item.component.ItemTitleText
 
@@ -142,11 +149,11 @@ fun AddFeedScreen(
                         .height(44.dp)
                         .border(
                             width = if (isShowDate) 1.dp else (-1).dp,
-                            color = Color(0xFFBFD320),
+                            color = Lime200,
                             shape = RoundedCornerShape(size = 10.dp)
                         )
                         .background(
-                            color = if (isShowDate) Color(0xFFFCFFE7) else Color(0xFFF1F1F1),
+                            color = if (isShowDate) ColorFamilyLime100AndGray600 else ColorFamilyGray200AndGray600,
                             shape = RoundedCornerShape(size = 10.dp)
                         )
                         .clickable { isShowDate = !isShowDate },
@@ -154,7 +161,7 @@ fun AddFeedScreen(
                 ) {
                     HasText(
                         text = "${state.date.year}년 ${state.date.monthValue}월 ${state.date.dayOfMonth}일",
-                        color = if(isShowDate) Color(0xFF8A9918) else Color(0xFF202020),
+                        color = if(isShowDate) ColorFamilyLime700AndLime200 else ColorFamilyBlackAndWhite,
                         fontWeight = HasFontWeight.Bold
                     )
                 }
@@ -177,27 +184,51 @@ fun AddFeedScreen(
                     )
                 }
 
-                ItemTitleText(
-                    modifier = Modifier.padding(top = 32.dp, bottom = 16.dp),
-                    text = "Style"
-                )
-
-                Box(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(44.dp)
-                        .background(
-                            color = Color(0xFFF1F1F1),
-                            shape = RoundedCornerShape(size = 10.dp)
-                        )
-                        .clickable { showStyleSheet.invoke() },
-                    contentAlignment = Alignment.Center
+                        .padding(top = 32.dp, bottom = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Image(
-                        modifier = Modifier.size(20.dp),
-                        painter = painterResource(id = R.drawable.btn_style_add),
-                        contentDescription = "style add",
+                    ItemTitleText(
+                        modifier = Modifier.weight(1f),
+                        text = "Style"
                     )
+                    if(state.selectedStyle != null) {
+                        Row(
+                            modifier = Modifier.clickableNoRipple { showStyleSheet.invoke() },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                modifier = Modifier.size(14.dp),
+                                painter = painterResource(id = R.drawable.btn_edit),
+                                contentDescription = "style edit",
+                            )
+                            HasText(
+                                text = "Edit",
+                                color = Gray350,
+                                fontSize = 13.dp
+                            )
+                        }
+                    }
+                }
+
+                if(state.selectedStyle == null) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(44.dp)
+                            .clip(shape = RoundedCornerShape(size = 10.dp))
+                            .background(ColorFamilyGray200AndGray600)
+                            .clickable { showStyleSheet.invoke() },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            modifier = Modifier.size(20.dp),
+                            painter = painterResource(id = R.drawable.btn_style_add),
+                            contentDescription = "style add",
+                        )
+                    }
                 }
 
                 state.selectedStyle?.let { style ->
