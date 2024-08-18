@@ -77,6 +77,9 @@ val ColorFamilyLime500AndLime300
 val ColorFamilyLime700AndLime200
     @Composable get() = ColorFamily(Lime700, Lime200).color
 
+val ColorFamilyGray100AndGray800
+    @Composable get() = ColorFamily(Gray100, Gray800).color
+
 
 
 val ColorFamilyBackground

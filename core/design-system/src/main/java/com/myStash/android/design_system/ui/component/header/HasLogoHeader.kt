@@ -1,6 +1,7 @@
 package com.myStash.android.design_system.ui.component.header
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -15,8 +16,10 @@ fun HasLogoHeader() {
         isBack = false,
         centerContent = {
             Image(
-                modifier = Modifier.width(74.dp).height(20.dp),
-                painter = painterResource(id = R.drawable.img_has_logo),
+                modifier = Modifier
+                    .width(74.dp)
+                    .height(20.dp),
+                painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.img_has_logo_dark else R.drawable.img_has_logo),
                 contentDescription = "has logo"
             )
         }

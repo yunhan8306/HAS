@@ -170,7 +170,8 @@ fun AddFeedScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(dateHeight)
-                        .alpha(dateFadeIn)
+                        .alpha(dateFadeIn),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     HasCalender(
                         modifier = Modifier.width(360.dp),
