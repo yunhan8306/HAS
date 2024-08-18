@@ -2,6 +2,7 @@ package com.myStash.android.feature.feed
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,13 +38,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import coil.compose.SubcomposeAsyncImage
 import com.google.accompanist.navigation.animation.composable
+import com.myStash.android.common.resource.R
 import com.myStash.android.design_system.ui.color.ColorFamilyGray100AndGray800
+import com.myStash.android.design_system.ui.color.ColorFamilyGray500AndGray900
 import com.myStash.android.design_system.ui.component.calender.HasCalender
 import com.myStash.android.design_system.ui.component.header.HasLogoHeader
 import com.myStash.android.design_system.ui.component.tag.TagChipItem
@@ -235,6 +239,27 @@ fun FeedScreen(
                         }
                     }
                     Box(modifier = Modifier.height(16.dp))
+                }
+            } ?: run {
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Image(
+                            modifier = Modifier.size(150.dp),
+                            painter = painterResource(id = R.drawable.img_hamong_feed_gone),
+                            contentDescription = "feed gone"
+                        )
+                        HasText(
+                            modifier = Modifier.padding(top = 16.dp),
+                            text = "There is no registered Feed.",
+                            color = ColorFamilyGray500AndGray900,
+                            fontSize = 14.dp
+                        )
+                    }
                 }
             }
         }
