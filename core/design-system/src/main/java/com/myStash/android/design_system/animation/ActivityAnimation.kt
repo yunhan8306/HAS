@@ -10,3 +10,11 @@ fun ComponentActivity.slideIn() {
 fun ComponentActivity.slideOut() {
     overridePendingTransition(R.anim.nothing, R.anim.slide_out)
 }
+
+fun ComponentActivity.fadeIn() {
+    overridePendingTransition(R.anim.fade_in, R.anim.nothing)
+}
+
+fun ComponentActivity.fadeOut() {
+    overridePendingTransition(R.anim.nothing, R.anim.fade_out)
+}
