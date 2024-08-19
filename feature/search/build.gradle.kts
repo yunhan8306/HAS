@@ -12,6 +12,7 @@ dependencies {
     implementation(projects.core.designSystem)
     implementation(projects.core.model)
     implementation(projects.core.data)
+    implementation(projects.core.di)
     implementation(projects.common.compose)
     implementation(projects.common.util)
     implementation(projects.common.resource)

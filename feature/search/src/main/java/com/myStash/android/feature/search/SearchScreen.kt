@@ -1,6 +1,5 @@
 package com.myStash.android.feature.search
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,12 +24,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.testTagList
 import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.color.Gray350
 import com.myStash.android.design_system.ui.component.SpacerLineBox
 import com.myStash.android.design_system.ui.component.button.HasButton
 import com.myStash.android.design_system.ui.component.content.ContentTextField
@@ -39,6 +37,7 @@ import com.myStash.android.design_system.ui.component.tag.TagDeleteChipItem
 import com.myStash.android.design_system.ui.component.tag.TagSearchItem
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
+import com.myStash.android.design_system.ui.theme.HasSearchTheme
 import com.myStash.android.design_system.ui.theme.clickableNoRipple
 import com.myStash.android.design_system.util.addFocusCleaner
 import com.myStash.android.design_system.util.rememberImeState
@@ -46,14 +45,8 @@ import com.myStash.android.design_system.util.rememberImeState
 @Composable
 fun SearchScreen(
     searchTextState: TextFieldState,
-    totalTagList: List<Tag> = emptyList(),
-    selectTagList: List<Tag>,
-    searchTagList: List<Tag>,
-    selectedHasCnt: Int,
-    onSelect: (Tag) -> Unit,
-    onConfirm: () -> Unit,
-    onDelete: () -> Unit,
-    onBack: () -> Unit,
+    state: SearchScreenState,
+    onAction: (SearchAction) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
     val imeState = rememberImeState()
@@ -78,8 +71,8 @@ fun SearchScreen(
                 textState = searchTextState,
                 hint = "원하는 태그를 검색해 보세요",
                 isBack = true,
-                back = onBack,
-                delete = onDelete
+                back = { onAction.invoke(SearchAction.Finish) },
+                delete = { onAction.invoke(SearchAction.DeleteText) }
             )
 
             Box(
@@ -88,7 +81,7 @@ fun SearchScreen(
                     .height(93.dp),
                 contentAlignment = Alignment.Center
             ) {
-                if(selectTagList.isNotEmpty()) {
+                if(state.selectedTagList.isNotEmpty()) {
                     Column(
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -100,10 +93,13 @@ fun SearchScreen(
                         LazyRow(
                             modifier = Modifier.padding(top = 6.dp)
                         ) {
-                            items(selectTagList) { tag ->
+                            items(
+                                items = state.selectedTagList,
+                                key = { it.id!! }
+                            ) { tag ->
                                 TagDeleteChipItem(
                                     name = tag.name,
-                                    onClick = { onSelect.invoke(tag) }
+                                    onClick = { onAction.invoke(SearchAction.SelectTag(tag)) }
                                 )
                             }
                         }
@@ -118,7 +114,7 @@ fun SearchScreen(
                         )
                         HasText(
                             text = "원하는 태그를 검색하여 추가해 보세요.",
-                            color = Color(0xFF909090),
+                            color = Gray350,
                             fontSize = 12.dp
                         )
                     }
@@ -145,16 +141,16 @@ fun SearchScreen(
                             .weight(1f)
                             .verticalScroll(scrollState)
                     ) {
-                        totalTagList.forEach { tag ->
-                            val isSelected by remember(selectTagList) {
+                        state.totalTagList.forEach { tag ->
+                            val isSelected by remember(state.selectedTagList) {
                                 derivedStateOf {
-                                    tag.checkSelected(selectTagList)
+                                    tag.checkSelected(state.selectedTagList)
                                 }
                             }
                             TagChipItem(
                                 name = tag.name,
                                 isSelected = isSelected,
-                                onClick = { onSelect.invoke(tag) }
+                                onClick = { onAction.invoke(SearchAction.SelectTag(tag)) }
                             )
                         }
                     }
@@ -162,17 +158,20 @@ fun SearchScreen(
                     LazyColumn(
                         modifier = Modifier.weight(1f)
                     ) {
-                        items(searchTagList) { tag ->
-                            val isSelected by remember(selectTagList) {
+                        items(
+                            items = state.searchTagList,
+                            key = { it.id!! }
+                        ) { tag ->
+                            val isSelected by remember(state.selectedTagList) {
                                 derivedStateOf {
-                                    tag.checkSelected(selectTagList)
+                                    tag.checkSelected(state.selectedTagList)
                                 }
                             }
                             TagSearchItem(
                                 name = tag.name,
                                 searchText = searchTextState.text.toString(),
                                 isSelected = isSelected,
-                                onClick = { onSelect.invoke(tag) }
+                                onClick = { onAction.invoke(SearchAction.SelectTag(tag)) }
                             )
                         }
                     }
@@ -180,7 +179,7 @@ fun SearchScreen(
             }
         }
     }
-    if(selectedHasCnt > 0) {
+    state.selectedCntText?.let { text ->
         Column(
             modifier = Modifier
                 .imePadding()
@@ -188,26 +187,26 @@ fun SearchScreen(
         ) {
             Spacer(modifier = Modifier.weight(1f))
             HasButton(
-                text = "${selectedHasCnt}개 Has 보기",
-                onClick = onConfirm
+                text = text,
+                onClick = { onAction.invoke(SearchAction.Confirm) }
             )
         }
     }
-    BackHandler(onBack = onBack)
 }
 
 @DevicePreviews
 @Composable
 fun SearchScreenPreview() {
-    SearchScreen(
-        searchTextState = TextFieldState(),
-        totalTagList = testTagList,
-        selectTagList = emptyList(),
-        searchTagList = emptyList(),
-        selectedHasCnt = 0,
-        onSelect = {},
-        onConfirm = {},
-        onDelete = {},
-        onBack = {}
-    )
+    HasSearchTheme {
+        SearchScreen(
+            searchTextState = TextFieldState(),
+            state = SearchScreenState(
+                totalTagList = testTagList,
+                selectedTagList = emptyList(),
+                searchTagList = emptyList(),
+                selectedCntText = "5",
+            ),
+            onAction = {}
+        )
+    }
 }

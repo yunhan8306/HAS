@@ -20,6 +20,7 @@ sealed interface StyleScreenAction {
     data class SelectStyle(val style: StyleScreenModel?) : StyleScreenAction
     data class SelectTag(val tag: Tag) : StyleScreenAction
     data class ShowMoreStyle(val style: StyleScreenModel): StyleScreenAction
+    data class SetTagList(val tagIdList: List<Long>) : StyleScreenAction
     object ShowSearch : StyleScreenAction
     object ResetSelectStyle: StyleScreenAction
     object TagToggle: StyleScreenAction

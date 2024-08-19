@@ -2,14 +2,9 @@ package com.myStash.android.feature.essential
 
 import android.app.Application
 import android.util.Log
-import androidx.compose.foundation.text2.input.TextFieldState
-import androidx.compose.foundation.text2.input.clearText
-import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
-import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.common.util.offerOrRemove
-import com.myStash.android.common.util.removeBlank
 import com.myStash.android.core.data.usecase.gender.GetSelectedGenderUseCase
 import com.myStash.android.core.data.usecase.has.DeleteHasUseCase
 import com.myStash.android.core.data.usecase.has.GetHasListUseCase
@@ -24,6 +19,7 @@ import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.getSelectedTypeAndTagHasList
+import com.myStash.android.core.model.getTagList
 import com.myStash.android.core.model.getTotalTypeList
 import com.myStash.android.core.model.sortSelectedTagList
 import com.myStash.android.feature.gallery.ImageRepository
@@ -32,9 +28,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
@@ -69,21 +63,8 @@ class HasViewModel @Inject constructor(
 
     init {
         fetch()
-        collectSearchText()
         initGalleryImages()
     }
-
-    val searchTextState = TextFieldState()
-    private val searchTagList = searchTextState
-        .textAsFlow()
-        .flowOn(defaultDispatcher)
-        .onEach { text -> searchTextState.setTextAndPlaceCursorAtEnd(text.removeBlank()) }
-        .map { search -> tagTotalList.value.filter { it.name.contains(search) } }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000L),
-            initialValue = emptyList()
-        )
 
     var testImageCnt = 0
 
@@ -144,22 +125,11 @@ class HasViewModel @Inject constructor(
         }
     }
 
-    private fun collectSearchText() {
-        intent {
-            viewModelScope.launch {
-                searchTagList.collectLatest {
-                    reduce {
-                        state.copy(searchTagList = it.toList())
-                    }
-                }
-            }
-        }
-    }
-
     fun onAction(action: HasScreenAction) {
         when(action) {
             is HasScreenAction.SelectType -> selectType(action.type)
             is HasScreenAction.SelectTag -> selectTag(action.tag)
+            is HasScreenAction.SetTagList -> setTagList(action.tagIdList)
             is HasScreenAction.SelectHas -> selectHas(action.has)
             is HasScreenAction.ResetSelectHas -> resetSelectHas()
             is HasScreenAction.TagToggle -> toggleTag()
@@ -167,10 +137,28 @@ class HasViewModel @Inject constructor(
         }
     }
 
-    fun selectTag(tag: Tag) {
+    private fun selectTag(tag: Tag) {
         intent {
             viewModelScope.launch {
                 selectedTagList.offerOrRemove(tag) { it.name == tag.name }
+
+                reduce {
+                    state.copy(
+                        selectedTagList = selectedTagList.toList(),
+                        hasList = hasTotalList.value.getSelectedTypeAndTagHasList(state.selectedType, selectedTagList)
+                    )
+                }
+            }
+        }
+    }
+
+    private fun setTagList(tagIdList: List<Long>) {
+        intent {
+            viewModelScope.launch {
+                selectedTagList.apply {
+                    clear()
+                    addAll(tagIdList.getTagList(state.totalTagList))
+                }
 
                 reduce {
                     state.copy(
@@ -232,10 +220,6 @@ class HasViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    fun deleteSearchText() {
-        searchTextState.clearText()
     }
 
     private fun initGalleryImages() {

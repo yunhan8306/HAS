@@ -22,6 +22,10 @@ fun List<Tag>.sortSelectedTagList(selectedTagList: List<Tag>, isFold: Boolean): 
     }
 }
 
+fun List<Long>.getTagList(tagList: List<Tag>): List<Tag> {
+    return tagList.filter { contains(it.id) }
+}
+
 val testTagList = listOf(
     Tag(name = "nike"),
     Tag(name = "needles"),

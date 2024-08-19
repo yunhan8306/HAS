@@ -1,14 +1,9 @@
 package com.myStash.android.feature.style
 
 import android.app.Application
-import androidx.compose.foundation.text2.input.TextFieldState
-import androidx.compose.foundation.text2.input.clearText
-import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
-import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.common.util.offerOrRemove
-import com.myStash.android.common.util.removeBlank
 import com.myStash.android.core.data.usecase.style.GetStyleListUseCase
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
 import com.myStash.android.core.data.usecase.type.GetTypeListUseCase
@@ -17,15 +12,13 @@ import com.myStash.android.core.di.IoDispatcher
 import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.filterSelectTag
+import com.myStash.android.core.model.getTagList
 import com.myStash.android.core.model.sortSelectedTagList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
@@ -51,18 +44,6 @@ class StyleViewModel @Inject constructor(
     init {
         fetch()
     }
-
-    val searchTextState = TextFieldState()
-    private val searchTagList = searchTextState
-        .textAsFlow()
-        .flowOn(defaultDispatcher)
-        .onEach { text -> searchTextState.setTextAndPlaceCursorAtEnd(text.removeBlank()) }
-        .map { search -> tagTotalList.value.filter { it.name.contains(search) } }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000L),
-            initialValue = emptyList()
-        )
 
     private val styleTotalList = getStyleListUseCase.styleList
         .stateIn(
@@ -101,19 +82,6 @@ class StyleViewModel @Inject constructor(
                         )
                     }
                 }
-                collectSearchText()
-            }
-        }
-    }
-
-    private fun collectSearchText() {
-        intent {
-            viewModelScope.launch {
-                searchTagList.collectLatest {
-                    reduce {
-                        state.copy(searchTagList = it.toList())
-                    }
-                }
             }
         }
     }
@@ -122,16 +90,35 @@ class StyleViewModel @Inject constructor(
         when(action) {
             is StyleScreenAction.SelectStyle -> selectStyle(action.style)
             is StyleScreenAction.SelectTag -> selectTag(action.tag)
+            is StyleScreenAction.SetTagList -> setTagList(action.tagIdList)
             is StyleScreenAction.ResetSelectStyle -> resetSelectStyle()
             is StyleScreenAction.TagToggle -> toggleTag()
             else -> Unit
         }
     }
 
-    fun selectTag(tag: Tag) {
+    private fun selectTag(tag: Tag) {
         intent {
             viewModelScope.launch {
                 selectedTagList.offerOrRemove(tag) { it.name == tag.name }
+                reduce {
+                    state.copy(
+                        selectedTagList = selectedTagList.toList(),
+                        styleList = styleTotalList.value.filterSelectTag(selectedTagList)
+                    )
+                }
+            }
+        }
+    }
+
+    private fun setTagList(tagIdList: List<Long>) {
+        intent {
+            viewModelScope.launch {
+                selectedTagList.apply {
+                    clear()
+                    addAll(tagIdList.getTagList(state.totalTagList))
+                }
+
                 reduce {
                     state.copy(
                         selectedTagList = selectedTagList.toList(),
@@ -177,9 +164,5 @@ class StyleViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    fun deleteSearchText() {
-        searchTextState.clearText()
     }
 }

@@ -22,6 +22,7 @@ sealed interface HasScreenAction {
     data class SelectHas(val has: Has) : HasScreenAction
     data class SelectType(val type: Type) : HasScreenAction
     data class SelectTag(val tag: Tag) : HasScreenAction
+    data class SetTagList(val tagIdList: List<Long>) : HasScreenAction
     data class ShowItemActivity(val has: Has?): HasScreenAction
     object ResetSelectHas : HasScreenAction
     object ShowSearch : HasScreenAction

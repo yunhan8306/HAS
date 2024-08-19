@@ -47,6 +47,7 @@ import com.myStash.android.common.util.CommonActivityResultContract
 import com.myStash.android.core.model.getTotalType
 import com.myStash.android.core.model.testManTypeTotalList
 import com.myStash.android.core.model.testTagList
+import com.myStash.android.design_system.animation.fadeIn
 import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.color.ColorFamilyGray200AndGray600
@@ -60,7 +61,8 @@ import com.myStash.android.design_system.ui.component.tag.TagMoreChipItem
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.feature.item.ItemActivity
 import com.myStash.android.feature.item.item.ItemTab
-import com.myStash.android.feature.search.SearchScreen
+import com.myStash.android.feature.search.SearchActivity
+import com.myStash.android.feature.search.SearchConstants
 import com.myStash.android.navigation.MainNavType
 import org.orbitmvi.orbit.compose.collectAsState
 
@@ -78,7 +80,6 @@ fun HasRoute(
 ) {
 
     val state by viewModel.collectAsState()
-    val searchTextState by remember { mutableStateOf(viewModel.searchTextState) }
 
     val activity = LocalContext.current as ComponentActivity
     val itemActivityLauncher = rememberLauncherForActivityResult(
@@ -86,14 +87,29 @@ fun HasRoute(
         onResult = {}
     )
 
-    var isShowSearch by remember { mutableStateOf(false) }
+    val searchActivityLauncher = rememberLauncherForActivityResult(
+        contract = CommonActivityResultContract(),
+        onResult = { intent ->
+            intent?.getLongArrayExtra(SearchConstants.SELECTED_TAG_LIST)?.let {
+                viewModel.onAction(HasScreenAction.SetTagList(it.toList()))
+            }
+        }
+    )
+
     var testConfirm by remember { mutableStateOf(false) }
 
     HasScreen(
         state = state,
         onAction = { action ->
              when(action) {
-                 is HasScreenAction.ShowSearch -> { isShowSearch = true }
+                 is HasScreenAction.ShowSearch -> {
+                     val intent = Intent(activity, SearchActivity::class.java)
+                         .putExtra(SearchConstants.TYPE, SearchConstants.HAS)
+                         .putExtra(SearchConstants.SELECTED_TAG_LIST, state.selectedTagList.map { it.id }.toTypedArray())
+
+                     searchActivityLauncher.launch(intent)
+                     activity.fadeIn()
+                 }
                  is HasScreenAction.ShowItemActivity -> {
                      val intent = Intent(activity, ItemActivity::class.java)
                          .putExtra("tab", ItemTab.HAS.name)
@@ -106,20 +122,6 @@ fun HasRoute(
              }
         }
     )
-
-    if(isShowSearch) {
-        SearchScreen(
-            searchTextState = searchTextState,
-            totalTagList = state.totalTagList,
-            selectTagList = state.selectedTagList,
-            searchTagList = state.searchTagList,
-            selectedHasCnt = 0,
-            onSelect = viewModel::selectTag,
-            onConfirm = { isShowSearch = false },
-            onDelete = viewModel::deleteSearchText,
-            onBack = { isShowSearch = false },
-        )
-    }
 
     HasConfirmDialog(
         isShow = testConfirm,

@@ -1,6 +1,9 @@
 package com.myStash.android.feature.style
 
+import android.content.Intent
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,13 +29,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
 import com.myStash.android.common.compose.activityViewModel
+import com.myStash.android.common.util.CommonActivityResultContract
 import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.testTagList
+import com.myStash.android.design_system.animation.fadeIn
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.component.SpacerLineBox
 import com.myStash.android.design_system.ui.component.content.ContentHeaderSearchText
@@ -40,7 +46,8 @@ import com.myStash.android.design_system.ui.component.style.StyleMainItem
 import com.myStash.android.design_system.ui.component.tag.TagChipItem
 import com.myStash.android.design_system.ui.component.tag.TagMoreChipItem
 import com.myStash.android.design_system.ui.component.text.HasText
-import com.myStash.android.feature.search.SearchScreen
+import com.myStash.android.feature.search.SearchActivity
+import com.myStash.android.feature.search.SearchConstants
 import com.myStash.android.navigation.MainNavType
 import org.orbitmvi.orbit.compose.collectAsState
 
@@ -59,35 +66,35 @@ fun StyleRoute(
 
     val state by viewModel.collectAsState()
 
-    val searchTextState by remember { mutableStateOf(viewModel.searchTextState) }
-
-    var isShowSearch by remember { mutableStateOf(false) }
+    val activity = LocalContext.current as ComponentActivity
     var showMoreStyle: StyleScreenModel? by remember { mutableStateOf(null) }
+
+    val searchActivityLauncher = rememberLauncherForActivityResult(
+        contract = CommonActivityResultContract(),
+        onResult = { intent ->
+            intent?.getLongArrayExtra(SearchConstants.SELECTED_TAG_LIST)?.let {
+                viewModel.onAction(StyleScreenAction.SetTagList(it.toList()))
+            }
+        }
+    )
 
     StyleScreen(
         state = state,
         onAction = { action ->
             when(action) {
-                is StyleScreenAction.ShowSearch -> isShowSearch = true
+                is StyleScreenAction.ShowSearch -> {
+                    val intent = Intent(activity, SearchActivity::class.java)
+                        .putExtra(SearchConstants.TYPE, SearchConstants.STYLE)
+                        .putExtra(SearchConstants.SELECTED_TAG_LIST, state.selectedTagList.map { it.id }.toTypedArray())
+
+                    searchActivityLauncher.launch(intent)
+                    activity.fadeIn()
+                }
                 is StyleScreenAction.ShowMoreStyle -> showMoreStyle = action.style
                 else -> viewModel.onAction(action)
             }
         }
     )
-
-    if(isShowSearch) {
-        SearchScreen(
-            searchTextState = searchTextState,
-            totalTagList = state.totalTagList,
-            selectTagList = state.selectedTagList,
-            searchTagList = state.searchTagList,
-            selectedHasCnt = 0,
-            onSelect = viewModel::selectTag,
-            onConfirm = { isShowSearch = false },
-            onDelete = viewModel::deleteSearchText,
-            onBack = { isShowSearch = false },
-        )
-    }
 
     StyleMoreDialog(
         styleScreenModel = showMoreStyle,
