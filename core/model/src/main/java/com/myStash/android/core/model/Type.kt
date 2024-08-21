@@ -1,12 +1,22 @@
 package com.myStash.android.core.model
 
-class Type(
+data class Type(
     val id: Long? = null,
     val name: String = "",
     val order: Long? = 99,
     val createTime: Long = System.currentTimeMillis(),
     val isRemove: Boolean = false
 )
+
+fun List<Type>.update(type: Type): List<Type> {
+    return this.map {
+        if(type.id == it.id) {
+            type
+        } else {
+            it
+        }
+    }.toList()
+}
 
 fun getTotalType() = Type(id = null, name = "전체")
 

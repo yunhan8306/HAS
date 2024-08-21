@@ -26,6 +26,16 @@ fun List<Long>.getTagList(tagList: List<Tag>): List<Tag> {
     return tagList.filter { contains(it.id) }
 }
 
+fun List<Tag>.update(tag: Tag): List<Tag> {
+    return this.map {
+        if(tag.id == it.id) {
+            tag
+        } else {
+            it
+        }
+    }.toList()
+}
+
 val testTagList = listOf(
     Tag(name = "nike"),
     Tag(name = "needles"),

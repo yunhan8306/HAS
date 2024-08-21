@@ -41,6 +41,7 @@ import com.myStash.android.design_system.ui.component.header.HasLogoHeader
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.design_system.ui.theme.clickableNoRipple
+import com.myStash.android.feature.manage.ManageActivity
 import com.myStash.android.feature.webview.WebView
 import com.myStash.android.feature.webview.WebViewConstants
 import com.myStash.android.navigation.MainNavType
@@ -69,6 +70,11 @@ fun MyPageRoute(
         onResult = { menuType = null }
     )
 
+    val manageActivityLauncher = rememberLauncherForActivityResult(
+        contract = CommonActivityResultContract(),
+        onResult = { menuType = null }
+    )
+
     MyPageScreen(
         state = MyPageScreenState(nickName = "Test"),
         onAction = { action ->
@@ -79,6 +85,9 @@ fun MyPageRoute(
                 }
                 is MyPageScreenAction.ShowContact -> {
                     menuType = MyPageMenuType.Contact
+                }
+                is MyPageScreenAction.ShowManage -> {
+                    menuType = MyPageMenuType.Manage
                 }
                 else -> Unit
             }
@@ -95,6 +104,11 @@ fun MyPageRoute(
         is MyPageMenuType.Contact -> {
             val intent = Intent(activity, ContactActivity::class.java)
             contactActivityLauncher.launch(intent)
+            activity.slideIn()
+        }
+        is MyPageMenuType.Manage -> {
+            val intent = Intent(activity, ManageActivity::class.java)
+            manageActivityLauncher.launch(intent)
             activity.slideIn()
         }
         else -> Unit
@@ -142,7 +156,7 @@ fun MyPageScreen(
         ) {
             MyPageItem(
                 text = "Manage Categories / Tags",
-                onClick = {  }
+                onClick = { onAction.invoke(MyPageScreenAction.ShowManage) }
             )
             MyPageItem(
                 text = "Notice",
