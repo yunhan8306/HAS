@@ -33,7 +33,7 @@ fun ManageScreen(
             .addFocusCleaner(focusManager)
     ) {
         HasHeader(
-            text = "등록하기",
+            text = "Manage",
             onBack = onBack
         )
         TabRow(

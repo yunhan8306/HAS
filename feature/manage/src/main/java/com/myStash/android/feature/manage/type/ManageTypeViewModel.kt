@@ -1,6 +1,7 @@
 package com.myStash.android.feature.manage.type
 
 import androidx.compose.foundation.text2.input.TextFieldState
+import androidx.compose.foundation.text2.input.clearText
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.core.data.usecase.type.GetTypeListUseCase
@@ -29,7 +30,7 @@ class ManageTypeViewModel @Inject constructor(
     override val container: Container<ManageTypeState, ManageTypeSideEffect> =
         container(ManageTypeState())
 
-    val searchTextState = TextFieldState()
+    val addTypeTextState = TextFieldState()
 
     private val typeTotalList = getTypeListUseCase.typeList
         .stateIn(
@@ -68,6 +69,9 @@ class ManageTypeViewModel @Inject constructor(
                 is ManageTypeAction.UpdateType -> {
                     updateType(action.type)
                 }
+                is ManageTypeAction.DeleteAddTypeText -> {
+                    deleteAddTypeText()
+                }
             }
         }
     }
@@ -75,7 +79,7 @@ class ManageTypeViewModel @Inject constructor(
     private fun addType() {
         viewModelScope.launch {
             val newType = Type(
-                name = searchTextState.text.toString()
+                name = addTypeTextState.text.toString()
             )
 
             val id = saveTypeUseCase.invoke(newType)
@@ -112,6 +116,10 @@ class ManageTypeViewModel @Inject constructor(
         }
     }
 
+    private fun deleteAddTypeText() {
+        addTypeTextState.clearText()
+    }
+
 }
 
 data class ManageTypeState(
@@ -123,7 +131,8 @@ sealed interface ManageTypeSideEffect {
 }
 
 sealed interface ManageTypeAction {
-    object AddType: ManageTypeAction
     data class RemoveType(val type: Type): ManageTypeAction
     data class UpdateType(val type: Type): ManageTypeAction
+    object AddType: ManageTypeAction
+    object DeleteAddTypeText: ManageTypeAction
 }
