@@ -181,7 +181,7 @@ fun HasScreen(
         ) {
             items(
                 items = state.totalTypeList,
-                key = { type -> type.name}
+                key = { type -> type.name }
             ) { type ->
                 TypeItem(
                     name = type.name,
