@@ -12,6 +12,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
@@ -26,6 +28,7 @@ import com.myStash.android.design_system.ui.color.ColorFamilyGray900AndGray400
 fun HasTextField(
     modifier: Modifier = Modifier,
     textState: TextFieldState,
+    focusRequester: FocusRequester,
     fontSize: Dp = 15.dp,
     textColor: Color = ColorFamilyBlackAndWhite,
     hint: String,
@@ -41,7 +44,7 @@ fun HasTextField(
     }
 
     BasicTextField2(
-        modifier = modifier,
+        modifier = modifier.focusRequester(focusRequester),
         state = textState,
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
         textStyle = TextStyle(color = textColor, fontSize = fontSizeSp, fontWeight = FontWeight.Medium),
