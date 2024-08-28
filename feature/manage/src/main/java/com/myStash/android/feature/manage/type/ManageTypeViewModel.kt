@@ -72,6 +72,9 @@ class ManageTypeViewModel @Inject constructor(
                 is ManageTypeAction.DeleteAddTypeText -> {
                     deleteAddTypeText()
                 }
+                is ManageTypeAction.FocusType -> {
+                    focusType(action.type)
+                }
             }
         }
     }
@@ -104,11 +107,13 @@ class ManageTypeViewModel @Inject constructor(
     private fun updateType(type: Type) {
         intent {
             viewModelScope.launch {
+                // TODO: 검증 작업 필요
                 updateTypeUseCase.invoke(type)
 
                 reduce {
                     state.copy(
-                        typeTotalList = state.typeTotalList.update(type)
+                        typeTotalList = state.typeTotalList.update(type),
+                        focusType = null
                     )
 
                 }
@@ -120,10 +125,23 @@ class ManageTypeViewModel @Inject constructor(
         addTypeTextState.clearText()
     }
 
+    private fun focusType(type: Type?) {
+        intent {
+            viewModelScope.launch {
+                reduce {
+                    state.copy(
+                        focusType = type
+                    )
+                }
+            }
+        }
+    }
+
 }
 
 data class ManageTypeState(
-    val typeTotalList: List<Type> = emptyList()
+    val typeTotalList: List<Type> = emptyList(),
+    val focusType: Type? = null
 )
 
 sealed interface ManageTypeSideEffect {
@@ -133,6 +151,7 @@ sealed interface ManageTypeSideEffect {
 sealed interface ManageTypeAction {
     data class RemoveType(val type: Type): ManageTypeAction
     data class UpdateType(val type: Type): ManageTypeAction
+    data class FocusType(val type: Type?): ManageTypeAction
     object AddType: ManageTypeAction
     object DeleteAddTypeText: ManageTypeAction
 }
