@@ -25,7 +25,7 @@ fun SplashRoute(
     val state by viewModel.collectAsState()
 
     val activity = LocalContext.current as ComponentActivity
-    val itemActivityLauncher = rememberLauncherForActivityResult(
+    val mainActivityLauncher = rememberLauncherForActivityResult(
         contract = CommonActivityResultContract(),
         onResult = {}
     )
@@ -34,7 +34,7 @@ fun SplashRoute(
         when(sideEffect) {
             is SplashSideEffect.StartMainActivity -> {
                 val intent = Intent(activity.apply { slideIn() }, MainActivity::class.java)
-                itemActivityLauncher.launch(intent)
+                mainActivityLauncher.launch(intent)
                 activity.finish()
             }
         }

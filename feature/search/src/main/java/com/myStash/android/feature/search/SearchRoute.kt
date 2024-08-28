@@ -34,7 +34,9 @@ fun SearchRoute(
         state = state,
         onAction = { action ->
             when(action) {
-
+                is SearchAction.Finish -> {
+                    activity.finish()
+                }
                 else -> viewModel.onAction(action)
             }
         },
