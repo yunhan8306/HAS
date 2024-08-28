@@ -115,7 +115,6 @@ class ManageTypeViewModel @Inject constructor(
                         typeTotalList = state.typeTotalList.update(type),
                         focusType = null
                     )
-
                 }
             }
         }
@@ -136,7 +135,6 @@ class ManageTypeViewModel @Inject constructor(
             }
         }
     }
-
 }
 
 data class ManageTypeState(
