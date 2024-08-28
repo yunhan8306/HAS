@@ -38,7 +38,7 @@ import com.myStash.android.design_system.ui.component.text.HasTextField
 import com.myStash.android.design_system.ui.theme.clickableNoRipple
 import com.myStash.android.design_system.util.addFocusCleaner
 import com.myStash.android.feature.manage.component.ManageAware
-import com.myStash.android.feature.manage.component.TypeTextField
+import com.myStash.android.feature.manage.component.ManageTextField
 
 @Composable
 fun ManageTypeScreen(
@@ -69,7 +69,7 @@ fun ManageTypeScreen(
                         .height(64.dp)
                         .padding(top = 12.dp)
                 ) {
-                    TypeTextField(
+                    ManageTextField(
                         textState = addTypeTextState,
                         hint = "원하는 카테고리를 등록하세요.",
                         add = { onAction.invoke(ManageTypeAction.AddType) }
