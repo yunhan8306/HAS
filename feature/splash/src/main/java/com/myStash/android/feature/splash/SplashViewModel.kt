@@ -28,20 +28,9 @@ class SplashViewModel @Inject constructor(
     private fun initTest() {
         intent {
             viewModelScope.launch {
-                while (state.testCount > 0) {
-                    delay(1000)
-                    reduce {
-                        state.copy(testCount = state.testCount - 1)
-                    }
-                }
-                postSideEffect(SplashSideEffect.StartMainActivity)
-            }
-        }
-    }
-
-    fun skip() {
-        intent {
-            viewModelScope.launch {
+                delay(300)
+                reduce { state.copy(SplashStatus.Success) }
+                delay(1000)
                 postSideEffect(SplashSideEffect.StartMainActivity)
             }
         }

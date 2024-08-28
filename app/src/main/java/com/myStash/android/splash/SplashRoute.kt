@@ -1,16 +1,18 @@
-package com.myStash.android
+package com.myStash.android.splash
 
 import android.content.Intent
-import android.window.SplashScreen
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.myStash.android.MainActivity
 import com.myStash.android.common.util.CommonActivityResultContract
 import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.feature.splash.SplashScreen
 import com.myStash.android.feature.splash.SplashSideEffect
+import com.myStash.android.feature.splash.SplashStatus
 import com.myStash.android.feature.splash.SplashViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -20,7 +22,7 @@ fun SplashRoute(
     viewModel: SplashViewModel = hiltViewModel(),
 ) {
 
-    val testCount = viewModel.collectAsState().value.testCount
+    val state by viewModel.collectAsState()
 
     val activity = LocalContext.current as ComponentActivity
     val itemActivityLauncher = rememberLauncherForActivityResult(
@@ -38,8 +40,10 @@ fun SplashRoute(
         }
     }
 
-    SplashScreen(
-        testCount = testCount.toString(),
-        skip = viewModel::skip
-    )
+    when(state.status) {
+        is SplashStatus.Success -> {
+            SplashScreen()
+        }
+        else -> Unit
+    }
 }

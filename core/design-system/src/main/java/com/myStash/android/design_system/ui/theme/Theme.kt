@@ -113,3 +113,29 @@ fun HasSearchTheme(
         content = content
     )
 }
+
+@Composable
+fun HasSplashTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val colors = if (darkTheme) {
+        SearchDarkColorScheme
+    } else {
+        LightColorScheme
+    }
+
+    val systemUiController = rememberSystemUiController()
+    val navigationColor = ColorFamilyWhiteAndGray800
+
+    SideEffect {
+        systemUiController.setStatusBarColor(colors.surface)
+        systemUiController.setNavigationBarColor(navigationColor)
+    }
+
+    MaterialTheme(
+        colors = colors,
+//        typography = Typography,
+        content = content
+    )
+}
