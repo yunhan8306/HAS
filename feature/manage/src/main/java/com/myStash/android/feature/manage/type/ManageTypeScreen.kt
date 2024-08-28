@@ -100,11 +100,7 @@ fun ManageTypeScreen(
                             .height(50.dp)
                             .padding(end = 4.dp)
                             .clickableNoRipple {
-                                if (!isSelected) onAction.invoke(
-                                    ManageTypeAction.FocusType(
-                                        null
-                                    )
-                                )
+                                if(!isSelected) onAction.invoke(ManageTypeAction.FocusType(null))
                             },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -130,13 +126,7 @@ fun ManageTypeScreen(
                                 HasText(
                                     modifier = Modifier
                                         .padding(5.dp)
-                                        .clickableNoRipple {
-                                            onAction.invoke(
-                                                ManageTypeAction.UpdateType(
-                                                    type.copy(name = typeTextFieldState.text.toString())
-                                                )
-                                            )
-                                        },
+                                        .clickableNoRipple { onAction.invoke(ManageTypeAction.UpdateType(type.copy(name = typeTextFieldState.text.toString()))) },
                                     text = "Complete",
                                     color = ColorFamilyLime700AndLime200,
                                     fontSize = 13.dp,
@@ -146,13 +136,7 @@ fun ManageTypeScreen(
                                 Box(
                                     modifier = Modifier
                                         .size(30.dp)
-                                        .clickableNoRipple {
-                                            onAction.invoke(
-                                                ManageTypeAction.FocusType(
-                                                    type
-                                                )
-                                            )
-                                        },
+                                        .clickableNoRipple { onAction.invoke(ManageTypeAction.FocusType(type)) },
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Image(
@@ -164,13 +148,7 @@ fun ManageTypeScreen(
                                 Box(
                                     modifier = Modifier
                                         .size(30.dp)
-                                        .clickableNoRipple {
-                                            onAction.invoke(
-                                                ManageTypeAction.RemoveType(
-                                                    type
-                                                )
-                                            )
-                                        },
+                                        .clickableNoRipple { onAction.invoke(ManageTypeAction.RemoveType(type)) },
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Image(
