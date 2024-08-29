@@ -22,7 +22,6 @@
         <activity
             android:name=".splash.SplashActivity"
             android:exported="true"
-            android:launchMode="singleTask"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboard|keyboardHidden" >
 
             <intent-filter>
