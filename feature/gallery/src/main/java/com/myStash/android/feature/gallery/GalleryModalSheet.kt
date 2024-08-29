@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -20,8 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.myStash.android.common.util.AppConfig
+import com.myStash.android.design_system.ui.color.Gray0
+import com.myStash.android.design_system.ui.color.Lime300
+import com.myStash.android.design_system.ui.color.White
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.feature.gallery.GalleryConstants.MULTI_CNT
 import com.myStash.android.feature.gallery.GalleryConstants.SINGLE
@@ -42,35 +46,51 @@ fun GalleryModalSheet(
             .fillMaxWidth()
             .height(sheetPeekHeight)
     ) {
-        Box(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(40.dp),
-            contentAlignment = Alignment.CenterEnd
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 16.dp),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                if(!AppConfig.allowReadMediaVisualUserSelected) {
+                    HasText(
+                        modifier = Modifier.clickable { onRequestPermission.invoke() },
+                        text = "Allow",
+                        color = Gray0,
+                        fontSize = 14.dp,
+                        textDecoration = TextDecoration.Underline
+                    )
+                }
+            }
             Row {
                 HasText(
                     text = "(",
-                    color = Color.White,
+                    color = White,
                     fontSize = 14.dp
                 )
                 HasText(
                     text = state.selectedImageList.size.toString(),
-                    color = Color(0xFFE4F562),
+                    color = Lime300,
                 )
                 HasText(
                     text = "/",
-                    color = Color.White,
+                    color = White,
                     fontSize = 14.dp
                 )
                 HasText(
                     text = if(state.type == SINGLE) "1" else MULTI_CNT.toString(),
-                    color = Color.White,
+                    color = White,
                     fontSize = 14.dp
                 )
                 HasText(
                     text = ")",
-                    color = Color.White,
+                    color = White,
                     fontSize = 14.dp
                 )
             }
@@ -81,19 +101,6 @@ fun GalleryModalSheet(
             horizontalArrangement = Arrangement.spacedBy(2.dp),
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            if(!AppConfig.allowReadMediaVisualUserSelected) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .aspectRatio(1f)
-                            .background(Color.Blue)
-                            .clickable { onRequestPermission.invoke() },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        HasText(text = "test", color = Color.White)
-                    }
-                }
-            }
             items(
                 items = state.imageList,
                 key = { image -> image.uri }

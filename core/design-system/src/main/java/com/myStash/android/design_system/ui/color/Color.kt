@@ -8,7 +8,7 @@ val White = Color(0xFFFFFFFF)
 val Lime = Color(0xFFE4F562)
 val Purple = Color(0xFF716DF6)
 
-
+val Gray0 = Color(0xFFB8B8B8)
 val Gray50 = Color(0xFFD4D4D4) // Light Gray
 val Gray100 = Color(0xFFF5F5F5) // Light Gray
 val Gray200 = Color(0xFFF1F1F1) // Lighter Gray
