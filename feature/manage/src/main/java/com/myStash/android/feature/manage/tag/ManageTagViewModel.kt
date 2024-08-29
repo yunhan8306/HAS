@@ -1,6 +1,7 @@
 package com.myStash.android.feature.manage.tag
 
 import androidx.compose.foundation.text2.input.TextFieldState
+import androidx.compose.foundation.text2.input.clearText
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
@@ -16,6 +17,7 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
@@ -29,7 +31,7 @@ class ManageTagViewModel @Inject constructor(
     override val container: Container<ManageTagState, ManageTagSideEffect> =
         container(ManageTagState())
 
-    val searchTextState = TextFieldState()
+    val addTagTextState = TextFieldState()
 
     private val tagTotalList = getTagListUseCase.tagList
         .stateIn(
@@ -60,29 +62,39 @@ class ManageTagViewModel @Inject constructor(
         viewModelScope.launch {
             when(action) {
                 is ManageTagAction.AddTag -> {
-                    addType()
+                    addTag()
                 }
                 is ManageTagAction.RemoveTag -> {
-                     removeType(action.tag)
+                    removeTag(action.tag)
                 }
                 is ManageTagAction.UpdateTag -> {
                     updateType(action.tag)
+                }
+                is ManageTagAction.DeleteAddTagText -> {
+                    deleteAddTagText()
+                }
+                is ManageTagAction.FocusTag -> {
+                    focusTag(action.tag)
                 }
             }
         }
     }
 
-    private fun addType() {
-        viewModelScope.launch {
-            val newTag = Tag(
-                name = searchTextState.text.toString()
-            )
+    private fun addTag() {
+        intent {
+            viewModelScope.launch {
+                val newTag = Tag(
+                    name = addTagTextState.text.toString()
+                )
 
-            val id = saveTagUseCase.invoke(newTag)
+                val id = saveTagUseCase.invoke(newTag)
+                deleteAddTagText()
+                postSideEffect(ManageTagSideEffect.ScrollDown)
+            }
         }
     }
 
-    private fun removeType(tag: Tag) {
+    private fun removeTag(tag: Tag) {
         intent {
             viewModelScope.launch {
                 val removeTag = tag.copy(isRemove = true)
@@ -104,26 +116,44 @@ class ManageTagViewModel @Inject constructor(
 
                 reduce {
                     state.copy(
-                        tagTotalList = state.tagTotalList.update(tag)
+                        tagTotalList = state.tagTotalList.update(tag),
+                        focusTag = null
                     )
-
                 }
             }
         }
     }
 
+    private fun deleteAddTagText() {
+        addTagTextState.clearText()
+    }
+
+    private fun focusTag(tag: Tag?) {
+        intent {
+            viewModelScope.launch {
+                reduce {
+                    state.copy(
+                        focusTag = tag
+                    )
+                }
+            }
+        }
+    }
 }
 
 data class ManageTagState(
-    val tagTotalList: List<Tag> = emptyList()
+    val tagTotalList: List<Tag> = emptyList(),
+    val focusTag: Tag? = null
 )
 
 sealed interface ManageTagSideEffect {
-
+    object ScrollDown: ManageTagSideEffect
 }
 
 sealed interface ManageTagAction {
-    object AddTag: ManageTagAction
     data class RemoveTag(val tag: Tag): ManageTagAction
     data class UpdateTag(val tag: Tag): ManageTagAction
+    data class FocusTag(val tag: Tag?): ManageTagAction
+    object AddTag: ManageTagAction
+    object DeleteAddTagText: ManageTagAction
 }

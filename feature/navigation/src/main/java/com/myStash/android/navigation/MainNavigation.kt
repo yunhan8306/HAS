@@ -1,7 +1,10 @@
 package com.myStash.android.navigation
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomAppBar
 import androidx.compose.material.BottomNavigation
@@ -36,12 +39,13 @@ fun MainNavigation(navController: NavHostController) {
             elevation = 0.dp,
             backgroundColor = ColorFamilyWhiteAndGray600
         ) {
-            mainNavList.forEach {
-                val selected = it.name == currentRoute
+            mainNavList.forEachIndexed { index, navType ->
+                val selected = navType.name == currentRoute
                 BottomNavigationItem(
+                    modifier = Modifier.padding(top = 9.dp),
                     selected = selected,
                     onClick = {
-                        navController.navigate(route = it.name) {
+                        navController.navigate(route = navType.name) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
                             }
@@ -51,17 +55,20 @@ fun MainNavigation(navController: NavHostController) {
                     },
                     icon = {
                         AsyncImage(
-                            model = if (selected) it.activeIcon else it.inactiveIcon,
-                            contentDescription = it.name
+                            model = if (selected) navType.activeIcon else navType.inactiveIcon,
+                            contentDescription = navType.name
                         )
                     },
                     label = {
                         Text(
-                            text = it.name,
+                            text = navType.name,
                             color = Color.Black
                         )
                     }
                 )
+                if(index == 1) {
+                    Box(modifier = Modifier.width(52.dp))
+                }
             }
         }
     }

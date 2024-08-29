@@ -9,6 +9,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.common.resource)
     implementation(projects.core.designSystem)
 
     implementation(libs.androidx.core.ktx)

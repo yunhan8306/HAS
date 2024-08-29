@@ -1,5 +1,6 @@
 package com.myStash.android.feature.splash
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -7,44 +8,47 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray800
 
 @Composable
 fun SplashScreen(
-    testCount: String,
-    skip: () -> Unit
+
 ) {
     Column(
-        modifier = Modifier.fillMaxSize().background(Color.White),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(ColorFamilyWhiteAndGray800)
+            .padding(bottom = 48.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.weight(1f))
-        Text(text = "Splash")
-        Spacer(modifier = Modifier.height(10.dp))
-        Text(text = testCount)
-        Spacer(modifier = Modifier.height(10.dp))
-        Box(
-            modifier = Modifier
-                .size(50.dp)
-                .background(Color.Gray)
-                .clickable { skip.invoke() },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(text = "Skip")
-        }
+        Image(
+            modifier = Modifier.size(226.dp),
+            painter = painterResource(id = com.myStash.android.common.resource.R.drawable.img_app_logo),
+            contentDescription = "has logo"
+        )
         Spacer(modifier = Modifier.weight(1f))
+        Image(
+            modifier = Modifier.width(90.dp).height(24.dp),
+            painter = painterResource(id = com.myStash.android.common.resource.R.drawable.img_has_logo),
+            contentDescription = "has logo"
+        )
     }
 }
 
 @DevicePreviews
 @Composable
 fun SplashScreenPreview() {
-    SplashScreen("0", {})
+    SplashScreen()
 }

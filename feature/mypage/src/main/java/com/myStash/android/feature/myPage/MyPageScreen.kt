@@ -9,6 +9,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -171,34 +172,39 @@ fun MyPageScreen(
                 onClick = { onAction.invoke(MyPageScreenAction.ShowWebView(WebViewConstants.URL_FAQ)) }
             )
         }
-
-        Box(
-            modifier = Modifier.padding(horizontal = 16.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .border(width = 1.dp, color = Color(0xFFBFD320), shape = RoundedCornerShape(size = 10.dp))
-                    .clip(shape = RoundedCornerShape(size = 10.dp))
-                    .background(color = MaterialTheme.colors.surface)
-                    .fillMaxWidth()
-                    .height(55.dp)
-                    .padding(start = 16.dp, end = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    modifier = Modifier.size(20.dp),
-                    painter = painterResource(id = com.myStash.android.common.resource.R.drawable.img_dark_mode),
-                    contentDescription = ""
-                )
-                HasText(
-                    modifier = Modifier
-                        .padding(start = 6.dp)
-                        .weight(1f),
-                    text = "Dark Mode",
-                    fontSize = 16.dp
-                )
-            }
-        }
+        /** dark mode */
+//        Box(
+//            modifier = Modifier.padding(horizontal = 16.dp)
+//        ) {
+//            Row(
+//                modifier = Modifier
+//                    .border(
+//                        width = 1.dp,
+//                        color = Color(0xFFBFD320),
+//                        shape = RoundedCornerShape(size = 10.dp)
+//                    )
+//                    .clip(shape = RoundedCornerShape(size = 10.dp))
+//                    .background(color = MaterialTheme.colors.surface)
+//                    .fillMaxWidth()
+//                    .height(55.dp)
+//                    .padding(start = 16.dp, end = 12.dp),
+//                verticalAlignment = Alignment.CenterVertically
+//            ) {
+//                Image(
+//                    modifier = Modifier.size(20.dp),
+//                    painter = painterResource(id = com.myStash.android.common.resource.R.drawable.img_dark_mode),
+//                    contentDescription = ""
+//                )
+//                HasText(
+//                    modifier = Modifier
+//                        .padding(start = 6.dp)
+//                        .weight(1f),
+//                    text = "Dark Mode",
+//                    fontSize = 16.dp
+//                )
+//            }
+//        }
+        Spacer(modifier = Modifier.weight(1f))
 
         HasText(
             modifier = Modifier.padding(top = 50.dp),
@@ -215,7 +221,7 @@ fun MyPageScreen(
         )
         HasText(
             modifier = Modifier
-                .padding(top = 33.dp)
+                .padding(top = 33.dp, bottom = 36.dp)
                 .clickableNoRipple { onAction.invoke(MyPageScreenAction.ShowWebView(WebViewConstants.URL_TERMS)) },
             text = "Terms of Service",
             fontSize = 14.dp,
