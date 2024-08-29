@@ -1,7 +1,9 @@
 package com.myStash.android.feature.manage.tag
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.text2.input.rememberTextFieldState
@@ -43,6 +46,7 @@ import com.myStash.android.feature.manage.component.ManageTextField
 @Composable
 fun ManageTagScreen(
     state: ManageTagState,
+    scrollState: LazyListState,
     addTagTextState: TextFieldState,
     onAction: (ManageTagAction) -> Unit
 ) {
@@ -53,12 +57,14 @@ fun ManageTagScreen(
             state.focusTag.isNotNull()
         }
     }
+
     ManageAware {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
-                .addFocusCleaner(focusManager)
+                .addFocusCleaner(focusManager),
+            state = scrollState
         ) {
             item {
                 Box(
@@ -70,7 +76,10 @@ fun ManageTagScreen(
                     ManageTextField(
                         textState = addTagTextState,
                         hint = "원하는 태그를 등록하세요.",
-                        add = { onAction.invoke(ManageTagAction.AddTag) }
+                        add = {
+                            focusManager.clearFocus()
+                            onAction.invoke(ManageTagAction.AddTag)
+                        }
                     )
                 }
             }
@@ -98,7 +107,8 @@ fun ManageTagScreen(
                             .height(50.dp)
                             .padding(end = 4.dp)
                             .clickableNoRipple {
-                                if(!isSelected) onAction.invoke(ManageTagAction.FocusTag(null))
+                                focusManager.clearFocus()
+                                if (!isSelected) onAction.invoke(ManageTagAction.FocusTag(null))
                             },
                         verticalAlignment = Alignment.CenterVertically
                     ) {

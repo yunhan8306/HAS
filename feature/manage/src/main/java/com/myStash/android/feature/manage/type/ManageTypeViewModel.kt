@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
@@ -80,19 +81,23 @@ class ManageTypeViewModel @Inject constructor(
     }
 
     private fun addType() {
-        viewModelScope.launch {
-            val newType = Type(
-                name = addTypeTextState.text.toString()
-            )
+        intent {
+            viewModelScope.launch {
+                val newType = Type(
+                    name = addTypeTextState.text.toString()
+                )
 
-            val id = saveTypeUseCase.invoke(newType)
+                val id = saveTypeUseCase.invoke(newType)
+                deleteAddTypeText()
+                postSideEffect(ManageTypeSideEffect.ScrollDown)
+            }
         }
     }
 
-    private fun removeType(type: Type) {
+    private fun removeType(type: Type?) {
         intent {
             viewModelScope.launch {
-                val removeType = type.copy(isRemove = true)
+                val removeType = type!!.copy(isRemove = true)
                 updateTypeUseCase.invoke(removeType)
 
                 reduce {
@@ -143,7 +148,7 @@ data class ManageTypeState(
 )
 
 sealed interface ManageTypeSideEffect {
-
+    object ScrollDown: ManageTypeSideEffect
 }
 
 sealed interface ManageTypeAction {

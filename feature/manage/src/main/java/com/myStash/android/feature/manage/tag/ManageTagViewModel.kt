@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
@@ -64,7 +65,7 @@ class ManageTagViewModel @Inject constructor(
                     addTag()
                 }
                 is ManageTagAction.RemoveTag -> {
-                     removeTag(action.tag)
+                    removeTag(action.tag)
                 }
                 is ManageTagAction.UpdateTag -> {
                     updateType(action.tag)
@@ -80,12 +81,16 @@ class ManageTagViewModel @Inject constructor(
     }
 
     private fun addTag() {
-        viewModelScope.launch {
-            val newTag = Tag(
-                name = addTagTextState.text.toString()
-            )
+        intent {
+            viewModelScope.launch {
+                val newTag = Tag(
+                    name = addTagTextState.text.toString()
+                )
 
-            val id = saveTagUseCase.invoke(newTag)
+                val id = saveTagUseCase.invoke(newTag)
+                deleteAddTagText()
+                postSideEffect(ManageTagSideEffect.ScrollDown)
+            }
         }
     }
 
@@ -142,7 +147,7 @@ data class ManageTagState(
 )
 
 sealed interface ManageTagSideEffect {
-
+    object ScrollDown: ManageTagSideEffect
 }
 
 sealed interface ManageTagAction {

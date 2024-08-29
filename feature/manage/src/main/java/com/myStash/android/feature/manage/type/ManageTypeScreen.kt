@@ -1,7 +1,9 @@
 package com.myStash.android.feature.manage.type
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.text2.input.rememberTextFieldState
@@ -43,6 +46,7 @@ import com.myStash.android.feature.manage.component.ManageTextField
 @Composable
 fun ManageTypeScreen(
     state: ManageTypeState,
+    scrollState: LazyListState,
     addTypeTextState: TextFieldState,
     onAction: (ManageTypeAction) -> Unit
 ) {
@@ -60,7 +64,8 @@ fun ManageTypeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
-                .addFocusCleaner(focusManager)
+                .addFocusCleaner(focusManager),
+            state = scrollState
         ) {
             item {
                 Box(
@@ -72,7 +77,10 @@ fun ManageTypeScreen(
                     ManageTextField(
                         textState = addTypeTextState,
                         hint = "원하는 카테고리를 등록하세요.",
-                        add = { onAction.invoke(ManageTypeAction.AddType) }
+                        add = {
+                            focusManager.clearFocus()
+                            onAction.invoke(ManageTypeAction.AddType)
+                        }
                     )
                 }
             }
@@ -100,6 +108,7 @@ fun ManageTypeScreen(
                             .height(50.dp)
                             .padding(end = 4.dp)
                             .clickableNoRipple {
+                                focusManager.clearFocus()
                                 if(!isSelected) onAction.invoke(ManageTypeAction.FocusType(null))
                             },
                         verticalAlignment = Alignment.CenterVertically
