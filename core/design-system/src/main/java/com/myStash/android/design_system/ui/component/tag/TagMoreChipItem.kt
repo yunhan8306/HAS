@@ -27,7 +27,9 @@ fun TagMoreChipItem(
     onClick: () -> Unit
 ) {
     Box(
-        modifier = Modifier.padding(4.dp)
+        modifier = Modifier
+            .padding(4.dp)
+            .clickable { onClick.invoke() }
     ) {
         Row(
             modifier = Modifier
@@ -38,8 +40,7 @@ fun TagMoreChipItem(
                     shape = RoundedCornerShape(size = 15.dp)
                 )
                 .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 15.dp))
-                .padding(horizontal = 12.dp)
-                .clickable { onClick.invoke() },
+                .padding(horizontal = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             HasText(
@@ -50,7 +51,7 @@ fun TagMoreChipItem(
             )
             Image(
                 modifier = Modifier.size(14.dp),
-                painter = painterResource(id = if(isFold) R.drawable.btn_tag_more else R.drawable.btn_tag_more_fold),
+                painter = painterResource(id = if(isFold) R.drawable.btn_tag_more_fold else R.drawable.btn_tag_more),
                 contentDescription = "tag more"
             )
         }

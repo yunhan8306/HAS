@@ -155,7 +155,7 @@ fun StyleScreen(
                 }
             }
             TagMoreChipItem(
-                cnt = "${state.totalTagList.size - 4}",
+                cnt = "${state.totalTagList.size + (if(!state.isFoldTag) -3 else 0)}",
                 isFold = state.isFoldTag,
                 onClick = { onAction.invoke(StyleScreenAction.TagToggle) }
             )
