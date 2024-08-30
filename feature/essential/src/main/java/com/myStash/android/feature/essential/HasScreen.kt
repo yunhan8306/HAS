@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -35,7 +33,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
@@ -213,81 +210,73 @@ fun HasScreen(
             }
             if(state.totalTagList.size > 3) {
                 TagMoreChipItem(
-                    cnt = "${state.totalTagList.size - 4}",
+                    cnt = "${state.totalTagList.size + (if(!state.isFoldTag) -3 else 0)}",
                     isFold = state.isFoldTag,
                     onClick = { onAction.invoke(HasScreenAction.TagToggle) }
                 )
             }
         }
         SpacerLineBox()
-        LazyVerticalGrid(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .weight(1f)
-                .fillMaxWidth(),
-            columns = GridCells.Fixed(2),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(
-                count = 2,
-                key = { it }
-            ) { index ->
-                Box(
-                    modifier = Modifier
-                        .height(44.dp)
-                        .padding(top = 24.dp, end = 4.dp),
-                    contentAlignment = Alignment.TopEnd
-                ) {
-                    if(index == 1) {
-                        HasText(
-                            text = "총 ${state.hasList.size}개",
-                            color = ColorFamilyGray500AndGray900
-                        )
+        if(state.hasList.isNotEmpty()) {
+            LazyVerticalGrid(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .weight(1f)
+                    .fillMaxWidth(),
+                columns = GridCells.Fixed(2),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(
+                    count = 2,
+                    key = { it }
+                ) { index ->
+                    Box(
+                        modifier = Modifier
+                            .height(44.dp)
+                            .padding(top = 24.dp, end = 4.dp),
+                        contentAlignment = Alignment.TopEnd
+                    ) {
+                        if(index == 1) {
+                            HasText(
+                                text = "총 ${state.hasList.size}개",
+                                color = ColorFamilyGray500AndGray900
+                            )
+                        }
                     }
+                }
+                items(
+                    items = state.hasList,
+                    key = { it.id!! }
+                ) { has ->
+
+                    val selectedNumber by remember(state.selectedHasList) {
+                        derivedStateOf {
+                            state.selectedHasList.indexOf(has).takeIf { it != -1 }?.let { it + 1 }
+                        }
+                    }
+
+                    val isSelectedMode by remember(state.selectedHasList) {
+                        derivedStateOf {
+                            state.selectedHasList.isNotEmpty()
+                        }
+                    }
+
+                    HasMainItem(
+                        has = has,
+                        isSelectedMode = isSelectedMode,
+                        selectedNumber = selectedNumber,
+                        tagList = has.getTagList(state.totalTagList),
+                        selectTagList = state.selectedTagList,
+                        onSelectHas = { onAction.invoke(HasScreenAction.SelectHas(has)) },
+                        onEditHas = { onAction.invoke(HasScreenAction.ShowItemActivity(has)) },
+                        onDeleteHas = {},
+                    )
                 }
             }
-            items(
-                items = state.hasList,
-                key = { it.id!! }
-            ) { has ->
-
-                val selectedNumber by remember(state.selectedHasList) {
-                    derivedStateOf {
-                        state.selectedHasList.indexOf(has).takeIf { it != -1 }?.let { it + 1 }
-                    }
-                }
-
-                val isSelectedMode by remember(state.selectedHasList) {
-                    derivedStateOf {
-                        state.selectedHasList.isNotEmpty()
-                    }
-                }
-
-                HasMainItem(
-                    has = has,
-                    isSelectedMode = isSelectedMode,
-                    selectedNumber = selectedNumber,
-                    tagList = has.getTagList(state.totalTagList),
-                    selectTagList = state.selectedTagList,
-                    onSelectHas = { onAction.invoke(HasScreenAction.SelectHas(has)) },
-                    onEditHas = { onAction.invoke(HasScreenAction.ShowItemActivity(has)) },
-                    onDeleteHas = {},
-                )
-            }
+        } else {
+            HasEmptyScreen()
         }
-    }
-
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomEnd
-    ) {
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .background(Color.Red)
-                .clickable { onAction.invoke(HasScreenAction.ShowItemActivity(null)) }
-        )
     }
 }
 
