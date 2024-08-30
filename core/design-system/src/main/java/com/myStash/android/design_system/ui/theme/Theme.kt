@@ -6,6 +6,7 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.myStash.android.design_system.ui.color.Black
 import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray600
@@ -131,6 +132,26 @@ fun HasSplashTheme(
     SideEffect {
         systemUiController.setStatusBarColor(colors.surface)
         systemUiController.setNavigationBarColor(navigationColor)
+    }
+
+    MaterialTheme(
+        colors = colors,
+//        typography = Typography,
+        content = content
+    )
+}
+
+@Composable
+fun HasGalleryTheme(
+    content: @Composable () -> Unit
+) {
+    val colors = DarkColorScheme
+
+    val systemUiController = rememberSystemUiController()
+
+    SideEffect {
+        systemUiController.setStatusBarColor(Color.Black)
+        systemUiController.setNavigationBarColor(Color.Black)
     }
 
     MaterialTheme(
