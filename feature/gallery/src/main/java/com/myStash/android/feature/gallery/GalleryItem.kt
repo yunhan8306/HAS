@@ -8,7 +8,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,8 +16,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
-import com.myStash.android.common.util.isNotNull
 import com.myStash.android.common.resource.R
+import com.myStash.android.common.util.isNotNull
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 
@@ -60,15 +59,13 @@ fun GalleryItem(
             if(selectedNumber.isNotNull()) {
                 if(isSingle) {
                     Image(
-                        modifier = Modifier.size(18.dp),
-                        painter = painterResource(id = R.drawable.btn_tag_select),
-                        contentDescription = ""
+                        painter = painterResource(id = R.drawable.btn_gallery_select_single),
+                        contentDescription = "select single"
                     )
                 } else {
                     Image(
-                        modifier = Modifier.size(18.dp),
-                        painter = painterResource(id = R.drawable.btn_gallery_multi_selector),
-                        contentDescription = ""
+                        painter = painterResource(id = R.drawable.btn_gallery_select_multi),
+                        contentDescription = "select multi"
                     )
                     HasText(
                         text = selectedNumber.toString(),
@@ -77,8 +74,7 @@ fun GalleryItem(
                 }
             } else {
                 Image(
-                    modifier = Modifier.size(18.dp),
-                    painter = painterResource(id = R.drawable.btn_no_select_has),
+                    painter = painterResource(id = R.drawable.btn_gallery_no_select),
                     contentDescription = ""
                 )
             }

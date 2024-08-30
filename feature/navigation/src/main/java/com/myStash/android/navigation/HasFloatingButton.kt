@@ -15,7 +15,7 @@ fun HasFloatingButton(
     onClick: () -> Unit,
 ) {
     Box(
-        modifier = Modifier.padding(top = 10.dp),
+        modifier = Modifier.padding(top = 25.dp),
     ) {
         Image(
             modifier = Modifier

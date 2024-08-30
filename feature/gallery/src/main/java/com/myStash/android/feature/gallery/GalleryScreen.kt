@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetScaffoldState
@@ -85,6 +83,7 @@ fun GalleryScreen(
                     ) {
                         Row(
                             modifier = Modifier.padding(start = 12.dp, end = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             HasText(
                                 text = selectedFolder.name,
@@ -92,8 +91,7 @@ fun GalleryScreen(
                                 fontSize = 16.dp
                             )
                             Image(
-                                modifier = Modifier.size(20.dp),
-                                painter = painterResource(id = if(isShowFolderWindow) R.drawable.btn_gallery_up else R.drawable.btn_gallery_down),
+                                painter = painterResource(id = if(isShowFolderWindow) R.drawable.img_up else R.drawable.img_down),
                                 contentDescription = "gallery folder toggle"
                             )
                         }

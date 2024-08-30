@@ -179,8 +179,7 @@ fun AddStyleModalSheet(
                             ) {
                                 if(isSelected) {
                                     Image(
-                                        modifier = Modifier.size(18.dp),
-                                        painter = painterResource(id = R.drawable.btn_select_has),
+                                        painter = painterResource(id = R.drawable.btn_purple_select),
                                         contentDescription = "has select"
                                     )
                                     HasText(
@@ -191,8 +190,7 @@ fun AddStyleModalSheet(
                                     )
                                 } else {
                                     Image(
-                                        modifier = Modifier.size(18.dp),
-                                        painter = painterResource(id = R.drawable.btn_no_select_has),
+                                        painter = painterResource(id = R.drawable.btn_purple_no_select),
                                         contentDescription = "has select"
                                     )
                                 }

@@ -116,8 +116,7 @@ fun HasMainItem(
             ) {
                 if(selectedNumber.isNotNull()) {
                     Image(
-                        modifier = Modifier.size(18.dp),
-                        painter = painterResource(id = R.drawable.btn_select_has),
+                        painter = painterResource(id = R.drawable.btn_purple_select),
                         contentDescription = "has select"
                     )
                     HasText(
@@ -128,8 +127,7 @@ fun HasMainItem(
                     )
                 } else {
                     Image(
-                        modifier = Modifier.size(18.dp),
-                        painter = painterResource(id = R.drawable.btn_no_select_has),
+                        painter = painterResource(id = R.drawable.btn_purple_no_select),
                         contentDescription = "has select"
                     )
                 }
