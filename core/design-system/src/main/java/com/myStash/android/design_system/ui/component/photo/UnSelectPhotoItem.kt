@@ -3,6 +3,7 @@ package com.myStash.android.design_system.ui.component.photo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,14 +29,16 @@ fun UnselectPhotoItem(
         Box(
             modifier = Modifier
                 .size(100.dp)
-                .background(color = ColorFamilyGray200AndGray600, shape = RoundedCornerShape(size = 10.dp))
+                .background(
+                    color = ColorFamilyGray200AndGray600,
+                    shape = RoundedCornerShape(size = 10.dp)
+                )
                 .clickable { onClick.invoke() },
             contentAlignment = Alignment.Center
         ) {
             Column {
                 Image(
-                    modifier = Modifier.size(32.dp),
-                    painter = painterResource(id = R.drawable.img_photo),
+                    painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.img_empty_photo_dark else R.drawable.img_empty_photo_light),
                     contentDescription = "unselect photo"
                 )
                 HasText(

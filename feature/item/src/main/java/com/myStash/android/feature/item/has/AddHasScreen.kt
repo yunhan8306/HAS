@@ -4,6 +4,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -122,8 +123,12 @@ fun AddHasScreen(
                             endContent = {
                                 Image(
                                     modifier = Modifier.size(24.dp),
-                                    painter = painterResource(id = R.drawable.btn_down),
-                                    contentDescription = "btn down"
+                                    painter = painterResource(id = if(dropDownExpanded) {
+                                        if(isSystemInDarkTheme()) R.drawable.btn_drop_up_dark else R.drawable.btn_drop_up_light
+                                    } else {
+                                        if(isSystemInDarkTheme()) R.drawable.btn_drop_down_dark else R.drawable.btn_drop_down_light
+                                    }),
+                                    contentDescription = "drop down button"
                                 )
                             }
                         )
