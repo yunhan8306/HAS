@@ -4,11 +4,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -51,8 +51,7 @@ fun TagDeleteChipItem(
                     fontSize = 14.dp,
                 )
                 Image(
-                    modifier = Modifier.size(10.dp),
-                    painter = painterResource(id = R.drawable.btn_tag_delete),
+                    painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.btn_tag_delete_dark else R.drawable.btn_tag_delete_light),
                     contentDescription = "tag delete",
                 )
             }
