@@ -85,8 +85,7 @@ fun MainHasBottomModal(
                             contentDescription = "main has modal image"
                         )
                         Image(
-                            modifier = Modifier.size(24.dp),
-                            painter = painterResource(id = R.drawable.btn_input_delete),
+                            painter = painterResource(id = R.drawable.btn_delete),
                             contentDescription = "delete"
                         )
                     }

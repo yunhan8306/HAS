@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,7 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -54,7 +54,11 @@ fun ContentTextField(
 
     BasicTextField2(
         modifier = Modifier
-            .border(width = 1.dp, color = if (isFocused) ColorFamilyBlackAndWhite else ColorFamilyGray300AndGray600, shape = RoundedCornerShape(size = 10.dp))
+            .border(
+                width = 1.dp,
+                color = if (isFocused) ColorFamilyBlackAndWhite else ColorFamilyGray300AndGray600,
+                shape = RoundedCornerShape(size = 10.dp)
+            )
             .clip(shape = RoundedCornerShape(size = 10.dp))
             .fillMaxWidth()
             .height(44.dp)
@@ -74,10 +78,9 @@ fun ContentTextField(
                     if(isBack) {
                         Image(
                             modifier = Modifier
-                                .size(24.dp)
                                 .padding(end = 8.dp)
                                 .clickable { back.invoke() },
-                            painter = painterResource(id = R.drawable.btn_back),
+                            painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.btn_back_dark else R.drawable.btn_back_light),
                             contentDescription = "back"
                         )
                     }
@@ -96,8 +99,7 @@ fun ContentTextField(
                             contentAlignment = Alignment.Center
                         ) {
                             Image(
-                                modifier = Modifier.size(16.dp),
-                                painter = painterResource(id = R.drawable.btn_input_delete),
+                                painter = painterResource(id = R.drawable.btn_delete),
                                 contentDescription = "input delete"
                             )
                         }
