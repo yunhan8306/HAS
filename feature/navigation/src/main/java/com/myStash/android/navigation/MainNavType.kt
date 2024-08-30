@@ -1,25 +1,35 @@
 package com.myStash.android.navigation
 
-import com.myStash.android.feature.navigation.R
+import com.myStash.android.common.resource.R
 
 enum class MainNavType(
-    val activeIcon: Int,
-    val inactiveIcon: Int,
+    val lightActiveIcon: Int,
+    val lightInactiveIcon: Int,
+    val darkActiveIcon: Int,
+    val darkInactiveIcon: Int,
 ) {
     HAS(
-        activeIcon = R.drawable.btn_btm_bar_swipe_on,
-        inactiveIcon = R.drawable.btn_btm_bar_swipe_off
+        lightActiveIcon = R.drawable.img_nav_has_light_on,
+        lightInactiveIcon = R.drawable.img_nav_has_light_off,
+        darkActiveIcon = R.drawable.img_nav_has_dark_on,
+        darkInactiveIcon = R.drawable.img_nav_has_dark_off
     ),
     STYLE(
-        activeIcon = R.drawable.btn_btm_bar_like_on,
-        inactiveIcon = R.drawable.btn_btm_bar_like_off
+        lightActiveIcon = R.drawable.img_nav_style_light_on,
+        lightInactiveIcon = R.drawable.img_nav_style_light_off,
+        darkActiveIcon = R.drawable.img_nav_style_dark_on,
+        darkInactiveIcon = R.drawable.img_nav_style_dark_off
     ),
     FEED(
-        activeIcon = R.drawable.btn_btm_bar_message_on,
-        inactiveIcon = R.drawable.btn_btm_bar_message_off
+        lightActiveIcon = R.drawable.img_nav_feed_light_on,
+        lightInactiveIcon = R.drawable.img_nav_feed_light_off,
+        darkActiveIcon = R.drawable.img_nav_feed_dark_on,
+        darkInactiveIcon = R.drawable.img_nav_feed_dark_off
     ),
     MY_PAGE(
-        activeIcon = R.drawable.btn_btm_bar_my_page_on,
-        inactiveIcon = R.drawable.btn_btm_bar_my_page_off
+        lightActiveIcon = R.drawable.img_nav_mypage_light_on,
+        lightInactiveIcon = R.drawable.img_nav_mypage_light_off,
+        darkActiveIcon = R.drawable.img_nav_mypage_dark_on,
+        darkInactiveIcon = R.drawable.img_nav_mypage_dark_off
     )
 }

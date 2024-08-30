@@ -21,7 +21,7 @@ fun HasFloatingButton(
             modifier = Modifier
                 .size(52.dp)
                 .clickableNoRipple(onClick = onClick),
-            painter = painterResource(id = com.myStash.android.common.resource.R.drawable.btn_nav_add_item),
+            painter = painterResource(id = com.myStash.android.common.resource.R.drawable.img_nav_add),
             contentDescription = "add item"
         )
     }

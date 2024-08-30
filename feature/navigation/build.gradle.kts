@@ -27,4 +27,5 @@ dependencies {
     implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.compose.hilt.navigation)
     implementation(libs.navigation.animation)
+    implementation(project(":common:util"))
 }
