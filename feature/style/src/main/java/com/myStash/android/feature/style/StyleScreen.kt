@@ -161,46 +161,50 @@ fun StyleScreen(
             )
         }
         SpacerLineBox()
-        LazyVerticalGrid(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .weight(1f)
-                .fillMaxWidth(),
-            columns = GridCells.Fixed(2),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(
-                count = 2,
-                key = { it }
-            ) { index ->
-                Box(
-                    modifier = Modifier
-                        .height(44.dp)
-                        .padding(top = 24.dp, end = 4.dp),
-                    contentAlignment = Alignment.TopEnd
-                ) {
-                    if(index == 1) HasText(text = "총 ${state.styleList.size}개")
-                }
-            }
-
-            items(
-                items = state.styleList,
-                key = { it.id }
-            ) { style ->
-                val isSelected by remember(state.selectedStyle) {
-                    derivedStateOf {
-                        state.selectedStyle?.id == style.id
+        if(state.styleList.isEmpty()) {
+            LazyVerticalGrid(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .weight(1f)
+                    .fillMaxWidth(),
+                columns = GridCells.Fixed(2),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(
+                    count = 2,
+                    key = { it }
+                ) { index ->
+                    Box(
+                        modifier = Modifier
+                            .height(44.dp)
+                            .padding(top = 24.dp, end = 4.dp),
+                        contentAlignment = Alignment.TopEnd
+                    ) {
+                        if(index == 1) HasText(text = "총 ${state.styleList.size}개")
                     }
                 }
 
-                StyleMainItem(
-                    style = style,
-                    isSelected = isSelected,
-                    onClick = { onAction.invoke(StyleScreenAction.ShowMoreStyle(style)) },
-                    onLongClick = { onAction.invoke(StyleScreenAction.SelectStyle(style)) }
-                )
+                items(
+                    items = state.styleList,
+                    key = { it.id }
+                ) { style ->
+                    val isSelected by remember(state.selectedStyle) {
+                        derivedStateOf {
+                            state.selectedStyle?.id == style.id
+                        }
+                    }
+
+                    StyleMainItem(
+                        style = style,
+                        isSelected = isSelected,
+                        onClick = { onAction.invoke(StyleScreenAction.ShowMoreStyle(style)) },
+                        onLongClick = { onAction.invoke(StyleScreenAction.SelectStyle(style)) }
+                    )
+                }
             }
+        } else {
+            StyleEmptyScreen()
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.myStash.android.feature.essential
+package com.myStash.android.feature.style
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -16,7 +16,7 @@ import com.myStash.android.design_system.ui.color.ColorFamilyGray500AndGray900
 import com.myStash.android.design_system.ui.component.text.HasText
 
 @Composable
-fun HasEmptyScreen() {
+fun StyleEmptyScreen() {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -24,11 +24,11 @@ fun HasEmptyScreen() {
         Spacer(modifier = Modifier.weight(1f))
         Image(
             painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.img_hadung_empty_dark else R.drawable.img_hadung_empty_light),
-            contentDescription = "has empty"
+            contentDescription = "style empty"
         )
         HasText(
             modifier = Modifier.padding(top = 16.dp),
-            text = "There is no registered Has.",
+            text = "There is no registered Style.",
             fontSize = 14.dp,
             color = ColorFamilyGray500AndGray900
 
