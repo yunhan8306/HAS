@@ -14,11 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.myStash.android.design_system.ui.DevicePreviews
-import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndGray450
-import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndLime300
-import com.myStash.android.design_system.ui.color.ColorFamilyGray200AndBlack
+import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndGray450
+import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndLime300
+import com.myStash.android.design_system.ui.color.ColorFamilyGray200AndBlack20
 import com.myStash.android.design_system.ui.color.ColorFamilyGray200AndGray400
-import com.myStash.android.design_system.ui.color.ColorFamilyLime300AndBlack
+import com.myStash.android.design_system.ui.color.ColorFamilyLime300AndBlack20
 import com.myStash.android.design_system.ui.color.Gray400
 import com.myStash.android.design_system.ui.color.Lime300
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
@@ -38,7 +38,7 @@ fun TagCountChipItem(
             modifier = Modifier
                 .height(28.dp)
                 .clip(shape = RoundedCornerShape(size = 15.dp))
-                .background(color = if(isSelected) ColorFamilyLime300AndBlack else ColorFamilyGray200AndBlack)
+                .background(color = if(isSelected) ColorFamilyLime300AndBlack20 else ColorFamilyGray200AndBlack20)
                 .border(width = 1.dp, color = if(isSelected) Lime300 else ColorFamilyGray200AndGray400, shape = RoundedCornerShape(size = 15.dp))
                 .padding(start = 12.dp, end = 8.dp)
                 .clickable { onClick.invoke() },
@@ -50,7 +50,7 @@ fun TagCountChipItem(
                 HasText(
                     modifier = Modifier.padding(end = 4.dp),
                     text = name,
-                    color = if(isSelected) ColorFamilyBlackAndLime300 else ColorFamilyBlackAndGray450,
+                    color = if(isSelected) ColorFamilyBlack20AndLime300 else ColorFamilyBlack20AndGray450,
                     fontSize = 14.dp,
                 )
                 HasText(

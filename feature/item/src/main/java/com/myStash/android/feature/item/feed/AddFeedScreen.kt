@@ -47,7 +47,7 @@ import com.myStash.android.common.resource.R
 import com.myStash.android.common.util.isNotNull
 import com.myStash.android.core.model.setCalender
 import com.myStash.android.design_system.ui.DevicePreviews
-import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
+import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
 import com.myStash.android.design_system.ui.color.ColorFamilyGray200AndGray600
 import com.myStash.android.design_system.ui.color.ColorFamilyLime100AndGray600
 import com.myStash.android.design_system.ui.color.ColorFamilyLime700AndLime200
@@ -157,7 +157,7 @@ fun AddFeedScreen(
                 ) {
                     HasText(
                         text = "${state.date.year}년 ${state.date.monthValue}월 ${state.date.dayOfMonth}일",
-                        color = if(isShowDate) ColorFamilyLime700AndLime200 else ColorFamilyBlackAndWhite,
+                        color = if(isShowDate) ColorFamilyLime700AndLime200 else ColorFamilyBlack20AndWhite,
                         fontWeight = HasFontWeight.Bold
                     )
                 }

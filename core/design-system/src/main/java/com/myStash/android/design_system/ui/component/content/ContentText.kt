@@ -18,10 +18,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.myStash.android.common.resource.R
 import com.myStash.android.design_system.ui.DevicePreviews
-import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
+import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
 import com.myStash.android.design_system.ui.color.ColorFamilyGray300AndGray600
 import com.myStash.android.design_system.ui.color.ColorFamilyGray900AndGray400
-import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndBlack
+import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndBlack20
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.design_system.ui.theme.clickableNoRipple
 
@@ -35,11 +35,11 @@ fun ContentText(
 ) {
     Row(
         modifier = Modifier
-            .border(width = 1.dp, color = if (isBorderFocus) ColorFamilyBlackAndWhite else ColorFamilyGray300AndGray600, shape = RoundedCornerShape(size = 10.dp))
+            .border(width = 1.dp, color = if (isBorderFocus) ColorFamilyBlack20AndWhite else ColorFamilyGray300AndGray600, shape = RoundedCornerShape(size = 10.dp))
             .fillMaxWidth()
             .height(44.dp)
             .clip(shape = RoundedCornerShape(size = 10.dp))
-            .background(ColorFamilyWhiteAndBlack)
+            .background(ColorFamilyWhiteAndBlack20)
             .clickableNoRipple(onClick = onClick)
             .padding(start = 12.dp, end = 8.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -47,7 +47,7 @@ fun ContentText(
         HasText(
             modifier = Modifier.weight(1f),
             text = text,
-            color = if(isTextFocus) ColorFamilyBlackAndWhite else ColorFamilyGray900AndGray400
+            color = if(isTextFocus) ColorFamilyBlack20AndWhite else ColorFamilyGray900AndGray400
         )
         endContent.invoke()
     }

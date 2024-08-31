@@ -39,7 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.myStash.android.common.resource.R
-import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
+import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
 import com.myStash.android.design_system.ui.color.ColorFamilyGray200AndGray600
 import com.myStash.android.design_system.ui.color.ColorFamilyGray300AndGray400
 import com.myStash.android.design_system.ui.color.ColorFamilyLime700AndLime300
@@ -96,7 +96,7 @@ fun AddStyleModalSheet(
                 ) {
                     HasText(
                         text = type.name,
-                        color = if(type.id == state.selectedType.id) ColorFamilyLime700AndLime300 else ColorFamilyBlackAndWhite,
+                        color = if(type.id == state.selectedType.id) ColorFamilyLime700AndLime300 else ColorFamilyBlack20AndWhite,
                         fontWeight = if(type.id == state.selectedType.id) HasFontWeight.Bold else HasFontWeight.Medium
                     )
                 }

@@ -45,7 +45,7 @@ import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.testManTypeTotalList
 import com.myStash.android.core.model.testTagList
 import com.myStash.android.design_system.ui.DevicePreviews
-import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
+import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
 import com.myStash.android.design_system.ui.color.ColorFamilyLime100AndGray550
 import com.myStash.android.design_system.ui.color.ColorFamilyLime700AndLime300
 import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray600
@@ -156,7 +156,7 @@ fun AddHasScreen(
                                     content = {
                                         HasText(
                                             text = type.name,
-                                            color = if(isSelected) ColorFamilyLime700AndLime300 else ColorFamilyBlackAndWhite,
+                                            color = if(isSelected) ColorFamilyLime700AndLime300 else ColorFamilyBlack20AndWhite,
                                             fontWeight = if(isSelected) HasFontWeight.Bold else HasFontWeight.Medium,
                                         )
                                     },

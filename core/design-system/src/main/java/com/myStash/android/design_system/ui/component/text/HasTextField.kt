@@ -21,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
+import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
 import com.myStash.android.design_system.ui.color.ColorFamilyGray900AndGray400
 
 @Composable
@@ -30,7 +30,7 @@ fun HasTextField(
     textState: TextFieldState,
     focusRequester: FocusRequester,
     fontSize: Dp = 15.dp,
-    textColor: Color = ColorFamilyBlackAndWhite,
+    textColor: Color = ColorFamilyBlack20AndWhite,
     hint: String,
     hintColor: Color = ColorFamilyGray900AndGray400,
     onFocus: () -> Unit = {}

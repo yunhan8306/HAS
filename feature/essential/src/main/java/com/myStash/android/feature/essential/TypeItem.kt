@@ -11,7 +11,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
-import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
+import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
 
@@ -21,7 +21,7 @@ fun TypeItem(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    val drawLineColor = ColorFamilyBlackAndWhite
+    val drawLineColor = ColorFamilyBlack20AndWhite
 
     Box(
         modifier = Modifier

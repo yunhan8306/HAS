@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.myStash.android.design_system.ui.color.Black
+import com.myStash.android.design_system.ui.color.Black20
 import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray600
 import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray800
 import com.myStash.android.design_system.ui.color.Gray600
@@ -17,7 +17,7 @@ import com.myStash.android.design_system.ui.color.Lime
 import com.myStash.android.design_system.ui.color.White
 
 private val LightColorScheme = darkColors(
-    primary = Black,
+    primary = Black20,
     secondary = Lime,
     background = White,
     surface = White
@@ -25,14 +25,14 @@ private val LightColorScheme = darkColors(
 
 private val DarkColorScheme = lightColors(
     primary = Lime,
-    secondary = Black,
-    background = Black,
+    secondary = Black20,
+    background = Black20,
     surface = Gray600
 )
 
 private val SearchDarkColorScheme = lightColors(
     primary = Lime,
-    secondary = Black,
+    secondary = Black20,
     background = Gray800,
     surface = Gray800
 )

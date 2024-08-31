@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
+import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
 import com.myStash.android.design_system.ui.component.header.HasHeader
 import com.myStash.android.design_system.ui.component.tab.AddItemTab
 import com.myStash.android.design_system.util.addFocusCleaner
@@ -41,7 +41,7 @@ fun ManageScreen(
                 .fillMaxWidth()
                 .height(40.dp),
             selectedTabIndex = state.selectedTab.ordinal,
-            contentColor = ColorFamilyBlackAndWhite
+            contentColor = ColorFamilyBlack20AndWhite
         ) {
             AddItemTab(
                 name = ItemTab.TYPE.tabName,

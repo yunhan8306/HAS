@@ -30,7 +30,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.myStash.android.common.resource.R
 import com.myStash.android.common.util.isNotNull
-import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
+import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
 import com.myStash.android.design_system.ui.color.ColorFamilyGray200AndGray600
 import com.myStash.android.design_system.ui.color.ColorFamilyGray350AndGray400
 import com.myStash.android.design_system.ui.color.ColorFamilyLime700AndLime200
@@ -118,13 +118,13 @@ fun ManageTypeScreen(
                                 textState = typeTextFieldState,
                                 focusRequester = focusRequester,
                                 hint = type.name,
-                                hintColor = ColorFamilyBlackAndWhite
+                                hintColor = ColorFamilyBlack20AndWhite
                             )
                         } else {
                             HasText(
                                 modifier = Modifier.weight(1f),
                                 text = type.name,
-                                color = if(isEdit) ColorFamilyGray350AndGray400 else ColorFamilyBlackAndWhite
+                                color = if(isEdit) ColorFamilyGray350AndGray400 else ColorFamilyBlack20AndWhite
                             )
                         }
 

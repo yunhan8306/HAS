@@ -33,10 +33,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.myStash.android.common.resource.R
 import com.myStash.android.design_system.ui.DevicePreviews
-import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
+import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
 import com.myStash.android.design_system.ui.color.ColorFamilyGray300AndGray600
 import com.myStash.android.design_system.ui.color.ColorFamilyGray900AndGray400
-import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndBlack
+import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndBlack20
 import com.myStash.android.design_system.ui.component.text.HasText
 
 @Composable
@@ -56,17 +56,17 @@ fun ContentTextField(
         modifier = Modifier
             .border(
                 width = 1.dp,
-                color = if (isFocused) ColorFamilyBlackAndWhite else ColorFamilyGray300AndGray600,
+                color = if (isFocused) ColorFamilyBlack20AndWhite else ColorFamilyGray300AndGray600,
                 shape = RoundedCornerShape(size = 10.dp)
             )
             .clip(shape = RoundedCornerShape(size = 10.dp))
             .fillMaxWidth()
             .height(44.dp)
-            .background(ColorFamilyWhiteAndBlack)
+            .background(ColorFamilyWhiteAndBlack20)
             .padding(start = 12.dp, end = 10.dp),
         state = textState,
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-        textStyle = TextStyle(color = ColorFamilyBlackAndWhite, fontSize = fontSizeSp, fontWeight = FontWeight.Medium),
+        textStyle = TextStyle(color = ColorFamilyBlack20AndWhite, fontSize = fontSizeSp, fontWeight = FontWeight.Medium),
         decorator = { innerTextField ->
             Box(
                 contentAlignment = Alignment.CenterStart

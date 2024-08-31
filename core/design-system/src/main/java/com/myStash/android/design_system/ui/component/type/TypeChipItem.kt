@@ -10,8 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.myStash.android.design_system.ui.DevicePreviews
-import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
-import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndBlack
+import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
+import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndBlack20
 import com.myStash.android.design_system.ui.component.text.HasText
 
 @Composable
@@ -20,14 +20,14 @@ fun TypeChipItem(
 ) {
     Box(
         modifier = Modifier
-            .background(color = ColorFamilyBlackAndWhite, shape = RoundedCornerShape(size = 10.dp))
+            .background(color = ColorFamilyBlack20AndWhite, shape = RoundedCornerShape(size = 10.dp))
             .height(20.dp)
             .padding(start = 8.dp, end = 8.dp),
         contentAlignment = Alignment.Center
     ) {
         HasText(
             text = name,
-            color = ColorFamilyWhiteAndBlack,
+            color = ColorFamilyWhiteAndBlack20,
             fontSize = 14.dp
         )
     }

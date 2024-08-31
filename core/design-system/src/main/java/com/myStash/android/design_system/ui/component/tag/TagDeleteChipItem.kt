@@ -18,8 +18,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.myStash.android.common.resource.R
 import com.myStash.android.design_system.ui.DevicePreviews
-import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndLime300
-import com.myStash.android.design_system.ui.color.ColorFamilyLime300AndBlack
+import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndLime300
+import com.myStash.android.design_system.ui.color.ColorFamilyLime300AndBlack20
 import com.myStash.android.design_system.ui.color.Lime300
 import com.myStash.android.design_system.ui.component.text.HasText
 
@@ -35,7 +35,7 @@ fun TagDeleteChipItem(
             modifier = Modifier
                 .height(28.dp)
                 .clip(shape = RoundedCornerShape(size = 15.dp))
-                .background(ColorFamilyLime300AndBlack)
+                .background(ColorFamilyLime300AndBlack20)
                 .border(width = 1.dp, color = Lime300, shape = RoundedCornerShape(size = 15.dp))
                 .padding(start = 12.dp, end = 8.dp)
                 .clickable { onClick.invoke() },
@@ -47,7 +47,7 @@ fun TagDeleteChipItem(
                 HasText(
                     modifier = Modifier.padding(end = 4.dp),
                     text = name,
-                    color = ColorFamilyBlackAndLime300,
+                    color = ColorFamilyBlack20AndLime300,
                     fontSize = 14.dp,
                 )
                 Image(

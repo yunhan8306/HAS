@@ -2,8 +2,8 @@ package com.myStash.android.design_system.ui.color
 
 import androidx.compose.ui.graphics.Color
 
-
-val Black = Color(0xFF202020)
+val Black = Color(0xFF000000)
+val Black20 = Color(0xFF202020)
 val White = Color(0xFFFFFFFF)
 val Lime = Color(0xFFE4F562)
 val Purple = Color(0xFF716DF6)

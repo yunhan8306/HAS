@@ -10,18 +10,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomAppBar
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
+import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
 import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray600
+import com.myStash.android.design_system.ui.color.Gray350
+import com.myStash.android.design_system.ui.component.text.HasText
 
 @Composable
 fun MainNavigation(navController: NavHostController) {
@@ -65,9 +66,10 @@ fun MainNavigation(navController: NavHostController) {
                         )
                     },
                     label = {
-                        Text(
+                        HasText(
                             text = navType.name,
-                            color = Color.Black
+                            color = if(selected) ColorFamilyBlack20AndWhite else Gray350,
+                            fontSize = 10.dp
                         )
                     }
                 )

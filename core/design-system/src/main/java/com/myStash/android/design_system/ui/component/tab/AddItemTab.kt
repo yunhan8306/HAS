@@ -5,9 +5,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Tab
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
-import com.myStash.android.design_system.ui.color.ColorFamilyGray200AndGray600
+import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
 import com.myStash.android.design_system.ui.color.Gray350
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
@@ -27,7 +25,7 @@ fun AddItemTab(
     ) {
         HasText(
             text = name,
-            color = if(selected) ColorFamilyBlackAndWhite else Gray350,
+            color = if(selected) ColorFamilyBlack20AndWhite else Gray350,
             fontWeight = if(selected) HasFontWeight.Bold else HasFontWeight.Medium
         )
     }

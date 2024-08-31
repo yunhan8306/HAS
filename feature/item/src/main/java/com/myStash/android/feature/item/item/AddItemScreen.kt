@@ -8,14 +8,12 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.TabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.myStash.android.design_system.ui.DevicePreviews
-import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
+import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
 import com.myStash.android.design_system.ui.component.header.HasHeader
 import com.myStash.android.design_system.ui.component.tab.AddItemTab
-import com.myStash.android.design_system.util.addFocusCleaner
 
 @Composable
 fun AddItemScreen(
@@ -42,7 +40,7 @@ fun AddItemScreen(
                 .fillMaxWidth()
                 .height(40.dp),
             selectedTabIndex = state.selectedTab.ordinal,
-            contentColor = ColorFamilyBlackAndWhite
+            contentColor = ColorFamilyBlack20AndWhite
         ) {
             AddItemTab(
                 name = ItemTab.HAS.tabName,

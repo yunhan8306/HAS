@@ -34,8 +34,8 @@ import coil.compose.SubcomposeAsyncImage
 import com.myStash.android.core.model.CalenderData
 import com.myStash.android.core.model.setCalender
 import com.myStash.android.design_system.ui.DevicePreviews
-import com.myStash.android.design_system.ui.color.Black
-import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
+import com.myStash.android.design_system.ui.color.Black20
+import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
 import com.myStash.android.design_system.ui.color.Gray350
 import com.myStash.android.design_system.ui.color.Lime300
 import com.myStash.android.design_system.ui.color.White
@@ -141,7 +141,7 @@ fun HasCalender(
                 HasText(
                     text = "$year.$month",
                     fontSize = 16.dp,
-                    color = ColorFamilyBlackAndWhite,
+                    color = ColorFamilyBlack20AndWhite,
                     fontWeight = HasFontWeight.Bold,
                 )
                 Spacer(modifier = Modifier.weight(1f))
@@ -227,7 +227,7 @@ fun FeedCalenderRecordDayItem(
                 .clip(RoundedCornerShape(18.dp))
                 .border(
                     width = if (isSelect) 1.dp else (-1).dp,
-                    color = Black,
+                    color = Black20,
                     shape = RoundedCornerShape(size = 18.dp)
                 )
         ) {
@@ -243,7 +243,7 @@ fun FeedCalenderRecordDayItem(
         HasText(
             text = day,
             fontSize = 12.dp,
-            color = if(isSelect) Black else White
+            color = if(isSelect) Black20 else White
         )
     }
 }

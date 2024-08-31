@@ -33,7 +33,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.myStash.android.common.resource.R
-import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
+import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
 import com.myStash.android.design_system.ui.color.ColorFamilyGray500AndGray900
 import com.myStash.android.design_system.ui.color.ColorFamilyLime100AndGray550
 import com.myStash.android.design_system.ui.color.ColorFamilyLime700AndLime300
@@ -138,7 +138,7 @@ fun ContactScreen(
                                 content = {
                                     HasText(
                                         text = type,
-                                        color = if(isSelected) ColorFamilyLime700AndLime300 else ColorFamilyBlackAndWhite,
+                                        color = if(isSelected) ColorFamilyLime700AndLime300 else ColorFamilyBlack20AndWhite,
                                         fontWeight = if(isSelected) HasFontWeight.Bold else HasFontWeight.Medium,
                                     )
                                 },
