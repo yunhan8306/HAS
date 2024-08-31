@@ -11,4 +11,7 @@ class GetTypeListUseCase @Inject constructor(
 ) {
     val typeList: Flow<List<Type>> =
         typeRepository.selectAll().map { it.filter { !it.isRemove } }
+
+    val typeRemoveList : Flow<List<Type>> =
+        typeRepository.selectAll().map { it.filter { it.isRemove } }
 }

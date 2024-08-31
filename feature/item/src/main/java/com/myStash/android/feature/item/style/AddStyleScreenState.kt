@@ -15,3 +15,10 @@ data class AddStyleScreenState(
 sealed interface AddStyleSideEffect {
     data class Finish(val intent: Intent?): AddStyleSideEffect
 }
+
+sealed interface AddStyleScreenAction {
+    data class SelectType(val type: Type): AddStyleScreenAction
+    data class SelectHas(val has: Has): AddStyleScreenAction
+    object SaveStyle: AddStyleScreenAction
+
+}

@@ -26,20 +26,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.myStash.android.common.resource.R
-import com.myStash.android.core.model.Has
+import com.myStash.android.core.model.getType
 import com.myStash.android.design_system.ui.color.ColorFamilyGray500AndGray900
 import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray800
-import com.myStash.android.design_system.ui.color.White
 import com.myStash.android.design_system.ui.component.button.HasButton
-import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
+import com.myStash.android.design_system.ui.component.type.TypeSquareChipItem
 import com.myStash.android.design_system.util.ShimmerRectangleLoadingAnimation
 import com.myStash.android.feature.item.component.AddItemAware
 
 @Composable
 fun AddStyleScreen(
-    selectedHasList: List<Has>,
-    saveItem: () -> Unit,
+    state: AddStyleScreenState,
+    onAction: (AddStyleScreenAction) -> Unit,
     sheetContent: @Composable (ColumnScope.() -> Unit),
 ) {
     val configuration = LocalConfiguration.current
@@ -60,7 +59,7 @@ fun AddStyleScreen(
                     .fillMaxWidth()
                     .weight(1f)
             ) {
-                if(selectedHasList.isEmpty()) {
+                if(state.selectedHasList.isEmpty()) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -88,7 +87,7 @@ fun AddStyleScreen(
                         .fillMaxWidth()
                         .height(286.dp)
                 ) {
-                    itemsIndexed(selectedHasList) { index, has ->
+                    itemsIndexed(state.selectedHasList) { index, has ->
                         Box(
                             contentAlignment = Alignment.TopEnd
                         ) {
@@ -100,20 +99,13 @@ fun AddStyleScreen(
                                 loading = { ShimmerRectangleLoadingAnimation() },
                                 error = { ShimmerRectangleLoadingAnimation() }
                             )
-
                             Box(
-                                modifier = Modifier.padding(top = 12.dp, end = 12.dp),
+                                modifier = Modifier.padding(top = 10.dp, end = 10.dp),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.btn_purple_select),
-                                    contentDescription = "has select"
-                                )
-                                HasText(
-                                    text = (index + 1).toString(),
-                                    color = White,
-                                    fontSize = 12.dp,
-                                    fontWeight = HasFontWeight.Bold
+                                TypeSquareChipItem(
+                                    name = has.type.getType(state.typeTotalList)?.name ?: "미선택",
+                                    onClick = { onAction.invoke(AddStyleScreenAction.SelectHas(has)) }
                                 )
                             }
                         }
@@ -140,8 +132,8 @@ fun AddStyleScreen(
                     shape = RoundedCornerShape(size = 10.dp)
                 ),
                 text = "등록하기",
-                isComplete = selectedHasList.isNotEmpty(),
-                onClick = saveItem
+                isComplete = state.selectedHasList.isNotEmpty(),
+                onClick = { onAction.invoke(AddStyleScreenAction.SaveStyle) }
             )
         }
     }

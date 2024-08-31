@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.myStash.android.common.util.Quadruple
 import com.myStash.android.common.util.offerOrRemove
 import com.myStash.android.core.data.usecase.gender.GetSelectedGenderUseCase
 import com.myStash.android.core.data.usecase.has.DeleteHasUseCase
@@ -21,6 +22,7 @@ import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.getSelectedTypeAndTagHasList
 import com.myStash.android.core.model.getTagList
 import com.myStash.android.core.model.getTotalTypeList
+import com.myStash.android.core.model.getUnSelectTypeList
 import com.myStash.android.core.model.sortSelectedTagList
 import com.myStash.android.feature.gallery.ImageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -99,7 +101,14 @@ class HasViewModel @Inject constructor(
 //        )
 
     private val typeTotalList = getTypeListUseCase.typeList
-        .map { getTotalTypeList() + it }
+        .map { getTotalTypeList() + it + getUnSelectTypeList() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000L),
+            initialValue = emptyList()
+        )
+
+    private val typeRemoveList = getTypeListUseCase.typeRemoveList
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),
@@ -109,9 +118,9 @@ class HasViewModel @Inject constructor(
     private fun fetch() {
         intent {
             viewModelScope.launch {
-                combine(typeTotalList, hasTotalList, tagTotalList) { typeTotalList, itemList, tagTotalList ->
-                    Triple(typeTotalList, itemList, tagTotalList)
-                }.collectLatest { (typeTotalList, itemList, tagTotalList) ->
+                combine(typeTotalList, hasTotalList, tagTotalList, typeRemoveList) { typeTotalList, itemList, tagTotalList, typeRemoveList ->
+                    Quadruple(typeTotalList, itemList, tagTotalList, typeRemoveList)
+                }.collectLatest { (typeTotalList, itemList, tagTotalList, _) ->
                     reduce {
                         state.copy(
                             hasList = itemList,
@@ -145,7 +154,7 @@ class HasViewModel @Inject constructor(
                 reduce {
                     state.copy(
                         selectedTagList = selectedTagList.toList(),
-                        hasList = hasTotalList.value.getSelectedTypeAndTagHasList(state.selectedType, selectedTagList)
+                        hasList = hasTotalList.value.getSelectedTypeAndTagHasList(state.selectedType, selectedTagList, typeRemoveList.value)
                     )
                 }
             }
@@ -163,7 +172,7 @@ class HasViewModel @Inject constructor(
                 reduce {
                     state.copy(
                         selectedTagList = selectedTagList.toList(),
-                        hasList = hasTotalList.value.getSelectedTypeAndTagHasList(state.selectedType, selectedTagList)
+                        hasList = hasTotalList.value.getSelectedTypeAndTagHasList(state.selectedType, selectedTagList, typeRemoveList.value)
                     )
                 }
             }
@@ -175,7 +184,7 @@ class HasViewModel @Inject constructor(
             viewModelScope.launch {
                 reduce {
                     state.copy(
-                        hasList = hasTotalList.value.getSelectedTypeAndTagHasList(type, selectedTagList),
+                        hasList = hasTotalList.value.getSelectedTypeAndTagHasList(type, selectedTagList, typeRemoveList.value),
                         selectedType = type
                     )
                 }

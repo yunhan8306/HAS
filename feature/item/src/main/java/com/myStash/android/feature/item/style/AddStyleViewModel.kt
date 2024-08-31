@@ -7,7 +7,7 @@ import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.myStash.android.common.util.offerOrRemove
+import com.myStash.android.common.util.Quadruple
 import com.myStash.android.common.util.removeBlank
 import com.myStash.android.core.data.usecase.has.GetHasListUseCase
 import com.myStash.android.core.data.usecase.style.SaveStyleUseCase
@@ -18,8 +18,10 @@ import com.myStash.android.core.di.DefaultDispatcher
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Style
 import com.myStash.android.core.model.Type
+import com.myStash.android.core.model.checkTypeAndSelectHas
 import com.myStash.android.core.model.getTotalType
 import com.myStash.android.core.model.getTotalTypeList
+import com.myStash.android.core.model.getUnSelectTypeList
 import com.myStash.android.core.model.searchSelectedTypeHasList
 import com.myStash.android.feature.item.ItemConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -82,7 +84,14 @@ class AddStyleViewModel @Inject constructor(
         )
 
     private val typeTotalList = getTypeListUseCase.typeList
-        .map { getTotalTypeList() + it }
+        .map { getTotalTypeList() + it + getUnSelectTypeList() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000L),
+            initialValue = emptyList()
+        )
+
+    private val typeRemoveList = getTypeListUseCase.typeRemoveList
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),
@@ -101,9 +110,9 @@ class AddStyleViewModel @Inject constructor(
             viewModelScope.launch {
                 val selectedHasIdList = stateHandle.get<Array<Long>>("style")?.toList() ?: emptyList()
 
-                combine(typeTotalList, hasTotalList, tagTotalList) { typeList, hasList, tagTotalList ->
-                    Triple(typeList, hasList, tagTotalList)
-                }.collectLatest { (typeList, hasList, _) ->
+                combine(typeTotalList, hasTotalList, tagTotalList, typeRemoveList) { typeList, hasList, tagTotalList, typeRemoveList ->
+                    Quadruple(typeList, hasList, tagTotalList, typeRemoveList)
+                }.collectLatest { (typeList, hasList, _, _) ->
                     reduce {
                         state.copy(
                             typeTotalList = typeList,
@@ -128,7 +137,21 @@ class AddStyleViewModel @Inject constructor(
         }
     }
 
-    fun selectType(type: Type) {
+    fun onAction(action: AddStyleScreenAction) {
+        when(action) {
+            is AddStyleScreenAction.SelectType -> {
+                selectType(action.type)
+            }
+            is AddStyleScreenAction.SelectHas -> {
+                selectHas(action.has)
+            }
+            is AddStyleScreenAction.SaveStyle -> {
+                saveStyle()
+            }
+        }
+    }
+
+    private fun selectType(type: Type) {
         intent {
             viewModelScope.launch {
                 selectedType = type
@@ -142,20 +165,19 @@ class AddStyleViewModel @Inject constructor(
         }
     }
 
-    fun selectHas(has: Has) {
+    private fun selectHas(has: Has) {
         intent {
             viewModelScope.launch {
-                val selectedHasList = state.selectedHasList.toMutableList().apply { offerOrRemove(has) { it.id == has.id } }
                 reduce {
                     state.copy(
-                        selectedHasList = selectedHasList.toList()
+                        selectedHasList = state.selectedHasList.checkTypeAndSelectHas(has)
                     )
                 }
             }
         }
     }
 
-    fun saveStyle() {
+    private fun saveStyle() {
         intent {
             viewModelScope.launch {
                 val saveStyle = Style(
@@ -173,6 +195,7 @@ class AddStyleViewModel @Inject constructor(
 
     private fun getHasList(text: String): List<Has> {
         return text.searchSelectedTypeHasList(
+            typeRemoveList = typeRemoveList.value,
             tagTotalList = tagTotalList.value,
             hasTotalList = hasTotalList.value,
             type = selectedType

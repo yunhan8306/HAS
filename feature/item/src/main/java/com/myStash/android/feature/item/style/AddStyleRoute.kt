@@ -34,15 +34,22 @@ fun AddStyleRoute(
     }
 
     AddStyleScreen(
-        selectedHasList = state.selectedHasList,
-        saveItem = viewModel::saveStyle,
+        state = state,
+        onAction = { action ->
+            when(action) {
+                else -> viewModel.onAction(action)
+            }
+        },
         sheetContent = {
             AddStyleModalSheet(
                 searchModalState = searchModalState,
                 searchTextState = viewModel.searchTextState,
                 state = state,
-                onSelectType = viewModel::selectType,
-                onSelectHas = viewModel::selectHas,
+                onAction = { action ->
+                    when(action) {
+                        else -> viewModel.onAction(action)
+                    }
+                }
             )
         }
     )

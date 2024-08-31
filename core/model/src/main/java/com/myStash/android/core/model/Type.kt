@@ -18,9 +18,22 @@ fun List<Type>.update(type: Type): List<Type> {
     }.toList()
 }
 
+fun Long.getType(typeTotalList: List<Type>): Type? {
+    return typeTotalList.firstOrNull { it.id == this }
+}
+
+/**
+ * 전체 : type id = null
+ * 미등록 : type id = -1
+ * */
+
 fun getTotalType() = Type(id = null, name = "전체")
 
 fun getTotalTypeList() = listOf(getTotalType())
+
+fun getUnSelectType() = Type(id = -1, name = "미등록")
+
+fun getUnSelectTypeList() = listOf(getUnSelectType())
 
 val testManTypeTotalList = listOf(
     Type(id = 1,name = "상의"),

@@ -39,8 +39,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.myStash.android.common.resource.R
-import com.myStash.android.core.model.Has
-import com.myStash.android.core.model.Type
 import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
 import com.myStash.android.design_system.ui.color.ColorFamilyGray200AndGray600
 import com.myStash.android.design_system.ui.color.ColorFamilyGray300AndGray400
@@ -61,8 +59,7 @@ fun AddStyleModalSheet(
     searchModalState: ModalBottomSheetState,
     searchTextState: TextFieldState,
     state: AddStyleScreenState,
-    onSelectType: (Type) -> Unit,
-    onSelectHas: (Has) -> Unit
+    onAction: (AddStyleScreenAction) -> Unit
 ) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
@@ -95,7 +92,7 @@ fun AddStyleModalSheet(
                 Box(
                     modifier = Modifier
                         .padding(horizontal = 24.dp)
-                        .clickableNoRipple { onSelectType.invoke(type) }
+                        .clickableNoRipple { onAction.invoke(AddStyleScreenAction.SelectType(type)) }
                 ) {
                     HasText(
                         text = type.name,
@@ -162,7 +159,7 @@ fun AddStyleModalSheet(
                             modifier = Modifier
                                 .aspectRatio(1f)
                                 .clip(shape = RoundedCornerShape(size = 8.dp))
-                                .clickable { onSelectHas.invoke(has) },
+                                .clickable { onAction.invoke(AddStyleScreenAction.SelectHas(has)) },
                             contentScale = ContentScale.Crop,
                             loading = { ShimmerLoadingAnimation() },
                             error = { ShimmerLoadingAnimation() }

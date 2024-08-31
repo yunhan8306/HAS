@@ -1,6 +1,8 @@
 package com.myStash.android.core.model
 
 import android.os.Parcelable
+import com.myStash.android.common.util.isNotNull
+import com.myStash.android.common.util.offerOrRemove
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -22,11 +24,15 @@ data class Has(
     }
 }
 fun List<Has>.selectType(type: Type): List<Has> {
-    return if(type.id?.toInt() == 0) {
+    return if(type.id == null) {
         this
     } else {
         this.filter { it.type == type.id }
     }
+}
+
+fun List<Has>.unSelectType(typeRemoveList: List<Type>): List<Has> {
+    return filter { typeRemoveList.map { it.id }.contains(it.type) }
 }
 
 fun List<Has>.selectTag(tags: List<Tag>): List<Has> {
@@ -52,15 +58,32 @@ fun String.searchHasList(tagTotalList: List<Tag>, hasTotalList: List<Has>): List
     return hasTotalList.filter { tagIdList.contains(it.id) }
 }
 
-fun String.searchSelectedTypeHasList(tagTotalList: List<Tag>, hasTotalList: List<Has>, type: Type): List<Has> {
+fun String.searchSelectedTypeHasList(tagTotalList: List<Tag>, hasTotalList: List<Has>, type: Type, typeRemoveList: List<Type>): List<Has> {
     return when {
         type.id == null -> searchHasList(tagTotalList, hasTotalList)
+        type.id == -1L -> searchHasList(tagTotalList, hasTotalList).unSelectType(typeRemoveList)
         isNotEmpty() -> searchHasList(tagTotalList, hasTotalList).selectType(type)
         isEmpty() -> hasTotalList.selectType(type)
         else -> emptyList()
     }
 }
 
-fun List<Has>.getSelectedTypeAndTagHasList(selectedType: Type, selectedTags: List<Tag>): List<Has> {
-    return filter { it.type == selectedType.id || selectedType.id == null }.selectTag(selectedTags)
+fun List<Has>.getSelectedTypeAndTagHasList(selectedType: Type, selectedTags: List<Tag>, removeTypeList: List<Type>): List<Has> {
+    return when {
+        selectedType.id == -1L -> unSelectType(removeTypeList)
+        else -> selectType(selectedType)
+    }.selectTag(selectedTags)
+}
+
+fun List<Has>.checkTypeAndSelectHas(has: Has): List<Has> {
+    return toMutableList().apply {
+        when {
+            firstOrNull { it.id == has.id }.isNotNull() -> offerOrRemove(has) { it.id == has.id }
+            firstOrNull { it.type == has.type }.isNotNull() -> {
+                offerOrRemove(has) { it.type == has.type }
+                add(has)
+            }
+            else -> add(has)
+        }
+    }.toList()
 }
