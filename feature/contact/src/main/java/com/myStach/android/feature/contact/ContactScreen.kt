@@ -29,15 +29,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.myStash.android.common.resource.R
 import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
-import com.myStash.android.design_system.ui.color.ColorFamilyGray300AndGray600
 import com.myStash.android.design_system.ui.color.ColorFamilyGray500AndGray900
-import com.myStash.android.design_system.ui.color.ColorFamilyGray900AndGray400
 import com.myStash.android.design_system.ui.color.ColorFamilyLime100AndGray550
 import com.myStash.android.design_system.ui.color.ColorFamilyLime700AndLime300
 import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray600
@@ -112,7 +109,7 @@ fun ContactScreen(
                         endContent = {
                             Image(
                                 modifier = Modifier.size(24.dp),
-                                painter = painterResource(id = R.drawable.btn_down),
+                                painter = painterResource(id = R.drawable.img_down),
                                 contentDescription = "btn down"
                             )
                         }
@@ -187,7 +184,12 @@ fun ContactScreen(
 
             LazyRow {
                 if (state.selectedImages.size < 5) {
-                    item { UnselectPhotoItem(onClick = { onAction.invoke(ContactAction.ShowGalleryActivity) }) }
+                    item {
+                        UnselectPhotoItem(
+                            cnt = state.selectedImages.size,
+                            onClick = { onAction.invoke(ContactAction.ShowGalleryActivity) }
+                        )
+                    }
                 }
                 items(state.selectedImages) { uri ->
                     Row {

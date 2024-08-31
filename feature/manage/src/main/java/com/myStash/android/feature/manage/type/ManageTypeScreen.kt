@@ -1,9 +1,7 @@
 package com.myStash.android.feature.manage.type
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -150,7 +148,7 @@ fun ManageTypeScreen(
                                 ) {
                                     Image(
                                         modifier = Modifier.size(20.dp),
-                                        painter = painterResource(id = R.drawable.btn_edit),
+                                        painter = painterResource(id = R.drawable.img_edit),
                                         contentDescription = "edit",
                                     )
                                 }
@@ -162,7 +160,7 @@ fun ManageTypeScreen(
                                 ) {
                                     Image(
                                         modifier = Modifier.size(20.dp),
-                                        painter = painterResource(id = R.drawable.btn_remove),
+                                        painter = painterResource(id = R.drawable.img_remove),
                                         contentDescription = "remove",
                                     )
                                 }

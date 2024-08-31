@@ -67,16 +67,7 @@ import com.myStash.android.feature.item.component.ItemTitleText
 fun AddFeedScreen(
     searchModalState: ModalBottomSheetState,
     state: AddFeedScreenState,
-//    imageUri: String?,
-//    selectedType: Type?,
-//    typeTotalList: List<Type>,
-//    selectType: (Type) -> Unit,
-//    selectedTagList: List<Tag>,
-//    selectTag: (Tag) -> Unit,
-//    search: () -> Unit,
-//    saveItem: () -> Unit,
     showGalleryActivity: () -> Unit,
-//    onBack: () -> Unit,
     onAction: (AddFeedScreenAction) -> Unit,
     showStyleSheet: () -> Unit,
     sheetContent: @Composable (ColumnScope.() -> Unit),
@@ -128,7 +119,12 @@ fun AddFeedScreen(
                 )
                 LazyRow {
                     if (state.selectedImageList.size < 5) {
-                        item { UnselectPhotoItem(onClick = showGalleryActivity) }
+                        item {
+                            UnselectPhotoItem(
+                                cnt = state.selectedImageList.size,
+                                onClick = showGalleryActivity
+                            )
+                        }
                     }
                     items(state.selectedImageList) { uri ->
                         Row {
@@ -202,10 +198,11 @@ fun AddFeedScreen(
                         ) {
                             Image(
                                 modifier = Modifier.size(14.dp),
-                                painter = painterResource(id = R.drawable.btn_edit),
+                                painter = painterResource(id = R.drawable.img_edit),
                                 contentDescription = "style edit",
                             )
                             HasText(
+                                modifier = Modifier.padding(start = 2.dp),
                                 text = "Edit",
                                 color = Gray350,
                                 fontSize = 13.dp
@@ -225,8 +222,7 @@ fun AddFeedScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
-                            modifier = Modifier.size(20.dp),
-                            painter = painterResource(id = R.drawable.btn_style_add),
+                            painter = painterResource(id = R.drawable.img_add_feed),
                             contentDescription = "style add",
                         )
                     }

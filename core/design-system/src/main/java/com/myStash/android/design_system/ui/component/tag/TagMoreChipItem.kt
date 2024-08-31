@@ -51,7 +51,7 @@ fun TagMoreChipItem(
             )
             Image(
                 modifier = Modifier.size(14.dp),
-                painter = painterResource(id = if(isFold) R.drawable.btn_tag_more_fold else R.drawable.btn_tag_more),
+                painter = painterResource(id = if(isFold) R.drawable.img_up else R.drawable.img_down),
                 contentDescription = "tag more"
             )
         }

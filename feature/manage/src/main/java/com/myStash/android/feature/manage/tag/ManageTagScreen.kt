@@ -1,9 +1,7 @@
 package com.myStash.android.feature.manage.tag
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -86,14 +84,14 @@ fun ManageTagScreen(
             items(
                 items = state.tagTotalList,
                 key = { it.id!! }
-            ) { Tag ->
+            ) { tag ->
 
                 val isSelected by remember(state.focusTag?.id) {
                     derivedStateOf {
-                        state.focusTag?.id == Tag.id
+                        state.focusTag?.id == tag.id
                     }
                 }
-                val TagTextFieldState = rememberTextFieldState(Tag.name)
+                val tagTextFieldState = rememberTextFieldState(tag.name)
                 val focusRequester = remember { FocusRequester() }
 
                 LaunchedEffect(isSelected) {
@@ -116,15 +114,15 @@ fun ManageTagScreen(
                         if(isSelected) {
                             HasTextField(
                                 modifier = Modifier.weight(1f),
-                                textState = TagTextFieldState,
+                                textState = tagTextFieldState,
                                 focusRequester = focusRequester,
-                                hint = Tag.name,
+                                hint = tag.name,
                                 hintColor = ColorFamilyBlackAndWhite
                             )
                         } else {
                             HasText(
                                 modifier = Modifier.weight(1f),
-                                text = Tag.name,
+                                text = tag.name,
                                 color = if(isEdit) ColorFamilyGray350AndGray400 else ColorFamilyBlackAndWhite
                             )
                         }
@@ -137,7 +135,7 @@ fun ManageTagScreen(
                                         .clickableNoRipple {
                                             onAction.invoke(
                                                 ManageTagAction.UpdateTag(
-                                                    Tag.copy(name = TagTextFieldState.text.toString())
+                                                    tag.copy(name = tagTextFieldState.text.toString())
                                                 )
                                             )
                                         },
@@ -153,7 +151,7 @@ fun ManageTagScreen(
                                         .clickableNoRipple {
                                             onAction.invoke(
                                                 ManageTagAction.FocusTag(
-                                                    Tag
+                                                    tag
                                                 )
                                             )
                                         },
@@ -161,7 +159,7 @@ fun ManageTagScreen(
                                 ) {
                                     Image(
                                         modifier = Modifier.size(20.dp),
-                                        painter = painterResource(id = R.drawable.btn_edit),
+                                        painter = painterResource(id = R.drawable.img_edit),
                                         contentDescription = "edit",
                                     )
                                 }
@@ -171,7 +169,7 @@ fun ManageTagScreen(
                                         .clickableNoRipple {
                                             onAction.invoke(
                                                 ManageTagAction.RemoveTag(
-                                                    Tag
+                                                    tag
                                                 )
                                             )
                                         },
@@ -179,7 +177,7 @@ fun ManageTagScreen(
                                 ) {
                                     Image(
                                         modifier = Modifier.size(20.dp),
-                                        painter = painterResource(id = R.drawable.btn_remove),
+                                        painter = painterResource(id = R.drawable.img_remove),
                                         contentDescription = "remove",
                                     )
                                 }
