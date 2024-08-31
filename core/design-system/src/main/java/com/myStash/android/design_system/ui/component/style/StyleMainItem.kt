@@ -12,11 +12,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.myStash.android.core.model.StyleScreenModel
+import com.myStash.android.design_system.ui.color.ColorFamilyGray300AndGray400
+import com.myStash.android.design_system.ui.color.Purple
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 
 @Composable
@@ -30,7 +31,7 @@ fun StyleMainItem(
         modifier = Modifier
             .border(
                 width = if (isSelected) 2.dp else 1.dp,
-                color = if (isSelected) Color(0xFF716DF6) else Color(0xFFE1E1E1),
+                color = if (isSelected) Purple else ColorFamilyGray300AndGray400,
                 shape = RoundedCornerShape(size = 12.dp)
             )
             .clip(RoundedCornerShape(size = 12.dp))

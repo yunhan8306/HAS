@@ -20,13 +20,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
+import com.myStash.android.design_system.ui.color.ColorFamilyGray300AndGray400
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.design_system.ui.component.type.TypeChipItem
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
@@ -55,7 +55,7 @@ fun AddStyleHasItem(
                     .aspectRatio(1f)
                     .border(
                         width = 1.dp,
-                        color = Color(0xFFE1E1E1),
+                        color = ColorFamilyGray300AndGray400,
                         shape = RoundedCornerShape(size = 6.dp)
                     )
                     .clip(RoundedCornerShape(size = 6.dp))
