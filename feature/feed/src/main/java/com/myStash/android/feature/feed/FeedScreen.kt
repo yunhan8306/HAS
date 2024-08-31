@@ -208,8 +208,8 @@ fun FeedScreen(
                         }
                         if(state.selectedFeedTagList.size > 3) {
                             TagMoreChipItem(
-                                cnt = "${state.selectedFeedTagList.size + (if(flowToggle) -3 else 0)}",
-                                isFold = !flowToggle,
+                                cnt = "${state.selectedFeedTagList.size + (if(!flowToggle) -3 else 0)}",
+                                isFold = flowToggle,
                                 onClick = { flowToggle = !flowToggle }
                             )
                         }
