@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +25,6 @@ import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.color.ColorFamilyGray200AndGray600
 import com.myStash.android.design_system.ui.color.ColorFamilyLime100AndGray600
 import com.myStash.android.design_system.ui.color.ColorFamilyLime500AndLime300
-import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray800
 import com.myStash.android.design_system.ui.color.Gray400
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
@@ -43,7 +43,7 @@ fun TagSearchItem(
         modifier = Modifier
             .fillMaxWidth()
             .height(40.dp)
-            .background(if(isSelected) ColorFamilyLime100AndGray600 else ColorFamilyWhiteAndGray800)
+            .background(if(isSelected) ColorFamilyLime100AndGray600 else MaterialTheme.colors.background)
             .drawBehind {
                 drawLine(
                     color = drawLineColor,
