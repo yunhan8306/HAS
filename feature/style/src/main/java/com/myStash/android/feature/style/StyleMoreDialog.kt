@@ -13,13 +13,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
+import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray600
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.feature.item.feed.AddStyleHasItem
@@ -38,19 +38,15 @@ fun StyleMoreDialog(
         ) {
             Box(
                 modifier = Modifier
-                    .shadow(
-                        elevation = 6.dp,
-                        spotColor = Color(0x3D000000),
-                        ambientColor = Color(0x3D000000)
-                    )
+                    .shadow(elevation = 6.dp)
                     .width(328.dp)
                     .heightIn(max = 580.dp)
-                    .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 12.dp))
+                    .background(color = ColorFamilyWhiteAndGray600, shape = RoundedCornerShape(size = 12.dp))
                     .padding(horizontal = 16.dp),
                 contentAlignment = Alignment.Center
             ) {
                 LazyColumn(
-                    modifier = Modifier.heightIn(max = 1000.dp),
+                    modifier = Modifier.heightIn(max = 2000.dp),
                     userScrollEnabled = false
                 ) {
                     item { 

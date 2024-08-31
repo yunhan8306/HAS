@@ -1,6 +1,5 @@
 package com.myStash.android.feature.item.feed
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
@@ -29,6 +28,7 @@ import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
 import com.myStash.android.design_system.ui.component.text.HasText
+import com.myStash.android.design_system.ui.component.type.TypeChipItem
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 
 @Composable
@@ -75,7 +75,7 @@ fun AddStyleHasItem(
                 contentAlignment = Alignment.CenterStart
             ) {
                 Column {
-                    TypeTest(
+                    TypeChipItem(
                         name = hasType
                     )
                     Column(
@@ -101,25 +101,6 @@ fun AddStyleHasItem(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun TypeTest(
-    name: String
-) {
-    Box(
-        modifier = Modifier
-            .background(color = Color(0xFF707070), shape = RoundedCornerShape(size = 10.dp))
-            .height(20.dp)
-            .padding(start = 8.dp, end = 8.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        HasText(
-            text = name,
-            color = Color(0xFFFFFFFF),
-            fontSize = 14.dp
-        )
     }
 }
 

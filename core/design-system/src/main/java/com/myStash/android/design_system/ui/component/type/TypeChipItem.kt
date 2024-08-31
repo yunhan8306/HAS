@@ -1,43 +1,35 @@
 package com.myStash.android.design_system.ui.component.type
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.color.ColorFamilyBlackAndWhite
+import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndBlack
+import com.myStash.android.design_system.ui.component.text.HasText
 
 @Composable
 fun TypeChipItem(
-    name: String,
-    isSelected: Boolean,
-    onClick: () -> Unit
+    name: String
 ) {
     Box(
-        modifier = Modifier.padding(5.dp)
+        modifier = Modifier
+            .background(color = ColorFamilyBlackAndWhite, shape = RoundedCornerShape(size = 10.dp))
+            .height(20.dp)
+            .padding(start = 8.dp, end = 8.dp),
+        contentAlignment = Alignment.Center
     ) {
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(10.dp))
-                .background(
-                    if(isSelected) Color(0xFF202020) else Color(0xFFF1F1F1)
-                )
-                .clickable { onClick.invoke() },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
-                text = name,
-                color = if(isSelected) Color(0xFFF1F1F1) else Color(0xFF707070)
-            )
-        }
+        HasText(
+            text = name,
+            color = ColorFamilyWhiteAndBlack,
+            fontSize = 14.dp
+        )
     }
 }
 
@@ -45,8 +37,6 @@ fun TypeChipItem(
 @Composable
 fun TypeChipItemPreview() {
     TypeChipItem(
-        name = "test",
-        isSelected = false,
-        onClick = {}
+        name = "test"
     )
 }
