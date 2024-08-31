@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.myStash.android.common.resource.R
 import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.color.ColorFamilyGray300AndGray500
 import com.myStash.android.design_system.ui.component.text.HasText
 
 @Composable
@@ -36,10 +38,10 @@ fun TagMoreChipItem(
                 .height(28.dp)
                 .border(
                     width = 1.dp,
-                    color = Color(0xFFE1E1E1),
+                    color = ColorFamilyGray300AndGray500,
                     shape = RoundedCornerShape(size = 15.dp)
                 )
-                .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 15.dp))
+                .background(color = MaterialTheme.colors.background, shape = RoundedCornerShape(size = 15.dp))
                 .padding(horizontal = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
