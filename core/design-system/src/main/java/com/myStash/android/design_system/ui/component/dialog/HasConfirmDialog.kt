@@ -12,12 +12,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.myStash.android.design_system.ui.DevicePreviews
+import com.myStash.android.design_system.ui.color.ColorFamilyGray500AndGray900
+import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray600
+import com.myStash.android.design_system.ui.color.Gray350
 import com.myStash.android.design_system.ui.component.button.HasButton
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
@@ -42,13 +44,9 @@ fun HasConfirmDialog(
 
             Column(
                 modifier = Modifier
-                    .shadow(
-                        elevation = 6.dp,
-                        spotColor = Color(0x29000000),
-                        ambientColor = Color(0x29000000)
-                    )
+                    .shadow(elevation = 6.dp,)
                     .width(328.dp)
-                    .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 10.dp))
+                    .background(color = ColorFamilyWhiteAndGray600, shape = RoundedCornerShape(size = 10.dp))
                     .padding(start = 16.dp, top = 20.dp, end = 16.dp, bottom = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -60,7 +58,7 @@ fun HasConfirmDialog(
                 HasText(
                     modifier = Modifier.padding(bottom = 20.dp),
                     text = content,
-                    color = Color(0xFF505050),
+                    color = ColorFamilyGray500AndGray900,
                     fontSize = 14.dp,
                     textAlign = TextAlign.Center,
                     lineHeight = 21.dp
@@ -76,7 +74,7 @@ fun HasConfirmDialog(
                         HasText(
                             modifier = Modifier.clickable { onDismiss.invoke() },
                             text = dismissText,
-                            color = Color(0xFF909090),
+                            color = Gray350,
                             fontSize = 14.dp,
                             fontWeight = HasFontWeight.Medium,
                         )

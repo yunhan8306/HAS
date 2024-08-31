@@ -161,7 +161,7 @@ fun StyleScreen(
             )
         }
         SpacerLineBox()
-        if(state.styleList.isEmpty()) {
+        if(state.styleList.isNotEmpty()) {
             LazyVerticalGrid(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
