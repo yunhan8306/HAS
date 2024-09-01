@@ -22,6 +22,7 @@ import coil.compose.AsyncImage
 import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
 import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray600
 import com.myStash.android.design_system.ui.color.Gray350
+import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
 
 @Composable
@@ -69,7 +70,8 @@ fun MainNavigation(navController: NavHostController) {
                         HasText(
                             text = navType.name,
                             color = if(selected) ColorFamilyBlack20AndWhite else Gray350,
-                            fontSize = 10.dp
+                            fontSize = 10.dp,
+                            fontWeight = if(selected) HasFontWeight.Medium else HasFontWeight.Thin
                         )
                     }
                 )

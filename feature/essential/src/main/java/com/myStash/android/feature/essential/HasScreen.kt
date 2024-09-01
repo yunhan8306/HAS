@@ -191,7 +191,7 @@ fun HasScreen(
             modifier = Modifier
                 .heightIn(max = if (state.isFoldTag) 200.dp else Dp.Unspecified)
                 .fillMaxWidth()
-                .padding(top = 18.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
+                .padding(top = 12.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
                 .verticalScroll(tagScrollState)
         ) {
             state.totalTagList.forEachIndexed { index, tag ->
@@ -272,6 +272,10 @@ fun HasScreen(
                         onEditHas = { onAction.invoke(HasScreenAction.ShowItemActivity(has)) },
                         onDeleteHas = {},
                     )
+                }
+
+                items(2) {
+                    Box(modifier = Modifier.height(12.dp))
                 }
             }
         } else {
