@@ -19,7 +19,7 @@ fun HasLogoHeader() {
                 modifier = Modifier
                     .width(74.dp)
                     .height(20.dp),
-                painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.img_has_logo_dark else R.drawable.img_has_logo),
+                painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.img_has_logo_dark else R.drawable.img_has_logo_light),
                 contentDescription = "has logo"
             )
         }
