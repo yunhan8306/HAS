@@ -38,6 +38,7 @@ import com.myStash.android.design_system.ui.color.ColorFamilyGray500AndGray900
 import com.myStash.android.design_system.ui.color.ColorFamilyLime100AndGray550
 import com.myStash.android.design_system.ui.color.ColorFamilyLime700AndLime300
 import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndGray600
+import com.myStash.android.design_system.ui.color.Purple
 import com.myStash.android.design_system.ui.component.button.HasButton
 import com.myStash.android.design_system.ui.component.content.ContentText
 import com.myStash.android.design_system.ui.component.content.ContentTextField
@@ -89,12 +90,21 @@ fun ContactScreen(
                 .imePadding()
                 .verticalScroll(scrollState)
         ) {
-            HasText(
+            Row(
                 modifier = Modifier.padding(top = 24.dp, bottom = 16.dp),
-                text = "문의 항목",
-                fontSize = 14.dp,
-                fontWeight = HasFontWeight.Bold
-            )
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                HasText(
+                    text = "문의 항목",
+                    fontSize = 14.dp,
+                    fontWeight = HasFontWeight.Bold
+                )
+                HasText(
+                    text = "*",
+                    color = Purple,
+                    fontSize = 14.dp
+                )
+            }
 
             ExposedDropdownMenuBox(
                 expanded = dropDownExpanded,
@@ -134,7 +144,7 @@ fun ContactScreen(
                             DropdownMenuItem(
                                 modifier = Modifier
                                     .width(1000.dp)
-                                    .background(if(isSelected) ColorFamilyLime100AndGray550 else ColorFamilyWhiteAndGray600),
+                                    .background(if (isSelected) ColorFamilyLime100AndGray550 else ColorFamilyWhiteAndGray600),
                                 content = {
                                     HasText(
                                         text = type,
@@ -151,12 +161,21 @@ fun ContactScreen(
                     }
                 }
             }
-            HasText(
+            Row(
                 modifier = Modifier.padding(top = 24.dp, bottom = 16.dp),
-                text = "문의 내용*",
-                fontSize = 14.dp,
-                fontWeight = HasFontWeight.Bold
-            )
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                HasText(
+                    text = "문의 내용",
+                    fontSize = 14.dp,
+                    fontWeight = HasFontWeight.Bold
+                )
+                HasText(
+                    text = "*",
+                    color = Purple,
+                    fontSize = 14.dp
+                )
+            }
             ContactContentTextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -200,12 +219,21 @@ fun ContactScreen(
                     }
                 }
             }
-            HasText(
+            Row(
                 modifier = Modifier.padding(top = 32.dp, bottom = 16.dp),
-                text = "이메일",
-                fontSize = 14.dp,
-                fontWeight = HasFontWeight.Bold
-            )
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                HasText(
+                    text = "이메일",
+                    fontSize = 14.dp,
+                    fontWeight = HasFontWeight.Bold
+                )
+                HasText(
+                    text = "*",
+                    color = Purple,
+                    fontSize = 14.dp
+                )
+            }
             ContentTextField(
                 textState = emailTextState,
                 hint = "회신 받을 이메일",
