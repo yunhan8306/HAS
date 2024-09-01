@@ -45,7 +45,7 @@ fun StyleBottomModal(
         ) {
             HasSelectButton(
                 modifier = Modifier.padding(top = 16.dp),
-                selectText = "피드 등록하기",
+                selectText = "등록하기",
                 onSelect = onSelect,
                 onCancel = onCancel
             )
