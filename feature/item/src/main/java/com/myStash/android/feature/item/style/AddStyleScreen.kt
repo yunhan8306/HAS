@@ -1,6 +1,7 @@
 package com.myStash.android.feature.item.style
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -80,7 +81,7 @@ fun AddStyleScreen(
                         ) {
                             Image(
                                 modifier = Modifier.size(150.dp),
-                                painter = painterResource(id = R.drawable.img_big_hamong),
+                                painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.img_hadung_empty_two_dark else R.drawable.img_hadung_empty_two_light),
                                 contentDescription = "has select"
                             )
                             HasText(
