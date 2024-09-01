@@ -38,6 +38,7 @@ import com.myStash.android.core.model.setCalender
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.color.Black20
 import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
+import com.myStash.android.design_system.ui.color.DimWhite60
 import com.myStash.android.design_system.ui.color.Gray350
 import com.myStash.android.design_system.ui.color.Lime300
 import com.myStash.android.design_system.ui.color.White
@@ -201,7 +202,7 @@ fun FeedCalenderDayItem(
     ) {
         Box(
             modifier = Modifier
-                .size(28.dp)
+                .size(36.dp)
                 .clip(RoundedCornerShape(18.dp))
                 .background(if (isSelect) Lime300 else MaterialTheme.colors.background),
             contentAlignment = Alignment.Center
@@ -209,7 +210,7 @@ fun FeedCalenderDayItem(
             HasText(
                 text = day,
                 fontSize = 12.dp,
-                color = Gray350
+                color = if(LocalDate.now().dayOfMonth.toString() == day) Lime300 else Gray350
             )
         }
     }
@@ -233,24 +234,32 @@ fun FeedCalenderRecordDayItem(
                 .size(36.dp)
                 .clip(RoundedCornerShape(18.dp))
                 .border(
-                    width = if (isSelect) 1.dp else (-1).dp,
-                    color = Black20,
+                    width = if(isSelect) 1.dp else (-1).dp,
+                    color = White,
                     shape = RoundedCornerShape(size = 18.dp)
                 )
         ) {
             SubcomposeAsyncImage(
+                modifier = Modifier.aspectRatio(1f),
                 model = imageUri,
                 contentDescription = "feed image",
-                modifier = Modifier.aspectRatio(1f),
                 contentScale = ContentScale.Crop,
                 loading = { ShimmerLoadingAnimation() },
                 error = { ShimmerLoadingAnimation() }
             )
+            if(isSelect) {
+                Box(
+                    modifier = Modifier
+                        .background(DimWhite60)
+                        .size(36.dp)
+                        .clip(RoundedCornerShape(18.dp))
+                )
+            }
         }
         HasText(
             text = day,
             fontSize = 12.dp,
-            color = if(isSelect) Black20 else White
+            color = if(isSelect) Black20 else if(LocalDate.now().dayOfMonth.toString() == day) Lime300 else White
         )
     }
 }

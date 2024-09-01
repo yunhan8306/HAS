@@ -31,7 +31,10 @@ val Lime300 = Color(0xFFE4F562) // Lime Green
 val Lime500 = Color(0xFF95A70F) // Medium Lime
 val Lime700 = Color(0xFF8A9918) // Dark Lime
 
+val DimWhite60 = Color(0x99FFFFFF) // 60% opacity
+val DimBackground60 = Color(0x99000000) // 60% opacity
+
+
 val TagGray = Color(0xFF85867C) // Tag Gray
 val DimBackground40 = Color(0x66000000) // 40% opacity
-val DimBackground60 = Color(0x99000000) // 60% opacity
 val ButtonDisabledGray = Color(0xFFD4D4D4) // Disabled Button Gray
