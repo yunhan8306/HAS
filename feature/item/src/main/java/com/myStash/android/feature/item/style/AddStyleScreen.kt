@@ -13,10 +13,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -44,6 +46,13 @@ fun AddStyleScreen(
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val sheetPeekHeight = screenHeight - 390.dp
+    val selectedHasHorizontalScrollState = rememberLazyListState()
+
+    LaunchedEffect(state.selectedHasList) {
+        if(state.selectedHasList.isNotEmpty()) {
+            selectedHasHorizontalScrollState.animateScrollToItem(state.selectedHasList.size - 1)
+        }
+    }
 
     AddItemAware {
         BottomSheetScaffold(
@@ -85,7 +94,8 @@ fun AddStyleScreen(
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(286.dp)
+                        .height(286.dp),
+                    state = selectedHasHorizontalScrollState
                 ) {
                     itemsIndexed(state.selectedHasList) { index, has ->
                         Box(
