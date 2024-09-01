@@ -12,10 +12,8 @@ import com.myStash.android.common.util.Quadruple
 import com.myStash.android.common.util.isNotNull
 import com.myStash.android.common.util.offerOrRemove
 import com.myStash.android.common.util.removeBlank
-import com.myStash.android.core.data.usecase.feed.GetFeedListUseCase
 import com.myStash.android.core.data.usecase.feed.SaveFeedUseCase
 import com.myStash.android.core.data.usecase.has.GetHasListUseCase
-import com.myStash.android.core.data.usecase.has.SaveHasUseCase
 import com.myStash.android.core.data.usecase.style.GetStyleListUseCase
 import com.myStash.android.core.data.usecase.tag.CheckAvailableTagUseCase
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
@@ -28,8 +26,6 @@ import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.filterSelectTag
 import com.myStash.android.core.model.getStyleScreenModel
 import com.myStash.android.feature.item.ItemConstants
-import com.myStash.android.feature.item.has.AddHasSideEffect
-import com.myStash.android.feature.item.item.ItemTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
@@ -155,6 +151,8 @@ class AddFeedViewModel @Inject constructor(
             is AddFeedScreenAction.SelectTag -> selectTag(action.tag)
             is AddFeedScreenAction.SelectDate -> selectDate(action.date)
             is AddFeedScreenAction.SaveFeed -> saveFeed()
+            is AddFeedScreenAction.PrevMonth -> prevMonth()
+            is AddFeedScreenAction.NextMonth -> nextMonth()
         }
     }
 
@@ -194,7 +192,7 @@ class AddFeedViewModel @Inject constructor(
             viewModelScope.launch {
                 reduce {
                     state.copy(
-                        date = date
+                        calenderDate = date
                     )
                 }
             }
@@ -206,7 +204,7 @@ class AddFeedViewModel @Inject constructor(
             viewModelScope.launch {
                 val saveFeed = Feed(
                     images = state.selectedImageList,
-                    date = state.date,
+                    date = state.calenderDate,
                     styleId = state.selectedStyle?.id!!,
                 )
                 val savedId = saveFeedUseCase.invoke(saveFeed)
@@ -232,51 +230,28 @@ class AddFeedViewModel @Inject constructor(
         }
     }
 
-//    fun addImage(uri: String) {
-//        intent {
-//            reduce {
-//                state.copy(
-//                    imageUri = uri
-//                )
-//            }
-//        }
-//    }
-//
-//    fun removeImage() {
-//        intent {
-//            reduce {
-//                state.copy(
-//                    imageUri = null
-//                )
-//            }
-//        }
-//    }
-
-    fun saveItem() {
+    private fun prevMonth() {
         intent {
             viewModelScope.launch {
-                val tagIdList = selectedTagList.map { tag ->
-                    if(tag.id == null) saveTagUseCase.invoke(tag)
-                    else tag.id!!
+                val date = state.calenderDate.minusMonths(1)
+                reduce {
+                    state.copy(
+                        calenderDate = date
+                    )
                 }
+            }
+        }
+    }
 
-                // 기존에 없던 tag 생성
-                selectedTagList.filter { it.id == null }.forEach { tag ->
-                    val id = saveTagUseCase.invoke(tag)
-                    selectedTagList.offerOrRemove(tag) { it.name == tag.name }
-                    selectedTagList.add(tag.copy(id = id))
+    private fun nextMonth() {
+        intent {
+            viewModelScope.launch {
+                val date = state.calenderDate.plusMonths(1)
+                reduce {
+                    state.copy(
+                        calenderDate = date
+                    )
                 }
-
-                // essential item 생성
-//                val saveHas = Has(
-//                    imagePath = state.imageUri,
-//                    tags = selectedTagList.map { it.id!! },
-//                    type = state.selectedType?.id!!,
-//                )
-//
-//                saveHasUseCase.invoke(saveHas)
-//
-//                postSideEffect(AddHasSideEffect.Finish)
             }
         }
     }

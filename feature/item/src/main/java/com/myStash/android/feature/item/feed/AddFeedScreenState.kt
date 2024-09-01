@@ -13,7 +13,7 @@ data class AddFeedScreenState(
     val selectedHasList: List<Has> = emptyList(),
 
     val selectedImageList: List<String> = emptyList(),
-    val date: LocalDate = LocalDate.now(),
+    val calenderDate: LocalDate = LocalDate.now(),
     val selectedStyle: StyleScreenModel? = null,
     val typeTotalList: List<Type> = emptyList(),
     val tagTotalList: List<Tag> = emptyList(),
@@ -30,8 +30,10 @@ sealed interface AddFeedSideEffect {
 
 sealed interface AddFeedScreenAction {
     data class SelectStyle(val style: StyleScreenModel?): AddFeedScreenAction
-    object DeleteSearchText: AddFeedScreenAction
     data class SelectTag(val tag: Tag): AddFeedScreenAction
     data class SelectDate(val date: LocalDate): AddFeedScreenAction
+    object PrevMonth: AddFeedScreenAction
+    object NextMonth: AddFeedScreenAction
+    object DeleteSearchText: AddFeedScreenAction
     object SaveFeed: AddFeedScreenAction
 }

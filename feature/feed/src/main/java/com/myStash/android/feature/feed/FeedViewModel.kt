@@ -106,14 +106,14 @@ class FeedViewModel @Inject constructor(
     fun onAction(action: FeedScreenAction) {
         viewModelScope.launch {
             when(action) {
-                is FeedScreenAction.AgoCalender -> agoCalender()
-                is FeedScreenAction.NextCalender -> nextCalender()
+                is FeedScreenAction.PrevMonth -> prevMonth()
+                is FeedScreenAction.NextMonth -> nextMonth()
                 is FeedScreenAction.SelectDay -> selectDay(action.date)
             }
         }
     }
 
-    private fun agoCalender() {
+    private fun prevMonth() {
         intent {
             viewModelScope.launch {
                 val date = state.calenderDate.minusMonths(1)
@@ -128,7 +128,7 @@ class FeedViewModel @Inject constructor(
             }
         }
     }
-    private fun nextCalender() {
+    private fun nextMonth() {
         intent {
             viewModelScope.launch {
                 val date = state.calenderDate.plusMonths(1)

@@ -129,8 +129,8 @@ fun FeedScreen(
                     month = state.calenderDate.monthValue,
                     selectDate = state.selectedDate,
                     calenderDataList = state.calenderDataList,
-                    onClickAgoCalender = { onAction.invoke(FeedScreenAction.AgoCalender) },
-                    onClickNextCalender = { onAction.invoke(FeedScreenAction.NextCalender) },
+                    onPrevMonth = { onAction.invoke(FeedScreenAction.PrevMonth) },
+                    onNextMonth = { onAction.invoke(FeedScreenAction.NextMonth) },
                     onClickDay = { onAction.invoke(FeedScreenAction.SelectDay(it)) },
                 )
             }

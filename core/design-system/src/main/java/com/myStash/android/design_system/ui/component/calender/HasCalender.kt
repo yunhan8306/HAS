@@ -1,9 +1,10 @@
 package com.myStash.android.design_system.ui.component.calender
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,10 +28,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
+import com.myStash.android.common.resource.R
 import com.myStash.android.core.model.CalenderData
 import com.myStash.android.core.model.setCalender
 import com.myStash.android.design_system.ui.DevicePreviews
@@ -52,8 +54,8 @@ fun HasCalender(
     month: Int,
     selectDate: LocalDate,
     calenderDataList: List<CalenderData>,
-    onClickAgoCalender: () -> Unit,
-    onClickNextCalender: () -> Unit,
+    onPrevMonth: () -> Unit,
+    onNextMonth: () -> Unit,
     onClickDay: (LocalDate) -> Unit,
 ) {
 
@@ -67,20 +69,12 @@ fun HasCalender(
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, bottom = 20.dp)
         ) {
-            Box(modifier = Modifier.height(22.dp))
-            Row(
-                modifier = Modifier.clickable { isShowDatePicker = !isShowDatePicker },
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                HasText(
-                    text = "$year.$month",
-                    fontSize = 16.dp,
-                    fontWeight = HasFontWeight.Bold
-                )
-                Box(modifier = Modifier
-                    .size(12.dp)
-                    .background(Color.Blue))
-            }
+            CalenderHeader(
+                year = year,
+                month = month,
+                prevMonth = onPrevMonth,
+                nextMonth = onNextMonth
+            )
             Box(modifier = Modifier.height(14.dp))
             LazyVerticalGrid(
                 modifier = Modifier.fillMaxWidth(),
@@ -123,37 +117,50 @@ fun HasCalender(
             }
         }
 
+        /** 추후 피커 작업 예정 */
         if(isShowDatePicker) {
-            // 피커 작업 필요
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(52.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(20.dp)
-                        .background(Color.Black)
-                        .clickable { onClickAgoCalender.invoke() }
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                HasText(
-                    text = "$year.$month",
-                    fontSize = 16.dp,
-                    color = ColorFamilyBlack20AndWhite,
-                    fontWeight = HasFontWeight.Bold,
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Box(
-                    modifier = Modifier
-                        .size(20.dp)
-                        .background(Color.Black)
-                        .clickable { onClickNextCalender.invoke() }
-                )
-            }
+            CalenderHeader(
+                year = year,
+                month = month,
+                prevMonth = onPrevMonth,
+                nextMonth = onNextMonth
+            )
             BackHandler { isShowDatePicker = false }
         }
+    }
+}
+
+@Composable
+fun CalenderHeader(
+    year: Int,
+    month: Int,
+    prevMonth: () -> Unit,
+    nextMonth: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(52.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            modifier = Modifier.clickableNoRipple { prevMonth.invoke() },
+            painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.btn_prev_dark else R.drawable.btn_prev_light),
+            contentDescription = "calender prev"
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        HasText(
+            text = "$year.$month",
+            fontSize = 16.dp,
+            color = ColorFamilyBlack20AndWhite,
+            fontWeight = HasFontWeight.Bold,
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        Image(
+            modifier = Modifier.clickableNoRipple { nextMonth.invoke() },
+            painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.btn_next_dark else R.drawable.btn_next_light),
+            contentDescription = "calender next"
+        )
     }
 }
 
@@ -196,7 +203,7 @@ fun FeedCalenderDayItem(
             modifier = Modifier
                 .size(28.dp)
                 .clip(RoundedCornerShape(18.dp))
-                .background(if(isSelect) Lime300 else MaterialTheme.colors.background),
+                .background(if (isSelect) Lime300 else MaterialTheme.colors.background),
             contentAlignment = Alignment.Center
         ) {
             HasText(
@@ -257,8 +264,8 @@ fun HasCalenderPreview() {
         month = 8,
         selectDate = LocalDate.now(),
         calenderDataList = setCalender(2024, 8),
-        onClickAgoCalender = {},
-        onClickNextCalender = {},
+        onPrevMonth = {},
+        onNextMonth = {},
         onClickDay = {}
     )
 }

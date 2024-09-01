@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -42,6 +43,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.myStash.android.common.resource.R
 import com.myStash.android.common.util.isNotNull
@@ -82,8 +84,18 @@ fun AddFeedScreen(
         label = "header fade ani"
     )
 
+    val dateMaxHeight by remember(state.calenderDate) {
+        derivedStateOf {
+            if(setCalender(state.calenderDate.year, state.calenderDate.monthValue).size > 42) {
+                400.dp
+            } else {
+                360.dp
+            }
+        }
+    }
+
     val dateHeight by animateDpAsState(
-        targetValue = if(isShowDate) 340.dp else 0.dp,
+        targetValue = if(isShowDate) dateMaxHeight else 0.dp,
         animationSpec = tween(400),
         label = "date height"
     )
@@ -156,7 +168,7 @@ fun AddFeedScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     HasText(
-                        text = "${state.date.year}년 ${state.date.monthValue}월 ${state.date.dayOfMonth}일",
+                        text = "${state.calenderDate.year}년 ${state.calenderDate.monthValue}월 ${state.calenderDate.dayOfMonth}일",
                         color = if(isShowDate) ColorFamilyLime700AndLime200 else ColorFamilyBlack20AndWhite,
                         fontWeight = HasFontWeight.Bold
                     )
@@ -171,12 +183,12 @@ fun AddFeedScreen(
                 ) {
                     HasCalender(
                         modifier = Modifier.width(360.dp),
-                        year = state.date.year,
-                        month = state.date.monthValue,
-                        selectDate = state.date,
-                        calenderDataList = setCalender(state.date.year, state.date.monthValue),
-                        onClickAgoCalender = {},
-                        onClickNextCalender = {},
+                        year = state.calenderDate.year,
+                        month = state.calenderDate.monthValue,
+                        selectDate = state.calenderDate,
+                        calenderDataList = setCalender(state.calenderDate.year, state.calenderDate.monthValue),
+                        onPrevMonth = { onAction.invoke(AddFeedScreenAction.PrevMonth) },
+                        onNextMonth = { onAction.invoke(AddFeedScreenAction.NextMonth) },
                         onClickDay = { onAction.invoke(AddFeedScreenAction.SelectDate(it)) },
                     )
                 }
@@ -284,4 +296,8 @@ fun AddFeedScreenPreview() {
         onAction = {},
         sheetContent = {}
     )
+}
+
+fun Int.toDp(constraintsScope: BoxWithConstraintsScope): Dp {
+    return with(constraintsScope) { this@toDp.dp }
 }
