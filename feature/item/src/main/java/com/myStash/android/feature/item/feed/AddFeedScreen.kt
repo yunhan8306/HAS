@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -105,6 +107,12 @@ fun AddFeedScreen(
     val isComplete by remember(state) {
         derivedStateOf {
             state.selectedStyle.isNotNull() && state.selectedImageList.isNotEmpty()
+        }
+    }
+
+    LaunchedEffect(state.calenderDate) {
+        if(scrollState.value > 450) {
+            scrollState.animateScrollBy(-(scrollState.value - 450f))
         }
     }
     
@@ -256,6 +264,8 @@ fun AddFeedScreen(
                         }
                         item { Box(modifier = Modifier.height(80.dp)) }
                     }
+                } ?: run {
+                    Box(modifier = Modifier.height(80.dp))
                 }
             }
         }
