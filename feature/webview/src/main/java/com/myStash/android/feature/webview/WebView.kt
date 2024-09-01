@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.myStash.android.common.resource.R
 import com.myStash.android.design_system.ui.theme.clickableNoRipple
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -41,23 +41,33 @@ fun WebView(
         ) {
             Column(
                 modifier = Modifier
-                    .shadow(elevation = 10.dp, shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-                    .background(Color.White, shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+                    .shadow(
+                        elevation = 10.dp,
+                        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+                    )
+                    .background(
+                        Color.White,
+                        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+                    )
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.End
             ) {
                 Box(
-                    modifier = Modifier.height(43.dp).padding(end = 16.dp),
+                    modifier = Modifier
+                        .height(43.dp)
+                        .padding(end = 16.dp),
                     contentAlignment = Alignment.CenterEnd
                 ) {
                     Image(
-                        modifier = Modifier.size(24.dp).clickableNoRipple { onDismiss.invoke() },
-                        painter = painterResource(id = com.myStash.android.common.resource.R.drawable.btn_header_delete),
+                        modifier = Modifier.clickableNoRipple { onDismiss.invoke() },
+                        painter = painterResource(id = R.drawable.btn_finish_light),
                         contentDescription = "image dismiss",
                     )
                 }
                 AndroidView(
-                    modifier = Modifier.fillMaxWidth().weight(1f),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
                     factory = {
                         WebView(it).apply {
                             layoutParams = ViewGroup.LayoutParams(

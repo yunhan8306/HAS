@@ -225,10 +225,8 @@ fun AddHasScreen(
                     .padding(start = 12.dp, top = 8.dp)
             ) {
                 Image(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickableRipple { scope.launch { searchModalState.hide() } },
-                    painter = painterResource(id = R.drawable.btn_header_delete),
+                    modifier = Modifier.clickableRipple { scope.launch { searchModalState.hide() } },
+                    painter = painterResource(id = if(isSystemInDarkTheme())R.drawable.btn_finish_dark else R.drawable.btn_finish_light),
                     contentDescription = "header back"
                 )
             }
