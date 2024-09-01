@@ -26,7 +26,7 @@ enum class MainNavType(
         darkActiveIcon = R.drawable.img_nav_feed_dark_on,
         darkInactiveIcon = R.drawable.img_nav_feed_dark_off
     ),
-    MY_PAGE(
+    MY(
         lightActiveIcon = R.drawable.img_nav_mypage_light_on,
         lightInactiveIcon = R.drawable.img_nav_mypage_light_off,
         darkActiveIcon = R.drawable.img_nav_mypage_dark_on,
