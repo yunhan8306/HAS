@@ -22,5 +22,6 @@ sealed interface FeedSideEffect
 sealed interface FeedScreenAction {
     object PrevMonth: FeedScreenAction
     object NextMonth: FeedScreenAction
+    object More: FeedScreenAction
     data class SelectDay(val date: LocalDate): FeedScreenAction
 }

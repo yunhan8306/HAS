@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -35,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
@@ -78,7 +76,12 @@ fun FeedRoute(
 
     FeedScreen(
         state = state,
-        onAction = viewModel::onAction
+        onAction = { action ->
+            when(action) {
+                is FeedScreenAction.More -> {}
+                else -> viewModel.onAction(action)
+            }
+        }
     )
 }
 
@@ -139,26 +142,24 @@ fun FeedScreen(
             ) {
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(44.dp)
                         .clip(shape = RoundedCornerShape(size = 12.dp))
                         .background(MaterialTheme.colors.background)
+                        .fillMaxWidth()
+                        .height(44.dp)
+                        .padding(start = 16.dp, end = 12.dp)
                         .onGloballyPositioned { coordinates ->
                             yPosition = coordinates.positionInWindow().y.toInt()
                         },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     HasText(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(start = 16.dp),
+                        modifier = Modifier.weight(1f),
                         text = "${state.selectedDate.monthValue}.${state.selectedDate.dayOfMonth}"
                     )
-                    Box(
-                        modifier = Modifier
-                            .background(Color.Blue)
-                            .size(20.dp)
-                            .padding(end = 10.dp)
+                    Image(
+                        modifier = Modifier.clickableNoRipple { onAction.invoke(FeedScreenAction.More) },
+                        painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.btn_more_dark else R.drawable.btn_more_light),
+                        contentDescription = "feed more"
                     )
                 }
             }
@@ -274,20 +275,18 @@ fun FeedScreen(
                     .background(MaterialTheme.colors.background)
                     .fillMaxWidth()
                     .height(44.dp)
+                    .padding(start = 16.dp, end = 12.dp)
                     .clickableNoRipple { scope.launch { scrollState.animateScrollTo(0) } },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 HasText(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 16.dp),
+                    modifier = Modifier.weight(1f),
                     text = "${state.selectedDate.monthValue}.${state.selectedDate.dayOfMonth}"
                 )
-                Box(
-                    modifier = Modifier
-                        .background(Color.Blue)
-                        .size(20.dp)
-                        .padding(end = 10.dp)
+                Image(
+                    modifier = Modifier.clickableNoRipple { onAction.invoke(FeedScreenAction.More) },
+                    painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.btn_more_dark else R.drawable.btn_more_light),
+                    contentDescription = "feed more"
                 )
             }
         }

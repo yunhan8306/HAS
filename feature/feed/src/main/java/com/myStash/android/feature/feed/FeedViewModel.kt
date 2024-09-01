@@ -109,6 +109,7 @@ class FeedViewModel @Inject constructor(
                 is FeedScreenAction.PrevMonth -> prevMonth()
                 is FeedScreenAction.NextMonth -> nextMonth()
                 is FeedScreenAction.SelectDay -> selectDay(action.date)
+                else -> Unit
             }
         }
     }
