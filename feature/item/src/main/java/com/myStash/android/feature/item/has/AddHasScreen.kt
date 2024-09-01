@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -71,6 +70,7 @@ fun AddHasScreen(
     val scope = rememberCoroutineScope()
     val dropDownScrollState = rememberScrollState()
     var dropDownExpanded by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
 
     val headerFadeAni by animateFloatAsState(
         targetValue = if(searchModalState.targetValue == ModalBottomSheetValue.Expanded) 1f else 0f,
@@ -92,10 +92,10 @@ fun AddHasScreen(
                     .weight(1f)
                     .background(MaterialTheme.colors.background)
                     .padding(horizontal = 16.dp)
-                    .padding(top = 24.dp)
+                    .verticalScroll(scrollState)
             ) {
                 ItemTitleText(
-                    modifier = Modifier.padding(bottom = 16.dp),
+                    modifier = Modifier.padding(top = 24.dp, bottom = 16.dp),
                     text = "사진"
                 )
                 state.imageUri?.let {
@@ -200,7 +200,8 @@ fun AddHasScreen(
                         )
                     }
                 }
-                Spacer(modifier = Modifier.weight(1f))
+                Box(modifier = Modifier.weight(1f))
+                Box(modifier = Modifier.height(12.dp))
             }
             Box(
                 modifier = Modifier
