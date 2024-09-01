@@ -254,32 +254,30 @@ fun AddFeedScreen(
                                 tagTotalList = state.tagTotalList
                             )
                         }
-                        if(isComplete) item { Box(modifier = Modifier.height(48.dp)) }
+                        item { Box(modifier = Modifier.height(80.dp)) }
                     }
                 }
             }
         }
 
-        if(isComplete) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomCenter
+        ) {
             Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                Box(
-                    modifier = Modifier
-                        .padding(top = 12.dp, bottom = 12.dp, start = 16.dp, end = 16.dp)
-                        .shadow(
-                            elevation = 10.dp,
-                            spotColor = Color(0x14000000),
-                            ambientColor = Color(0x14000000)
-                        )
-                ) {
-                    HasButton(
-                        text = "등록하기",
-                        isComplete = isComplete,
-                        onClick = { onAction.invoke(AddFeedScreenAction.SaveFeed) }
+                modifier = Modifier
+                    .padding(top = 12.dp, bottom = 12.dp, start = 16.dp, end = 16.dp)
+                    .shadow(
+                        elevation = 10.dp,
+                        spotColor = Color(0x14000000),
+                        ambientColor = Color(0x14000000)
                     )
-                }
+            ) {
+                HasButton(
+                    text = "등록하기",
+                    isComplete = isComplete,
+                    onClick = { onAction.invoke(AddFeedScreenAction.SaveFeed) }
+                )
             }
         }
     }
