@@ -12,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.myStash.android.common.util.CommonActivityResultContract
@@ -27,6 +29,7 @@ import com.myStash.android.feature.item.item.ItemTab
 import com.myStash.android.feature.style.StyleScreenAction
 import com.myStash.android.feature.style.StyleViewModel
 import com.myStash.android.navigation.MainNavType
+import com.myStash.android.navigation.navigate
 import org.orbitmvi.orbit.compose.collectAsState
 
 @Composable
@@ -46,9 +49,18 @@ fun MainBottomModalRoute(
     val itemActivityLauncher = rememberLauncherForActivityResult(
         contract = CommonActivityResultContract(),
         onResult = { intent ->
-            intent?.getStringExtra(ItemConstants.CMD_COMPLETE)?.let {
+            intent?.getStringExtra(ItemConstants.CMD_COMPLETE)?.let { nav ->
                 hasViewModel.onAction(HasScreenAction.ResetSelectHas)
                 styleViewModel.onAction(StyleScreenAction.ResetSelectStyle)
+
+                val navType = when(nav) {
+                    ItemConstants.CMD_HAS -> MainNavType.HAS
+                    ItemConstants.CMD_STYLE -> MainNavType.STYLE
+                    ItemConstants.CMD_FEED -> MainNavType.FEED
+                    else -> MainNavType.HAS
+                }
+
+                navHostController.navigate(navType)
             }
         }
     )

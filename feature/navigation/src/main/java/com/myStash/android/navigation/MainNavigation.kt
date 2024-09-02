@@ -47,15 +47,7 @@ fun MainNavigation(navController: NavHostController) {
                 BottomNavigationItem(
                     modifier = Modifier.padding(top = 9.dp),
                     selected = selected,
-                    onClick = {
-                        navController.navigate(route = navType.name) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    },
+                    onClick = { navController.navigate(navType) },
                     icon = {
                         AsyncImage(
                             model = if(selected) {
