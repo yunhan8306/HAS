@@ -9,8 +9,8 @@ import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.myStash.android.common.util.offer
 import com.myStash.android.common.util.offerOrRemove
-import com.myStash.android.common.util.removeBlank
 import com.myStash.android.core.data.usecase.has.GetHasListUseCase
 import com.myStash.android.core.data.usecase.style.GetStyleListUseCase
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
@@ -21,6 +21,7 @@ import com.myStash.android.core.model.getTagList
 import com.myStash.android.core.model.setUsedHasCnt
 import com.myStash.android.core.model.setUsedStyleCnt
 import com.myStash.android.core.model.selectTag
+import com.myStash.android.core.model.tagFoundFromSearchText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
@@ -61,7 +62,13 @@ class SearchViewModel @Inject constructor(
     private val searchTagList = searchTextState
         .textAsFlow()
         .flowOn(defaultDispatcher)
-        .onEach { text -> searchTextState.setTextAndPlaceCursorAtEnd(text.removeBlank()) }
+        .onEach { text ->
+            tagTotalList.value.tagFoundFromSearchText(
+                text = text,
+                found = { tag -> selectedTagList.offer(tag) { tag.id == it.id } },
+                complete = { searchTextState.setTextAndPlaceCursorAtEnd(it) }
+            )
+        }
         .map { search -> tagTotalList.value.filter { it.name.contains(search) }.getUsedCntTagList() }
         .stateIn(
             scope = viewModelScope,
@@ -122,7 +129,10 @@ class SearchViewModel @Inject constructor(
             viewModelScope.launch {
                 searchTagList.collectLatest {
                     reduce {
-                        state.copy(searchTagList = it.toList())
+                        state.copy(
+                            searchTagList = it.toList(),
+                            selectedTagList = selectedTagList.toList()
+                        )
                     }
                 }
             }
@@ -205,4 +215,3 @@ class SearchViewModel @Inject constructor(
         }
     }
 }
-

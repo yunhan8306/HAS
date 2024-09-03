@@ -100,7 +100,7 @@ fun AddHasRoute(
                 selectTagList = state.selectedTagList,
                 searchTagList = state.searchTagList,
                 buttonText = "완료",
-                onSelect = viewModel::selectTag,
+                onSelect = { viewModel.onAction(AddHasScreenAction.SelectTag(it)) },
                 onConfirm = { scope.launch { searchModalState.hide() } },
                 onDelete = viewModel::deleteSearchText,
                 onBack = { scope.launch { searchModalState.hide() } }

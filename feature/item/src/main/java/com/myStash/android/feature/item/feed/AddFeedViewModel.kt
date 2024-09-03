@@ -10,8 +10,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.common.util.Quadruple
 import com.myStash.android.common.util.isNotNull
+import com.myStash.android.common.util.offer
 import com.myStash.android.common.util.offerOrRemove
-import com.myStash.android.common.util.removeBlank
 import com.myStash.android.core.data.usecase.feed.SaveFeedUseCase
 import com.myStash.android.core.data.usecase.has.GetHasListUseCase
 import com.myStash.android.core.data.usecase.style.GetStyleListUseCase
@@ -25,6 +25,7 @@ import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.filterSelectTag
 import com.myStash.android.core.model.getStyleScreenModel
+import com.myStash.android.core.model.tagFoundFromSearchText
 import com.myStash.android.feature.item.ItemConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -76,7 +77,13 @@ class AddFeedViewModel @Inject constructor(
     private val searchTagList = searchTextState
         .textAsFlow()
         .flowOn(defaultDispatcher)
-        .onEach { text -> searchTextState.setTextAndPlaceCursorAtEnd(text.removeBlank()) }
+        .onEach { text ->
+            tagTotalList.value.tagFoundFromSearchText(
+                text = text,
+                found = { tag -> selectedTagList.offer(tag) { tag.id == it.id } },
+                complete = { searchTextState.setTextAndPlaceCursorAtEnd(it) }
+            )
+        }
         .map { search -> tagTotalList.value.filter { it.name.contains(search) } }
         .stateIn(
             scope = viewModelScope,
@@ -137,7 +144,10 @@ class AddFeedViewModel @Inject constructor(
             viewModelScope.launch {
                 searchTagList.collectLatest {
                     reduce {
-                        state.copy(tagList = it.toList())
+                        state.copy(
+                            tagList = it.toList(),
+                            selectedTagList = selectedTagList.toList()
+                        )
                     }
                 }
             }

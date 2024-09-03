@@ -8,8 +8,8 @@ import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.myStash.android.common.util.offer
 import com.myStash.android.common.util.offerOrRemove
-import com.myStash.android.common.util.removeBlank
 import com.myStash.android.core.data.usecase.has.SaveHasUseCase
 import com.myStash.android.core.data.usecase.tag.CheckAvailableTagUseCase
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
@@ -19,9 +19,7 @@ import com.myStash.android.core.di.DefaultDispatcher
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
-import com.myStash.android.core.model.testWomanTypeTotalList
-import com.myStash.android.feature.gallery.GalleryConstants
-import com.myStash.android.feature.gallery.GallerySideEffect
+import com.myStash.android.core.model.tagAddAndFoundFromSearchText
 import com.myStash.android.feature.item.ItemConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -64,16 +62,19 @@ class AddHasViewModel @Inject constructor(
 
     private val selectedTagList = mutableListOf<Tag>()
 
-    val newTagList = mutableListOf<String>()
-
-    var typeTextState = TextFieldState()
-
     val searchTextState = TextFieldState()
 
     private val searchTagList = searchTextState
         .textAsFlow()
         .flowOn(defaultDispatcher)
-        .onEach { text -> searchTextState.setTextAndPlaceCursorAtEnd(text.removeBlank()) }
+        .onEach { text ->
+            tagTotalList.value.tagAddAndFoundFromSearchText(
+                text = text,
+                add = { addText -> selectedTagList.offer(Tag(name = addText)) { addText == it.name} },
+                found = { tag -> selectedTagList.offer(tag) { tag.name == it.name } },
+                complete = { searchTextState.setTextAndPlaceCursorAtEnd(it) }
+            )
+        }
         .map { search -> tagTotalList.value.filter { it.name.contains(search) } }
         .stateIn(
             scope = viewModelScope,
@@ -119,7 +120,10 @@ class AddHasViewModel @Inject constructor(
             viewModelScope.launch {
                 searchTagList.collectLatest {
                     reduce {
-                        state.copy(searchTagList = it.toList())
+                        state.copy(
+                            searchTagList = it.toList(),
+                            selectedTagList = selectedTagList.toList()
+                        )
                     }
                 }
             }
@@ -173,12 +177,11 @@ class AddHasViewModel @Inject constructor(
                         selectedType = if(state.selectedType == type) null else type
                     )
                 }
-                typeTextState = TextFieldState(initialText = state.selectedType?.name ?: "")
             }
         }
     }
 
-    fun selectTag(tag: Tag) {
+    private fun selectTag(tag: Tag) {
         intent {
             viewModelScope.launch {
                 selectedTagList.offerOrRemove(tag) { it.name == tag.name }
@@ -194,31 +197,26 @@ class AddHasViewModel @Inject constructor(
     private fun saveItem() {
         intent {
             viewModelScope.launch {
-                val tagIdList = selectedTagList.map { tag ->
-                    if(tag.id == null) saveTagUseCase.invoke(tag)
-                    else tag.id!!
-                }
-
-                // 기존에 없던 tag 생성
-                selectedTagList.filter { it.id == null }.forEach { tag ->
-                    val id = saveTagUseCase.invoke(tag)
-                    selectedTagList.offerOrRemove(tag) { it.name == tag.name }
-                    selectedTagList.add(tag.copy(id = id))
-                }
-
-                // essential item 생성
-                val saveHas = Has(
+                val newHas = Has(
                     imagePath = state.imageUri,
-                    tags = selectedTagList.map { it.id!! },
+                    tags = getTagIdList(),
                     type = state.selectedType?.id!!,
                 )
 
-                saveHasUseCase.invoke(saveHas)
+                saveHasUseCase.invoke(newHas)
 
                 Intent().apply {
                     putExtra(ItemConstants.CMD_COMPLETE, ItemConstants.CMD_HAS)
                     postSideEffect(AddHasSideEffect.Finish(this))
                 }
+            }
+        }
+    }
+
+    private suspend fun getTagIdList(): List<Long> {
+        return selectedTagList.map { newTag ->
+            checkAvailableTagUseCase.invoke(newTag.name)?.id ?: run {
+                saveTagUseCase.invoke(newTag)
             }
         }
     }

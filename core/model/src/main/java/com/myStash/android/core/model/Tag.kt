@@ -1,5 +1,7 @@
 package com.myStash.android.core.model
 
+import com.myStash.android.common.util.removeLastBlank
+
 data class Tag(
     val id: Long? = null,
     val name: String,
@@ -64,6 +66,39 @@ fun List<Tag>.setUsedStyleCnt(styleTotalList: List<StyleScreenModel>): List<Tag>
                 }.size
             )
         }
+    }
+}
+
+fun List<Tag>.tagFoundFromSearchText(text: CharSequence, found: (Tag) -> Unit, complete: (String) -> Unit) {
+    if(text.contains(" ")) {
+        var emptyText = ""
+        text.split(" ").forEach { tagText ->
+            if(tagText.isBlank()) return@forEach
+            this.onEachIndexed { index, tag ->
+                if(tag.name == tagText) {
+                    found.invoke(tag)
+                    return@forEach
+                }
+                if(index == this.lastIndex) emptyText += "$tagText "
+            }
+        }
+        complete.invoke(emptyText.removeLastBlank())
+    }
+}
+
+fun List<Tag>.tagAddAndFoundFromSearchText(text: CharSequence, add: (String) -> Unit, found: (Tag) -> Unit, complete: (String) -> Unit) {
+    if(text.contains(" ")) {
+        var emptyText = ""
+        text.split(" ").forEach { tagText ->
+            if(tagText.isBlank()) return@forEach
+
+            this.find { it.name == tagText }?.let {
+                found.invoke(it)
+            } ?: run {
+                if(tagText.length >= 2) add.invoke(tagText) else emptyText += tagText
+            }
+        }
+        complete.invoke(emptyText.removeLastBlank())
     }
 }
 
