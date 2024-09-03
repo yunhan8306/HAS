@@ -1,13 +1,17 @@
 package com.myStach.android.feature.contact
 
+import android.app.Application
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.text2.input.clearText
 import androidx.compose.foundation.text2.input.textAsFlow
+import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.common.util.checkEmail
+import com.myStash.android.common.util.getUri
 import com.myStash.android.common.util.isNotNull
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -20,11 +24,12 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class ContactViewModel @Inject constructor(
-
+    private val application: Application,
 ): ViewModel(), ContainerHost<ContactState, ContactSideEffect> {
 
     override val container: Container<ContactState, ContactSideEffect> = container(ContactState())
@@ -90,9 +95,11 @@ class ContactViewModel @Inject constructor(
                     putExtra(Intent.EXTRA_SUBJECT, state.selectedType)
                     putExtra(Intent.EXTRA_TEXT, "receive email : ${emailTextState.text}\n"
                             + state.content.replace("\n", ""))
-                    putExtra(Intent.EXTRA_STREAM, state.selectedImages.toTypedArray())
 
-                    Log.d("qwe123", "intent : $this")
+                    val imageUris = state.selectedImages.map { it.getUri(application) }
+                    putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(imageUris))
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
                     postSideEffect(ContactSideEffect.SendEmail(this))
                 }
             }
@@ -117,9 +124,7 @@ class ContactViewModel @Inject constructor(
                 combine(checkContactType, checkContent, checkEmail) { checkContactType, checkContent, checkEmail ->
                     Triple(checkContactType, checkContent, checkEmail)
                 }.collectLatest { (checkContactType, checkContent, checkEmail) ->
-                    Log.d("qwe123", "state - ${state.isCompleted} / checkContactType - $checkContactType / checkContent - $checkContent / checkEmail - $checkEmail")
                     if(state.isCompleted != (checkContactType && checkContent && checkEmail)) {
-                    Log.d("qwe123", "checkContactType && checkContent && checkEmail - ${checkContactType && checkContent && checkEmail}")
                         reduce {
                             state.copy(
                                 isCompleted = checkContactType && checkContent && checkEmail

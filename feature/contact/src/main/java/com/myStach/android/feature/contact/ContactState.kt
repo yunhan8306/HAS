@@ -12,7 +12,6 @@ data class ContactState(
 
 sealed interface ContactSideEffect {
     data class SendEmail(val intent: Intent): ContactSideEffect
-    object Finish: ContactSideEffect
 }
 
 sealed interface ContactAction {
@@ -24,4 +23,8 @@ sealed interface ContactAction {
     object Confirm: ContactAction
     object Finish: ContactAction
 
+}
+
+enum class ContactCompleteStep {
+    NONE, COMPLETE, TRY, END
 }

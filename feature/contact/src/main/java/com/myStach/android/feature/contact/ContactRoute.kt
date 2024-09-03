@@ -13,6 +13,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.myStash.android.common.compose.AppLifecycleObserver
+import com.myStash.android.common.compose.LifecycleEventObserver
 import com.myStash.android.common.util.CommonActivityResultContract
 import com.myStash.android.common.util.constants.PermissionConstants
 import com.myStash.android.design_system.animation.slideIn
@@ -33,6 +35,8 @@ fun ContactRoute(
     val activity = LocalContext.current as ComponentActivity
     val state by viewModel.collectAsState()
     var isShowPermissionRequestConfirm by remember { mutableStateOf(false) }
+    var isShowContactCompleteConfirm by remember { mutableStateOf(false) }
+    var contactCompleteStep by remember { mutableStateOf(ContactCompleteStep.NONE) }
 
     val galleryActivityLauncher = rememberLauncherForActivityResult(
         contract = CommonActivityResultContract(),
@@ -60,16 +64,34 @@ fun ContactRoute(
         when(sideEffect) {
             is ContactSideEffect.SendEmail -> {
                 scope.launch {
+                    contactCompleteStep = ContactCompleteStep.COMPLETE
                     activity.startActivity(sideEffect.intent)
-                    activity.finish()
                 }
-            }
-            is ContactSideEffect.Finish -> {
-                activity.finish()
             }
             else -> Unit
         }
     }
+
+    AppLifecycleObserver(
+        onBackground = {
+            contactCompleteStep =
+                if(contactCompleteStep == ContactCompleteStep.COMPLETE) ContactCompleteStep.TRY
+                else ContactCompleteStep.NONE
+        },
+        onForeground = {
+            contactCompleteStep =
+                if(contactCompleteStep == ContactCompleteStep.TRY) ContactCompleteStep.END
+                else ContactCompleteStep.NONE
+        }
+    )
+
+    LifecycleEventObserver(
+        onResume = {
+            if(contactCompleteStep == ContactCompleteStep.END)
+                isShowContactCompleteConfirm = true
+            else ContactCompleteStep.NONE
+        }
+    )
 
     ContactScreen(
         state = state,
@@ -100,5 +122,15 @@ fun ContactRoute(
             activity.startActivity(intent)
             isShowPermissionRequestConfirm = false
         }
+    )
+
+    HasConfirmDialog(
+        isShow = isShowContactCompleteConfirm,
+        title = "문의 확인",
+        content = "문의를 완료하셨나요?",
+        confirmText = "확인",
+        dismissText = "취소",
+        onConfirm = { activity.finish() },
+        onDismiss = { isShowContactCompleteConfirm = false }
     )
 }
