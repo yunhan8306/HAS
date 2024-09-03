@@ -169,6 +169,7 @@ fun SearchScreen(
                             }
                             TagSearchItem(
                                 name = tag.name,
+                                cnt = tag.usedCnt.toString(),
                                 searchText = searchTextState.text.toString(),
                                 isSelected = isSelected,
                                 onClick = { onAction.invoke(SearchAction.SelectTag(tag)) }

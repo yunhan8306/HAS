@@ -6,6 +6,14 @@ data class Tag(
     val createTime: Long = System.currentTimeMillis(),
     val isRemove: Boolean = false
 ) {
+    private var _usedCnt = 0
+    val usedCnt: Int
+        get() = _usedCnt
+
+    fun setUsedCnt(cnt: Int) {
+        _usedCnt = cnt
+    }
+
     fun checkSelected(tagList: List<Tag>): Boolean {
         tagList.forEach { tag ->
             if(id == tag.id) return true
@@ -34,6 +42,29 @@ fun List<Tag>.update(tag: Tag): List<Tag> {
             it
         }
     }.toList()
+}
+
+fun List<Tag>.setUsedHasCnt(hasTotalList: List<Has>): List<Tag> {
+    return map { tag -> tag.apply { setUsedCnt(hasTotalList.filter { it.tags.contains(tag.id) }.size) } }
+}
+
+fun List<Tag>.setUsedStyleCnt(styleTotalList: List<StyleScreenModel>): List<Tag> {
+    return map { tag ->
+        tag.apply {
+            setUsedCnt(
+                styleTotalList.filter {
+                    var isUsed = false
+                    it.hasList.onEach {  has ->
+                        if(has.tags.contains(tag.id)) {
+                            isUsed = true
+                            return@onEach
+                        }
+                    }
+                    isUsed
+                }.size
+            )
+        }
+    }
 }
 
 val testTagList = listOf(

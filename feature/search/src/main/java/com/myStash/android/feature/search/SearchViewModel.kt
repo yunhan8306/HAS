@@ -15,11 +15,11 @@ import com.myStash.android.core.data.usecase.has.GetHasListUseCase
 import com.myStash.android.core.data.usecase.style.GetStyleListUseCase
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
 import com.myStash.android.core.di.DefaultDispatcher
-import com.myStash.android.core.model.Has
-import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.filterSelectTag
 import com.myStash.android.core.model.getTagList
+import com.myStash.android.core.model.setUsedHasCnt
+import com.myStash.android.core.model.setUsedStyleCnt
 import com.myStash.android.core.model.selectTag
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -62,7 +62,7 @@ class SearchViewModel @Inject constructor(
         .textAsFlow()
         .flowOn(defaultDispatcher)
         .onEach { text -> searchTextState.setTextAndPlaceCursorAtEnd(text.removeBlank()) }
-        .map { search -> tagTotalList.value.filter { it.name.contains(search) } }
+        .map { search -> tagTotalList.value.filter { it.name.contains(search) }.getUsedCntTagList() }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),
@@ -102,7 +102,7 @@ class SearchViewModel @Inject constructor(
                     if(selectedTagList.isEmpty()) {
                         selectedTagList.addAll(selectedTagIdList.getTagList(tagTotalList))
                     }
-                    val cntText = getCnt(hasTotalList, styleTotalList)
+                    val cntText = selectedTagList.getSelectedCnt()
 
                     reduce {
                         state.copy(
@@ -149,11 +149,10 @@ class SearchViewModel @Inject constructor(
             viewModelScope.launch {
                 selectedTagList.offerOrRemove(tag) { it.name == tag.name }
 
-                val cntText = getCnt(hasTotalList.value, styleTotalList.value)
                 reduce {
                     state.copy(
                         selectedTagList = selectedTagList.toList(),
-                        selectedCntText = cntText
+                        selectedCntText = selectedTagList.getSelectedCnt()
                     )
                 }
             }
@@ -175,40 +174,35 @@ class SearchViewModel @Inject constructor(
         searchTextState.clearText()
     }
 
-    private fun getCnt(hasTotalList: List<Has>, styleTotalList: List<StyleScreenModel>): String? {
-        return if(selectedTagList.isEmpty()) {
+    private fun List<Tag>.getSelectedCnt(): String? {
+        return if(isEmpty()) {
             null
         } else {
             when(type) {
                 SearchConstants.HAS -> {
-                    val cnt = hasTotalList.selectTag(selectedTagList).size
+                    val cnt = hasTotalList.value.selectTag(this).size
                     Log.d("qwe123", "cnt - $cnt")
                     if(cnt > 0) "${cnt}개 Has 보기" else null
                 }
                 SearchConstants.STYLE -> {
-                    val cnt = styleTotalList.filterSelectTag(selectedTagList).size
+                    val cnt = styleTotalList.value.filterSelectTag(this).size
                     if(cnt > 0) "${cnt}개 Style 보기" else null
                 }
                 else -> null
             }
         }
     }
+
+    private fun List<Tag>.getUsedCntTagList(): List<Tag> {
+        return when(type) {
+            SearchConstants.HAS -> {
+                setUsedHasCnt(hasTotalList.value)
+            }
+            SearchConstants.STYLE -> {
+                setUsedStyleCnt(styleTotalList.value)
+            }
+            else -> this
+        }
+    }
 }
 
-data class SearchScreenState(
-    val totalTagList: List<Tag> = emptyList(),
-    val selectedTagList: List<Tag> = emptyList(),
-    val searchTagList: List<Tag> = emptyList(),
-    val selectedCntText: String? = null,
-)
-
-sealed interface SearchSideEffect {
-    data class Complete(val intent: Intent): SearchSideEffect
-}
-
-sealed interface SearchAction {
-    data class SelectTag(val tag: Tag): SearchAction
-    object Confirm: SearchAction
-    object DeleteText: SearchAction
-    object Finish: SearchAction
-}
