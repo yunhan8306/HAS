@@ -15,7 +15,7 @@ fun ManageAware(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 80.dp),
+            .padding(top = 92.dp),
         content = content
     )
 }

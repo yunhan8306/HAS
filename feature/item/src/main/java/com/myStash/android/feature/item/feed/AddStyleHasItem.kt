@@ -26,6 +26,7 @@ import coil.compose.SubcomposeAsyncImage
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
+import com.myStash.android.core.model.getUnSelectType
 import com.myStash.android.design_system.ui.color.ColorFamilyGray300AndGray400
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.design_system.ui.component.type.TypeChipItem
@@ -37,7 +38,7 @@ fun AddStyleHasItem(
     typeTotalList: List<Type>,
     tagTotalList: List<Tag>,
 ) {
-    val hasType by remember { derivedStateOf { typeTotalList.firstOrNull { it.id == has.type }?.name ?: ""} }
+    val hasType by remember { derivedStateOf { typeTotalList.firstOrNull { it.id == has.type }?.name ?: getUnSelectType().name } }
     val hasTagList by remember { derivedStateOf { tagTotalList.filter { has.tags.contains(it.id) } } }
     val pairTagText by remember(hasTagList) { derivedStateOf { getHasTagText(hasTagList) } }
 

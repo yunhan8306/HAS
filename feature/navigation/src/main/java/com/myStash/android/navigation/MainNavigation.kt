@@ -39,6 +39,7 @@ fun MainNavigation(navController: NavHostController) {
         backgroundColor = ColorFamilyWhiteAndGray600
     ) {
         BottomNavigation(
+            modifier = Modifier.padding(horizontal = 10.dp),
             elevation = 0.dp,
             backgroundColor = ColorFamilyWhiteAndGray600
         ) {

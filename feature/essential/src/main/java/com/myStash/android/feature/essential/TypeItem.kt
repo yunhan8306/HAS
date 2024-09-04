@@ -25,14 +25,14 @@ fun TypeItem(
 
     Box(
         modifier = Modifier
-            .padding(bottom = 2.dp)
+            .padding(bottom = 1.dp)
             .drawBehind {
                 if (isSelected) {
                     drawLine(
                         color = drawLineColor,
                         start = Offset(x = 0f + 30, y = size.height),
                         end = Offset(x = size.width - 30, y = size.height),
-                        strokeWidth = 4.dp.toPx(),
+                        strokeWidth = 2.dp.toPx(),
                         cap = StrokeCap.Square
                     )
                 }

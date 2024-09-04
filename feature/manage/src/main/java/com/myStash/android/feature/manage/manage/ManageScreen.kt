@@ -28,7 +28,7 @@ fun ManageScreen(
     Column(
         modifier = Modifier
             .background(MaterialTheme.colors.surface)
-            .height(80.dp)
+            .height(92.dp)
             .fillMaxWidth()
             .addFocusCleaner(focusManager)
     ) {

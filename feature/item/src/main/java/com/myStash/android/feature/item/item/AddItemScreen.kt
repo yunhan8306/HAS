@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.TabRow
 import androidx.compose.runtime.Composable
@@ -27,7 +28,7 @@ fun AddItemScreen(
     Column(
         modifier = Modifier
             .background(MaterialTheme.colors.surface)
-            .height(80.dp)
+            .height(92.dp)
             .fillMaxWidth()
 //            .addFocusCleaner(focusManager)
     ) {

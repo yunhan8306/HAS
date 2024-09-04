@@ -210,7 +210,7 @@ fun FeedCalenderDayItem(
             HasText(
                 text = day,
                 fontSize = 12.dp,
-                color = if(LocalDate.now().dayOfMonth.toString() == day) Lime300 else Gray350
+                color = if(LocalDate.now().dayOfMonth.toString() == day && !isSelect) Lime300 else Gray350
             )
         }
     }

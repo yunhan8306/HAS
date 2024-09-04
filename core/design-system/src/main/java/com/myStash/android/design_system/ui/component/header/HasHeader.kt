@@ -30,8 +30,8 @@ fun HasHeader(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(40.dp)
-            .padding(horizontal = 12.dp),
+            .height(52.dp)
+            .padding(top = 12.dp, start = 12.dp, end = 12.dp),
         contentAlignment = Alignment.CenterStart
     ) {
         if(isBack) {

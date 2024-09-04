@@ -150,6 +150,10 @@ fun HasScreen(
         tagScrollState.scrollTo(0)
     }
 
+    LaunchedEffect(state.isFoldTag) {
+        if(state.isFoldTag) tagScrollState.scrollTo(1000)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()

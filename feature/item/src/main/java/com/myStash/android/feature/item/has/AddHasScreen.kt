@@ -222,7 +222,7 @@ fun AddHasScreen(
                     .fillMaxWidth()
                     .height(90.dp)
                     .background(MaterialTheme.colors.surface)
-                    .padding(start = 12.dp, top = 8.dp)
+                    .padding(start = 12.dp, top = 20.dp)
             ) {
                 Image(
                     modifier = Modifier.clickableRipple { scope.launch { searchModalState.hide() } },

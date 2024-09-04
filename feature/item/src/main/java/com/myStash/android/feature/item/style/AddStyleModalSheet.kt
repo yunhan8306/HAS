@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text2.input.TextFieldState
@@ -123,17 +124,16 @@ fun AddStyleModalSheet(
 
             LazyVerticalGrid(
                 modifier = Modifier
-                    .padding(top = 12.dp)
                     .weight(1f)
                     .fillMaxWidth(),
                 columns = GridCells.Fixed(3),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                items(
+                itemsIndexed(
                     items = state.hasList,
-                    key = { it.id ?: 0 }
-                ) { has ->
+                    key = { _, it -> it.id!! }
+                ) { index, has ->
                     val isSelected by remember(state.selectedHasList) {
                         derivedStateOf {
                             has.checkSelected(state.selectedHasList)
@@ -145,7 +145,7 @@ fun AddStyleModalSheet(
                             state.selectedHasList.indexOf(has) + 1
                         }
                     }
-
+                    if(index < 2) Box(modifier = Modifier.height(12.dp))
                     Box(
                         modifier = if(isSelected) {
                             Modifier.border(width = 2.dp, color = Purple, shape = RoundedCornerShape(size = 8.dp))

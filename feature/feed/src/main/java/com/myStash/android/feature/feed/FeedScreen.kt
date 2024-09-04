@@ -111,8 +111,7 @@ fun FeedScreen(
         HasLogoHeader()
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
+                .fillMaxSize()
                 .background(ColorFamilyGray100AndGray800)
                 .padding(horizontal = 16.dp)
                 .verticalScroll(scrollState),
@@ -244,7 +243,6 @@ fun FeedScreen(
                 }
             } ?: run {
                 Box(
-                    modifier = Modifier.weight(1f),
                     contentAlignment = Alignment.Center
                 ) {
                     Column(
