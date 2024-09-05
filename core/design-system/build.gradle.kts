@@ -30,4 +30,5 @@ dependencies {
     implementation(libs.navigation.animation)
     implementation(libs.androidx.paging)
     implementation(libs.androidx.paging.compose)
+    implementation(libs.balloon)
 }

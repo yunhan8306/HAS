@@ -39,6 +39,7 @@ dependencies {
     implementation(libs.orbit.compose)
     implementation(libs.orbit.viewmodel)
     implementation(libs.system.ui.controller)
+    implementation(libs.balloon)
 
     implementation(libs.androidx.paging)
     implementation(libs.androidx.paging.compose)
