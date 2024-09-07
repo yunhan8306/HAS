@@ -6,10 +6,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,14 +29,12 @@ fun SplashScreen(
     ) {
         Spacer(modifier = Modifier.weight(1f))
         Image(
-            modifier = Modifier.size(226.dp),
-            painter = painterResource(id = com.myStash.android.common.resource.R.drawable.img_app_logo),
-            contentDescription = "has logo"
+            painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.img_splash_app_logo_dark else R.drawable.img_splash_app_logo_light),
+            contentDescription = "app logo"
         )
         Spacer(modifier = Modifier.weight(1f))
         Image(
-            modifier = Modifier.width(90.dp).height(24.dp),
-            painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.img_has_logo_dark else R.drawable.img_has_logo_light),
+            painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.img_splash_has_logo_dark else R.drawable.img_splash_has_logo_light),
             contentDescription = "has logo"
         )
     }
