@@ -119,7 +119,7 @@ fun ContactScreen(
                         endContent = {
                             Image(
                                 modifier = Modifier.size(24.dp),
-                                painter = painterResource(id = R.drawable.img_down),
+                                painter = painterResource(id = R.drawable.img_down_gallery),
                                 contentDescription = "btn down"
                             )
                         }

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -52,8 +51,7 @@ fun TagMoreChipItem(
                 fontSize = 14.dp,
             )
             Image(
-                modifier = Modifier.size(14.dp),
-                painter = painterResource(id = if(isFold) R.drawable.img_up else R.drawable.img_down),
+                painter = painterResource(id = if(isFold) R.drawable.btn_up_tag else R.drawable.btn_down_tag),
                 contentDescription = "tag more"
             )
         }
