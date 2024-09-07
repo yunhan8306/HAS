@@ -5,42 +5,58 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
+import coil.compose.SubcomposeAsyncImage
 import com.google.accompanist.navigation.animation.composable
 import com.myStach.android.feature.contact.ContactActivity
+import com.myStash.android.common.resource.R
 import com.myStash.android.common.util.CommonActivityResultContract
+import com.myStash.android.common.util.constants.PermissionConstants
 import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.design_system.ui.component.SpacerLineBox
 import com.myStash.android.design_system.ui.component.header.HasLogoHeader
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.design_system.ui.theme.clickableNoRipple
+import com.myStash.android.design_system.util.ShimmerLoadingAnimation
+import com.myStash.android.design_system.util.rememberPermissionLauncher
+import com.myStash.android.feature.gallery.GalleryActivity
+import com.myStash.android.feature.gallery.GalleryConstants
 import com.myStash.android.feature.manage.ManageActivity
+import com.myStash.android.feature.myPage.component.ProfileNoneImage
 import com.myStash.android.feature.webview.WebView
 import com.myStash.android.feature.webview.WebViewConstants
 import com.myStash.android.navigation.MainNavType
+import org.orbitmvi.orbit.compose.collectAsState
 
 fun NavGraphBuilder.myPageScreen() {
     composable(
@@ -52,14 +68,16 @@ fun NavGraphBuilder.myPageScreen() {
 
 @Composable
 fun MyPageRoute(
-
+    viewModel: MyPageViewModel = hiltViewModel()
 ) {
 
+    val scope = rememberCoroutineScope()
     val activity = LocalContext.current as ComponentActivity
+    val state by viewModel.collectAsState()
     var menuType by remember { mutableStateOf<MyPageMenuType?>(null) }
 
     var webViewUrl by remember { mutableStateOf("") }
-    var isShowContact by remember { mutableStateOf(false) }
+    var isShowPermissionRequestConfirm by remember { mutableStateOf(false) }
 
     val contactActivityLauncher = rememberLauncherForActivityResult(
         contract = CommonActivityResultContract(),
@@ -71,8 +89,30 @@ fun MyPageRoute(
         onResult = { menuType = null }
     )
 
+    val galleryActivityLauncher = rememberLauncherForActivityResult(
+        contract = CommonActivityResultContract(),
+        onResult = { intent ->
+            intent?.getStringExtra(GalleryConstants.SINGLE)?.let { viewModel.onAction(MyPageScreenAction.SelectProfile(it)) }
+        }
+    )
+
+    val requestPermissionLauncher = rememberPermissionLauncher(
+        activity = activity,
+        scope = scope,
+        grant = {
+            val intent = Intent(activity.apply { slideIn() }, GalleryActivity::class.java).apply {
+                putExtra(GalleryConstants.TYPE, GalleryConstants.SINGLE)
+                putExtra(GalleryConstants.AGO_IMAGE_URI_ARRAY, arrayOf(state.profile))
+            }
+            galleryActivityLauncher.launch(intent)
+        },
+        denied = {
+            isShowPermissionRequestConfirm = true
+        }
+    )
+
     MyPageScreen(
-        state = MyPageScreenState(nickName = "Test"),
+        state = state,
         onAction = { action ->
             when(action) {
                 is MyPageScreenAction.ShowWebView -> {
@@ -85,7 +125,10 @@ fun MyPageRoute(
                 is MyPageScreenAction.ShowManage -> {
                     menuType = MyPageMenuType.Manage
                 }
-                else -> Unit
+                is MyPageScreenAction.EditProfile -> {
+                    requestPermissionLauncher.launch(PermissionConstants.GALLERY_PERMISSIONS)
+                }
+                else -> viewModel.onAction(action)
             }
         }
     )
@@ -134,14 +177,41 @@ fun MyPageScreen(
                 .padding(top = 44.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                modifier = Modifier.size(100.dp),
-                painter = painterResource(id = com.myStash.android.common.resource.R.drawable.img_mypage_hamong),
-                contentDescription = ""
-            )
+            Box(
+                contentAlignment = Alignment.BottomEnd
+            ) {
+                state.profile?.let { profileUri ->
+                    SubcomposeAsyncImage(
+                        model = profileUri,
+                        modifier = Modifier
+                            .clip(shape = CircleShape)
+                            .size(100.dp)
+                            .aspectRatio(1f),
+                        loading = { ShimmerLoadingAnimation() },
+                        error = { ProfileNoneImage() },
+                        contentScale = ContentScale.Crop,
+                        contentDescription = "profile image"
+                    )
+                } ?: run {
+                    ProfileNoneImage()
+                }
+                Box(
+                    modifier = Modifier.clickableNoRipple { onAction.invoke(MyPageScreenAction.EditProfile) },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.btn_my_profile_edit),
+                        contentDescription = "profile edit"
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.img_profile_edit_pencil),
+                        contentDescription = "profile edit pencil"
+                    )
+                }
+            }
             HasText(
                 modifier = Modifier.padding(top = 16.dp),
-                text = state.nickName,
+                text = state.nickName ?: "Test",
                 fontSize = 18.dp,
                 fontWeight = HasFontWeight.Bold
             )
@@ -200,14 +270,16 @@ fun MyPageScreen(
 //            }
 //        }
         Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(50.dp))
 
-        HasText(
-            modifier = Modifier.padding(top = 50.dp),
-            text = "Version 1.1.001(10)",
-            fontSize = 14.dp,
-            color = Color(0xFF707070),
-            fontWeight = HasFontWeight.Bold
-        )
+        state.version?.let { version ->
+            HasText(
+                text = "Version $version",
+                fontSize = 14.dp,
+                color = Color(0xFF707070),
+                fontWeight = HasFontWeight.Bold
+            )
+        }
         HasText(
             modifier = Modifier.padding(top = 6.dp),
             text = "This is the latest version",

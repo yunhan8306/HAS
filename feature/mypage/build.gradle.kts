@@ -21,6 +21,7 @@ dependencies {
     implementation(projects.feature.webview)
     implementation(projects.feature.contact)
     implementation(projects.feature.manage)
+    implementation(projects.feature.gallery)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.compose.lifecycle.runtime)
