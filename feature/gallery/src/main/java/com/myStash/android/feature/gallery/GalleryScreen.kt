@@ -91,7 +91,7 @@ fun GalleryScreen(
                                 fontSize = 16.dp
                             )
                             Image(
-                                painter = painterResource(id = if(isShowFolderWindow) R.drawable.img_up else R.drawable.img_down),
+                                painter = painterResource(id = if(isShowFolderWindow) R.drawable.img_up_gallery else R.drawable.img_down_gallery),
                                 contentDescription = "gallery folder toggle"
                             )
                         }
