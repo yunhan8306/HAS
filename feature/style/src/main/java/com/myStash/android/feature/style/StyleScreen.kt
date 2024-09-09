@@ -36,16 +36,22 @@ import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
 import com.myStash.android.common.compose.activityViewModel
 import com.myStash.android.common.util.CommonActivityResultContract
+import com.myStash.android.common.util.isNotNull
 import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.testTagList
 import com.myStash.android.design_system.animation.fadeIn
+import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.component.SpacerLineBox
 import com.myStash.android.design_system.ui.component.content.ContentHeaderSearchText
+import com.myStash.android.design_system.ui.component.dialog.HasConfirmDialog
 import com.myStash.android.design_system.ui.component.style.StyleMainItem
 import com.myStash.android.design_system.ui.component.tag.TagChipItem
 import com.myStash.android.design_system.ui.component.tag.TagMoreChipItem
 import com.myStash.android.design_system.ui.component.text.HasText
+import com.myStash.android.feature.item.ItemActivity
+import com.myStash.android.feature.item.ItemConstants
+import com.myStash.android.feature.item.item.ItemTab
 import com.myStash.android.feature.search.SearchActivity
 import com.myStash.android.feature.search.SearchConstants
 import com.myStash.android.navigation.MainNavType
@@ -69,6 +75,11 @@ fun StyleRoute(
     val activity = LocalContext.current as ComponentActivity
     var showMoreStyle: StyleScreenModel? by remember { mutableStateOf(null) }
 
+    val itemActivityLauncher = rememberLauncherForActivityResult(
+        contract = CommonActivityResultContract(),
+        onResult = {}
+    )
+
     val searchActivityLauncher = rememberLauncherForActivityResult(
         contract = CommonActivityResultContract(),
         onResult = { intent ->
@@ -77,6 +88,8 @@ fun StyleRoute(
             }
         }
     )
+
+    var deleteStyleConfirm: StyleScreenModel? by remember { mutableStateOf(null) }
 
     StyleScreen(
         state = state,
@@ -91,6 +104,17 @@ fun StyleRoute(
                     activity.fadeIn()
                 }
                 is StyleScreenAction.ShowMoreStyle -> showMoreStyle = action.style
+                is StyleScreenAction.ShowItemActivity -> {
+                    val intent = Intent(activity, ItemActivity::class.java)
+                        .putExtra(ItemConstants.CMD_TAB_NAME, ItemTab.STYLE.name)
+                        .putExtra(ItemConstants.CMD_STYLE, action.style.hasList.map { it.id }.toTypedArray())
+                        .putExtra(ItemConstants.CMD_EDIT_TAB_NAME, ItemTab.STYLE.name)
+                    itemActivityLauncher.launch(intent)
+                    activity.slideIn()
+                }
+                is StyleScreenAction.DeleteStyle -> {
+                    deleteStyleConfirm = action.style
+                }
                 else -> viewModel.onAction(action)
             }
         }
@@ -101,6 +125,19 @@ fun StyleRoute(
         typeTotalList = state.totalTypeList,
         tagTotalList = state.totalTagList,
         onDismiss = { showMoreStyle = null },
+    )
+
+    HasConfirmDialog(
+        isShow = deleteStyleConfirm.isNotNull(),
+        title = "Style",
+        content = "Do you want to delete this Style?",
+        confirmText = "confirm",
+        dismissText = "cancel",
+        onConfirm = {
+            deleteStyleConfirm = null
+            viewModel.onAction(StyleScreenAction.DeleteStyle(deleteStyleConfirm))
+        },
+        onDismiss = { deleteStyleConfirm = null }
     )
 
     if(state.selectedStyle != null) {
@@ -198,8 +235,11 @@ fun StyleScreen(
                     StyleMainItem(
                         style = style,
                         isSelected = isSelected,
+                        isMain = true,
                         onClick = { onAction.invoke(StyleScreenAction.ShowMoreStyle(style)) },
-                        onLongClick = { onAction.invoke(StyleScreenAction.SelectStyle(style)) }
+                        onLongClick = { onAction.invoke(StyleScreenAction.SelectStyle(style)) },
+                        onEdit = { onAction.invoke(StyleScreenAction.ShowItemActivity(style)) },
+                        onDelete = { onAction.invoke(StyleScreenAction.DeleteStyle(style)) }
                     )
                 }
             }

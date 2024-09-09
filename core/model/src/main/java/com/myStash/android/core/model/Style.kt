@@ -1,5 +1,8 @@
 package com.myStash.android.core.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 data class Style(
     val id: Long? = null,
     val hass: List<Long> = emptyList(),
@@ -14,10 +17,11 @@ data class Style(
     }
 }
 
+@Parcelize
 data class StyleScreenModel(
     val id: Long,
     val hasList: List<Has>
-)
+): Parcelable
 
 fun List<StyleScreenModel>.filterSelectTag(
     tags: List<Tag>

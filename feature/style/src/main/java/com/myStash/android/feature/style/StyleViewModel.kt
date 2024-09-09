@@ -93,6 +93,7 @@ class StyleViewModel @Inject constructor(
             is StyleScreenAction.SetTagList -> setTagList(action.tagIdList)
             is StyleScreenAction.ResetSelectStyle -> resetSelectStyle()
             is StyleScreenAction.TagToggle -> toggleTag()
+            is StyleScreenAction.DeleteStyle -> deleteStyle(action.style)
             else -> Unit
         }
     }
@@ -164,5 +165,9 @@ class StyleViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun deleteStyle(style: StyleScreenModel?) {
+
     }
 }
