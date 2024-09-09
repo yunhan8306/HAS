@@ -1,7 +1,10 @@
 package com.myStash.android.core.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 
+@Parcelize
 data class Feed(
     val id: Long? = null,
     val date: LocalDate,
@@ -9,7 +12,7 @@ data class Feed(
     val styleId: Long?,
     val createTime: Long = System.currentTimeMillis(),
     val isRemove: Boolean = false
-)
+): Parcelable
 
 fun List<Feed>.filterDate(year: Int, month: Int): List<Feed> {
     return filter { feed -> feed.date.year == year && feed.date.monthValue == month }

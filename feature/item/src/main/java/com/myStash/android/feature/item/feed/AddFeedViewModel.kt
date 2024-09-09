@@ -122,6 +122,7 @@ class AddFeedViewModel @Inject constructor(
     private fun fetch() {
         intent {
             viewModelScope.launch {
+                val qq = stateHandle.get<Feed?>(ItemConstants.CMD_FEED)
                 combine(styleTotalList, hasTotalList, tagTotalList, typeTotalList) { styleList, hasList, tagList, typeList ->
                     Quadruple(styleList, hasList, tagList, typeList)
                 }.collectLatest { (styleList, hasList, tagList, typeList) ->
@@ -129,7 +130,9 @@ class AddFeedViewModel @Inject constructor(
                         state.copy(
                             styleList = styleList,
                             tagList = tagList,
-                            selectedStyle = stateHandle.get<Long?>(ItemConstants.CMD_FEED).getStyleScreenModel(styleList),
+                            selectedImageList = state.selectedImageList.ifEmpty { qq?.images ?: emptyList() },
+                            calenderDate = if(state.calenderDate.dayOfMonth != LocalDate.now().dayOfMonth) state.calenderDate else qq?.date ?: LocalDate.now(),
+                            selectedStyle = state.selectedStyle ?: qq?.styleId.getStyleScreenModel(styleList),
                             typeTotalList = typeList,
                             tagTotalList = tagList
                         )
