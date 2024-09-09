@@ -8,6 +8,8 @@ import com.myStash.android.core.data.repository.init.InitRepository
 import com.myStash.android.core.data.repository.init.InitRepositoryImpl
 import com.myStash.android.core.data.repository.has.HasRepository
 import com.myStash.android.core.data.repository.has.HasRepositoryImpl
+import com.myStash.android.core.data.repository.profile.ProfileRepository
+import com.myStash.android.core.data.repository.profile.ProfileRepositoryImpl
 import com.myStash.android.core.data.repository.style.StyleRepository
 import com.myStash.android.core.data.repository.style.StyleRepositoryImpl
 import com.myStash.android.core.data.repository.tag.TagRepository
@@ -57,4 +59,9 @@ interface RepositoryModule {
     fun bindsInitRepository(
         initRepository: InitRepositoryImpl
     ): InitRepository
+
+    @Binds
+    fun bindsProfileRepository(
+        profileRepository: ProfileRepositoryImpl
+    ): ProfileRepository
 }

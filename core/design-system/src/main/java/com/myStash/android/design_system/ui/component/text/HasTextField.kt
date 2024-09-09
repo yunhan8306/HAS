@@ -15,10 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
@@ -30,7 +32,9 @@ fun HasTextField(
     textState: TextFieldState,
     focusRequester: FocusRequester,
     fontSize: Dp = 15.dp,
+    fontWeight: HasFontWeight = HasFontWeight.Medium,
     textColor: Color = ColorFamilyBlack20AndWhite,
+    textAlign: TextAlign = TextAlign.Unspecified,
     hint: String,
     hintColor: Color = ColorFamilyGray900AndGray400,
     onFocus: () -> Unit = {}
@@ -47,21 +51,33 @@ fun HasTextField(
         modifier = modifier.focusRequester(focusRequester),
         state = textState,
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-        textStyle = TextStyle(color = textColor, fontSize = fontSizeSp, fontWeight = FontWeight.Medium),
+        textStyle = TextStyle(
+            color = textColor,
+            fontSize = fontSizeSp,
+            fontWeight = when(fontWeight) {
+                HasFontWeight.Thin -> FontWeight.Normal
+                HasFontWeight.Medium -> FontWeight.Medium
+                HasFontWeight.Bold -> FontWeight.Bold
+            },
+            textAlign = textAlign
+        ),
         decorator = { innerTextField ->
             Box(
-                contentAlignment = Alignment.TopStart
+                contentAlignment = if(textAlign == TextAlign.Center) Alignment.Center else Alignment.TopStart
             ) {
                 if(textState.text.isEmpty()) {
                     HasText(
                         text = hint,
-                        color = hintColor
+                        color = hintColor,
+                        fontSize = fontSize,
+                        fontWeight = fontWeight,
+                        textAlign = textAlign
                     )
-                } else {
-                    innerTextField()
                 }
+                innerTextField()
             }
         },
-        interactionSource = interactionSource
+        interactionSource = interactionSource,
+        cursorBrush = SolidColor(textColor)
     )
 }

@@ -10,3 +10,6 @@ fun String.removeLastBlank(): String {
         this
     }
 }
+
+fun String.ifEmptyReturnNull(): String? =
+    takeIf { isNotNullAndNotEmpty() }

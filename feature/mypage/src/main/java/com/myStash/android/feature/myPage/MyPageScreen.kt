@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -27,10 +28,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,12 +46,15 @@ import com.myStash.android.common.resource.R
 import com.myStash.android.common.util.CommonActivityResultContract
 import com.myStash.android.common.util.constants.PermissionConstants
 import com.myStash.android.design_system.animation.slideIn
+import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
 import com.myStash.android.design_system.ui.component.SpacerLineBox
 import com.myStash.android.design_system.ui.component.header.HasLogoHeader
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
+import com.myStash.android.design_system.ui.component.text.HasTextField
 import com.myStash.android.design_system.ui.theme.clickableNoRipple
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
+import com.myStash.android.design_system.util.addFocusCleaner
 import com.myStash.android.design_system.util.rememberPermissionLauncher
 import com.myStash.android.feature.gallery.GalleryActivity
 import com.myStash.android.feature.gallery.GalleryConstants
@@ -92,7 +99,7 @@ fun MyPageRoute(
     val galleryActivityLauncher = rememberLauncherForActivityResult(
         contract = CommonActivityResultContract(),
         onResult = { intent ->
-            intent?.getStringExtra(GalleryConstants.SINGLE)?.let { viewModel.onAction(MyPageScreenAction.SelectProfile(it)) }
+            intent?.getStringExtra(GalleryConstants.SINGLE)?.let { viewModel.onAction(MyPageScreenAction.EditProfileUri(it)) }
         }
     )
 
@@ -113,6 +120,7 @@ fun MyPageRoute(
     )
 
     MyPageScreen(
+        nickNameState = viewModel.nickNameState,
         state = state,
         onAction = { action ->
             when(action) {
@@ -126,7 +134,7 @@ fun MyPageRoute(
                 is MyPageScreenAction.ShowManage -> {
                     menuType = MyPageMenuType.Manage
                 }
-                is MyPageScreenAction.EditProfile -> {
+                is MyPageScreenAction.ShowGalleryProfile -> {
                     requestPermissionLauncher.launch(PermissionConstants.GALLERY_PERMISSIONS)
                 }
                 else -> viewModel.onAction(action)
@@ -157,16 +165,20 @@ fun MyPageRoute(
 
 @Composable
 fun MyPageScreen(
+    nickNameState: TextFieldState,
     state: MyPageScreenState,
     onAction: (MyPageScreenAction) -> Unit
 ) {
 
     val scrollState = rememberScrollState()
+    val focusManager = LocalFocusManager.current
+    val focusRequester = remember { FocusRequester() }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
+            .addFocusCleaner(focusManager)
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -197,7 +209,7 @@ fun MyPageScreen(
                     ProfileNoneImage()
                 }
                 Box(
-                    modifier = Modifier.clickableNoRipple { onAction.invoke(MyPageScreenAction.EditProfile) },
+                    modifier = Modifier.clickableNoRipple { onAction.invoke(MyPageScreenAction.ShowGalleryProfile) },
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
@@ -210,11 +222,15 @@ fun MyPageScreen(
                     )
                 }
             }
-            HasText(
-                modifier = Modifier.padding(top = 16.dp),
-                text = state.nickName ?: "Test",
+            HasTextField(
+                modifier = Modifier.padding(16.dp),
+                textState = nickNameState,
+                focusRequester = focusRequester,
                 fontSize = 18.dp,
-                fontWeight = HasFontWeight.Bold
+                fontWeight = HasFontWeight.Bold,
+                textAlign = TextAlign.Center,
+                hint = state.nickName,
+                hintColor = ColorFamilyBlack20AndWhite,
             )
         }
         SpacerLineBox()
