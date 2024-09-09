@@ -142,6 +142,7 @@ class HasViewModel @Inject constructor(
             is HasScreenAction.SelectHas -> selectHas(action.has)
             is HasScreenAction.ResetSelectHas -> resetSelectHas()
             is HasScreenAction.TagToggle -> toggleTag()
+            is HasScreenAction.DeleteHas -> deleteHas(action.has)
             else -> Unit
         }
     }
@@ -229,6 +230,10 @@ class HasViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun deleteHas(has: Has?) {
+        Log.d("qwe123", "has 삭제 - $has")
     }
 
     private fun initGalleryImages() {

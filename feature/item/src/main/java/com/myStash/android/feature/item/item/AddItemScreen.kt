@@ -33,7 +33,7 @@ fun AddItemScreen(
 //            .addFocusCleaner(focusManager)
     ) {
         HasHeader(
-            text = "등록하기",
+            text = if(state.selectedTab.tabName == state.editTab?.tabName) "수정하기" else "등록하기",
             onBack = onBack
         )
         TabRow(

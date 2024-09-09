@@ -41,6 +41,8 @@ import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
 import com.myStash.android.common.compose.activityViewModel
 import com.myStash.android.common.util.CommonActivityResultContract
+import com.myStash.android.common.util.isNotNull
+import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.getTotalType
 import com.myStash.android.core.model.testManTypeTotalList
 import com.myStash.android.core.model.testTagList
@@ -57,6 +59,7 @@ import com.myStash.android.design_system.ui.component.tag.TagChipItem
 import com.myStash.android.design_system.ui.component.tag.TagMoreChipItem
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.feature.item.ItemActivity
+import com.myStash.android.feature.item.ItemConstants
 import com.myStash.android.feature.item.item.ItemTab
 import com.myStash.android.feature.search.SearchActivity
 import com.myStash.android.feature.search.SearchConstants
@@ -93,7 +96,7 @@ fun HasRoute(
         }
     )
 
-    var testConfirm by remember { mutableStateOf(false) }
+    var deleteHasConfirm: Has? by remember { mutableStateOf(null) }
 
     HasScreen(
         state = state,
@@ -109,25 +112,31 @@ fun HasRoute(
                  }
                  is HasScreenAction.ShowItemActivity -> {
                      val intent = Intent(activity, ItemActivity::class.java)
-                         .putExtra("tab", ItemTab.HAS.name)
-                         .putExtra("has", action.has)
+                         .putExtra(ItemConstants.CMD_TAB_NAME, ItemTab.HAS.name)
+                         .putExtra(ItemConstants.CMD_HAS, action.has)
+                         .putExtra(ItemConstants.CMD_EDIT_TAB_NAME, ItemTab.HAS.name)
                      itemActivityLauncher.launch(intent)
                      activity.slideIn()
                  }
-
+                 is HasScreenAction.DeleteHas -> {
+                     deleteHasConfirm = action.has
+                 }
                  else -> viewModel.onAction(action)
              }
         }
     )
 
     HasConfirmDialog(
-        isShow = testConfirm,
-        title = "title",
-        content = "content",
+        isShow = deleteHasConfirm.isNotNull(),
+        title = "HAS",
+        content = "Do you want to delete this HAS?",
         confirmText = "confirm",
-        dismissText = "닫기",
-        onConfirm = { testConfirm = false },
-        onDismiss = { testConfirm = false }
+        dismissText = "cancel",
+        onConfirm = {
+            deleteHasConfirm = null
+            viewModel.onAction(HasScreenAction.DeleteHas(deleteHasConfirm))
+        },
+        onDismiss = { deleteHasConfirm = null }
     )
 
     if(state.selectedHasList.isNotEmpty()) {
@@ -273,8 +282,8 @@ fun HasScreen(
                         tagList = has.getTagList(state.totalTagList),
                         selectTagList = state.selectedTagList,
                         onSelectHas = { onAction.invoke(HasScreenAction.SelectHas(has)) },
-                        onEditHas = { onAction.invoke(HasScreenAction.ShowItemActivity(has)) },
-                        onDeleteHas = {},
+                        onEdit = { onAction.invoke(HasScreenAction.ShowItemActivity(has)) },
+                        onDelete = { onAction.invoke(HasScreenAction.DeleteHas(has)) },
                     )
                 }
 

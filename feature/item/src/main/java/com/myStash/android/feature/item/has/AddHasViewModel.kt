@@ -19,6 +19,8 @@ import com.myStash.android.core.di.DefaultDispatcher
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
+import com.myStash.android.core.model.getTagList
+import com.myStash.android.core.model.getType
 import com.myStash.android.core.model.tagAddAndFoundFromSearchText
 import com.myStash.android.feature.item.ItemConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -99,14 +101,22 @@ class AddHasViewModel @Inject constructor(
     private fun fetch() {
         intent {
             viewModelScope.launch {
-                val has = stateHandle.get<Has?>("has")
+                val has = stateHandle.get<Has?>(ItemConstants.CMD_HAS)
+
                 combine(tagTotalList, typeTotalList) { tagList, typeList ->
                     Pair(tagList, typeList)
                 }.collectLatest { (tagList, typeList) ->
+                    if(selectedTagList.isEmpty()) {
+                        selectedTagList.addAll(has?.tags?.getTagList(tagList) ?: emptyList())
+                    }
+
                     reduce {
                         state.copy(
-                            tagTotalList = tagList,
+                            imageUri = state.imageUri ?: has?.imagePath,
                             typeTotalList = typeList,
+                            selectedType = state.selectedType ?: has?.type?.getType(typeList),
+                            tagTotalList = tagList,
+                            selectedTagList = selectedTagList,
                             searchTagList = tagList
                         )
                     }

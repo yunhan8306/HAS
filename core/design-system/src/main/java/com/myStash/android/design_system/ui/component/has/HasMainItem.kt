@@ -1,8 +1,6 @@
 package com.myStash.android.design_system.ui.component.has
 
-import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -24,35 +22,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.myStash.android.common.resource.R
 import com.myStash.android.common.util.isNotNull
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Tag
-import com.myStash.android.design_system.ui.color.Black
 import com.myStash.android.design_system.ui.color.ColorFamilyGray300AndGray400
 import com.myStash.android.design_system.ui.color.Purple
 import com.myStash.android.design_system.ui.color.White
-import com.myStash.android.design_system.ui.component.HasBalloon
-import com.myStash.android.design_system.ui.component.rememberHasBalloonBuilder
+import com.myStash.android.design_system.ui.component.balloon.HasBalloon
+import com.myStash.android.design_system.ui.component.balloon.HasBalloonItem
+import com.myStash.android.design_system.ui.component.balloon.HasBalloonState
+import com.myStash.android.design_system.ui.component.balloon.rememberHasBalloonBuilder
 import com.myStash.android.design_system.ui.component.tag.TagHasChipItem
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.design_system.ui.theme.clickableNoRipple
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
-import com.myStash.android.design_system.util.clickableRipple
 import com.myStash.android.design_system.util.singleClick
-import com.skydoves.balloon.compose.Balloon
-import com.skydoves.balloon.compose.rememberBalloonBuilder
-import com.skydoves.balloon.compose.setBackgroundColor
 import kotlinx.coroutines.delay
 
 @Composable
@@ -62,20 +52,31 @@ fun HasMainItem(
     selectedNumber: Int?,
     tagList: List<Tag>,
     selectTagList: List<Tag>,
-    onSelectHas: (Has) -> Unit,
-    onEditHas: (Has) -> Unit,
-    onDeleteHas: (Has) -> Unit
+    onSelectHas: () -> Unit,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit
 ) {
-    val hasBalloon = rememberHasBalloonBuilder()
-    var balloonEvent by remember { mutableStateOf(TimeLineMenuEvent.NONE) }
-    val builder = rememberBalloonBuilder {
-        arrowSize = 0
-        setPadding(4)
-        setMarginLeft(90)
-        setBackgroundColor(Color.Transparent)
-        setOnBalloonDismissListener {
-            balloonEvent = TimeLineMenuEvent.NONE
-        }
+
+    var balloonEvent by remember { mutableStateOf(HasBalloonState.NONE) }
+    val balloonBuilder = rememberHasBalloonBuilder(
+        onDismiss = { balloonEvent = HasBalloonState.NONE }
+    )
+    val balloonMenuList = remember {
+        listOf(
+            HasBalloonItem(
+                name = "수정",
+                onClick = {
+                    balloonEvent = HasBalloonState.CLOSE
+                    onEdit.invoke()
+                }
+            ),
+            HasBalloonItem(
+                name = "삭제",
+                onClick = { balloonEvent = HasBalloonState.CLOSE
+                    onDelete.invoke()
+                }
+            )
+        )
     }
 
     var shortClick by remember { mutableStateOf(false) }
@@ -88,7 +89,6 @@ fun HasMainItem(
     }
 
     singleClick { singleClickEventListener ->
-
         Box(
             modifier = Modifier
                 .border(
@@ -101,12 +101,12 @@ fun HasMainItem(
                     onLongClick = {
                         singleClickEventListener.onClick {
                             if (isSelectedMode) shortClick =
-                                !shortClick else onSelectHas.invoke(has)
+                                !shortClick else onSelectHas.invoke()
                         }
                     },
                     onClick = {
                         singleClickEventListener.onClick {
-                            if (isSelectedMode) onSelectHas.invoke(has) else shortClick =
+                            if (isSelectedMode) onSelectHas.invoke() else shortClick =
                                 !shortClick
                         }
                     },
@@ -150,7 +150,7 @@ fun HasMainItem(
                 Box(
                     modifier = Modifier
                         .size(18.dp)
-                        .clickable { singleClickEventListener.onClick { onSelectHas.invoke(has) } }
+                        .clickable { singleClickEventListener.onClick { onSelectHas.invoke() } }
                     ,
                     contentAlignment = Alignment.Center
                 ) {
@@ -174,40 +174,15 @@ fun HasMainItem(
                 }
             }
         } else {
-            Balloon(
-                modifier = Modifier
-                    .padding(end = 10.dp),
-                builder = builder,
-                balloonContent = {
-                    Box(
-                        contentAlignment = Alignment.TopEnd
-                    ) {
-                        Box(modifier = Modifier
-                            .size(80.dp)
-                            .background(Green)) {
-                            Log.d("qwe123", "HasBalloon")
-                            HasText(
-                                text = "수정",
-                                color = Black
-                            )
-                            HasText(
-                                text = "수정",
-                                color = Black
-                            )
-                        }
-                    }
-                }, content = { balloonWindow ->
-                    var size by remember { mutableStateOf(IntSize.Zero) }
-                    var position by remember { mutableStateOf(Offset.Zero) }
-
+            HasBalloon(
+                builder = balloonBuilder,
+                menuList = balloonMenuList,
+                content = { balloonWindow ->
                     LaunchedEffect(balloonEvent) {
                         when (balloonEvent) {
-                            TimeLineMenuEvent.NONE -> Unit
-                            TimeLineMenuEvent.CLOSE -> balloonWindow.dismiss()
-                            TimeLineMenuEvent.OPEN -> balloonWindow.showAsDropDown(
-//                                xOff = (position.x * 0.55).toInt(),
-                                yOff = size.height * 2
-                            )
+                            HasBalloonState.NONE -> Unit
+                            HasBalloonState.CLOSE -> balloonWindow.dismiss()
+                            HasBalloonState.OPEN -> balloonWindow.showAsDropDown()
                         }
                     }
 
@@ -222,13 +197,13 @@ fun HasMainItem(
                                 .padding(6.dp)
                                 .clickableNoRipple {
                                     singleClickEventListener.onClick {
-                                        balloonEvent = TimeLineMenuEvent.OPEN
+                                        balloonEvent = HasBalloonState.OPEN
                                     }
                                 }
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.btn_more_light),
-                                contentDescription = "feed more"
+                                contentDescription = "has more"
                             )
                         }
                     }
@@ -236,8 +211,4 @@ fun HasMainItem(
             )
         }
     }
-}
-
-internal enum class TimeLineMenuEvent {
-    NONE, OPEN, CLOSE
 }

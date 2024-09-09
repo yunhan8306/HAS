@@ -3,6 +3,7 @@ package com.myStash.android.feature.item.item
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.myStash.android.feature.item.ItemConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
@@ -28,7 +29,8 @@ class AddItemViewModel @Inject constructor(
             viewModelScope.launch {
                 reduce {
                     state.copy(
-                        selectedTab = savedStateHandle.get<String>("tab").getItemTab()
+                        selectedTab = savedStateHandle.get<String>(ItemConstants.CMD_TAB_NAME).getItemTab(),
+                        editTab = savedStateHandle.get<String>(ItemConstants.CMD_EDIT_TAB_NAME).getItemTab()
                     )
                 }
             }
