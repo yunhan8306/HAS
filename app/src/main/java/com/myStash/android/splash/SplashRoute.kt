@@ -33,7 +33,7 @@ fun SplashRoute(
     viewModel.collectSideEffect { sideEffect ->
         when(sideEffect) {
             is SplashSideEffect.StartMainActivity -> {
-                val intent = Intent(activity.apply { slideIn() }, MainActivity::class.java)
+                val intent = Intent(activity, MainActivity::class.java)
                 mainActivityLauncher.launch(intent)
                 activity.finish()
             }

@@ -49,11 +49,12 @@ fun ContactRoute(
         activity = activity,
         scope = scope,
         grant = {
-            val intent = Intent(activity.apply { slideIn() }, GalleryActivity::class.java).apply {
+            val intent = Intent(activity, GalleryActivity::class.java).apply {
                 putExtra(GalleryConstants.TYPE, GalleryConstants.MULTI)
                 putExtra(GalleryConstants.AGO_IMAGE_URI_ARRAY, state.selectedImages.toTypedArray())
             }
             galleryActivityLauncher.launch(intent)
+            activity.slideIn()
         },
         denied = {
             isShowPermissionRequestConfirm = true
