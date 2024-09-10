@@ -53,27 +53,27 @@ fun HasMainItem(
     tagList: List<Tag>,
     selectTagList: List<Tag>,
     onSelectHas: () -> Unit,
-    onEdit: () -> Unit,
-    onDelete: () -> Unit
+    onEdit: (Has) -> Unit,
+    onDelete: (Has) -> Unit
 ) {
 
     var balloonEvent by remember { mutableStateOf(HasBalloonState.NONE) }
     val balloonBuilder = rememberHasBalloonBuilder(
         onDismiss = { balloonEvent = HasBalloonState.NONE }
     )
-    val balloonMenuList = remember {
+    val balloonMenuList = remember(has) {
         listOf(
             HasBalloonItem(
                 name = "수정",
                 onClick = {
                     balloonEvent = HasBalloonState.CLOSE
-                    onEdit.invoke()
+                    onEdit.invoke(has)
                 }
             ),
             HasBalloonItem(
                 name = "삭제",
                 onClick = { balloonEvent = HasBalloonState.CLOSE
-                    onDelete.invoke()
+                    onDelete.invoke(has)
                 }
             )
         )

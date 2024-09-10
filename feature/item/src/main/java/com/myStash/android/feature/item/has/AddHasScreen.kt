@@ -209,7 +209,7 @@ fun AddHasScreen(
                     .padding(bottom = 12.dp, start = 16.dp, end = 16.dp)
             ) {
                 HasButton(
-                    text = "등록하기",
+                    text = if(state.isEdit) "수정하기" else "등록하기",
                     isComplete = state.imageUri.isNotNullAndNotEmpty() && state.selectedType.isNotNull() && state.selectedTagList.isNotEmpty(),
                     onClick = { onAction.invoke(AddHasScreenAction.Save) }
                 )

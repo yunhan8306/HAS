@@ -45,15 +45,7 @@ class HasViewModel @Inject constructor(
     private val application: Application,
     private val getHasListUseCase: GetHasListUseCase,
     private val getTagListUseCase: GetTagListUseCase,
-    private val saveHasUseCase: SaveHasUseCase,
-    // test
-    private val saveTagUseCase: SaveTagUseCase,
-    private val deleteTagUseCase: DeleteTagUseCase,
     private val deleteHasUseCase: DeleteHasUseCase,
-    // image
-    private val imageRepository: ImageRepository,
-    // gender
-    private val getSelectedGenderUseCase: GetSelectedGenderUseCase,
     // type
     private val getTypeListUseCase: GetTypeListUseCase,
     // dispatcher
@@ -65,10 +57,7 @@ class HasViewModel @Inject constructor(
 
     init {
         fetch()
-        initGalleryImages()
     }
-
-    var testImageCnt = 0
 
     private val hasTotalList = getHasListUseCase.hasList
         .stateIn(
@@ -84,21 +73,6 @@ class HasViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    private val selectedTagList = mutableListOf<Tag>()
-    private val selectedHasList = mutableListOf<Has>()
-
-//    private val typeTotalList = getSelectedGenderUseCase.gender
-//        .mapLatest {
-//            when(it.getGenderType()) {
-//                GenderType.MAN -> testManTypeTotalList
-//                GenderType.WOMAN -> testWomanTypeTotalList
-//                else -> emptyList()
-//            }
-//        }.stateIn(
-//            scope = viewModelScope,
-//            started = SharingStarted.WhileSubscribed(5_000L),
-//            initialValue = emptyList()
-//        )
 
     private val typeTotalList = getTypeListUseCase.typeList
         .map { getTotalTypeList() + it + getUnSelectTypeList() }
@@ -114,6 +88,9 @@ class HasViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000L),
             initialValue = emptyList()
         )
+
+    private val selectedTagList = mutableListOf<Tag>()
+    private val selectedHasList = mutableListOf<Has>()
 
     private fun fetch() {
         intent {
@@ -232,63 +209,9 @@ class HasViewModel @Inject constructor(
         }
     }
 
-    private fun deleteHas(has: Has?) {
-        Log.d("qwe123", "has 삭제 - $has")
-    }
-
-    private fun initGalleryImages() {
-        viewModelScope.launch(ioDispatcher) {
-            imageRepository.init()
-        }
-    }
-
-    fun testItemAdd() {
+    private fun deleteHas(has: Has) {
         viewModelScope.launch {
-            imageRepository.imagesStateFlow.collectLatest {
-                Log.d("qwe123", "list - $it")
-                if(it.isEmpty()) return@collectLatest
-
-                val newHas = Has(
-    //                tags = tags,
-    //                brand = brand,
-    //                type = type,
-                    imagePath = it[testImageCnt].uri.toString(),
-                    type = 1
-                )
-                val result = saveHasUseCase.invoke(newHas)
-                testImageCnt++
-            }
+            deleteHasUseCase.invoke(has)
         }
-    }
-
-    fun testTagAdd() {
-        viewModelScope.launch {
-            val newTag = Tag(
-                name = "태그 ${tagTotalList.value.size + 1}"
-            )
-            Log.d("qwe123", "newTag - $newTag")
-            val result = saveTagUseCase.invoke(newTag)
-        }
-    }
-
-    fun deleteAllTag() {
-        viewModelScope.launch {
-            tagTotalList.value.forEach {
-                deleteTagUseCase.invoke(it)
-            }
-        }
-    }
-
-    fun deleteAllItem() {
-        viewModelScope.launch {
-            hasTotalList.value.forEach {
-                deleteHasUseCase.invoke(it)
-            }
-        }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        imageRepository.cleanup()
     }
 }

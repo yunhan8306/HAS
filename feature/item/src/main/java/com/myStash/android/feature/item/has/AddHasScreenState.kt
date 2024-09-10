@@ -5,6 +5,7 @@ import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
 
 data class AddHasScreenState(
+    val isEdit: Boolean = false,
     val imageUri: String? = null,
     val typeTotalList: List<Type> = emptyList(),
     val selectedType: Type? = null,

@@ -8,5 +8,5 @@ class DeleteHasUseCase @Inject constructor(
     private val hasRepository: HasRepository
 ) {
     suspend fun invoke(has: Has) =
-        hasRepository.delete(has)
+        hasRepository.update(has.copy(isRemove = true))
 }

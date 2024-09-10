@@ -133,8 +133,8 @@ fun HasRoute(
         confirmText = "confirm",
         dismissText = "cancel",
         onConfirm = {
+            deleteHasConfirm?.let { viewModel.onAction(HasScreenAction.DeleteHas(it)) }
             deleteHasConfirm = null
-            viewModel.onAction(HasScreenAction.DeleteHas(deleteHasConfirm))
         },
         onDismiss = { deleteHasConfirm = null }
     )
@@ -282,8 +282,8 @@ fun HasScreen(
                         tagList = has.getTagList(state.totalTagList),
                         selectTagList = state.selectedTagList,
                         onSelectHas = { onAction.invoke(HasScreenAction.SelectHas(has)) },
-                        onEdit = { onAction.invoke(HasScreenAction.ShowItemActivity(has)) },
-                        onDelete = { onAction.invoke(HasScreenAction.DeleteHas(has)) },
+                        onEdit = { onAction.invoke(HasScreenAction.ShowItemActivity(it)) },
+                        onDelete = { onAction.invoke(HasScreenAction.DeleteHas(it)) },
                     )
                 }
 
