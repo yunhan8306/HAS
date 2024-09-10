@@ -30,7 +30,7 @@ class AddItemViewModel @Inject constructor(
                 reduce {
                     state.copy(
                         selectedTab = savedStateHandle.get<String>(ItemConstants.CMD_TAB_NAME).getItemTab(),
-                        editTab = savedStateHandle.get<String>(ItemConstants.CMD_EDIT_TAB_NAME).getItemTab()
+                        editTab = savedStateHandle.get<String>(ItemConstants.CMD_EDIT_TAB_NAME).getEditTab()
                     )
                 }
             }
