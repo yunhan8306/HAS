@@ -285,33 +285,31 @@ fun SelectStyleModalSheet(
             }
         }
 
-        when(modalType) {
-            SelectStyleModalType.TAG -> {
-                Column(
-                    modifier = Modifier
-                        .imePadding()
-                        .padding(start = 16.dp, end = 16.dp, bottom = 12.dp)
-                ) {
-                    Spacer(modifier = Modifier.weight(1f))
-                    HasButton(
-                        text = "${state.styleList.size}개 Style 보기",
-                        isComplete = state.styleList.isNotEmpty(),
-                        onClick = { modalType = SelectStyleModalType.STYLE }
-                    )
-                }
+        if(modalType == SelectStyleModalType.TAG) {
+            Box(
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp, bottom = 12.dp)
+                    .fillMaxSize()
+                    .imePadding(),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                HasButton(
+                    text = "${state.styleList.size}개 Style 보기",
+                    isComplete = state.styleList.isNotEmpty(),
+                    onClick = { modalType = SelectStyleModalType.STYLE }
+                )
             }
-            SelectStyleModalType.STYLE -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.BottomCenter
-                ) {
-                    StyleBottomModal(
-                        selectedStyle = selectedStyle,
-                        onSelect = { onAction.invoke(AddFeedScreenAction.SelectStyle(selectedStyle)) },
-                        onCancel = { selectedStyle = null },
-                    )
-                }
-            }
+        }
+
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            StyleBottomModal(
+                isShow = modalType == SelectStyleModalType.STYLE && selectedStyle.isNotNull(),
+                onSelect = { onAction.invoke(AddFeedScreenAction.SelectStyle(selectedStyle)) },
+                onCancel = { selectedStyle = null },
+            )
         }
 
         if(selectStyleModalState.isVisible || selectStyleModalState.targetValue == ModalBottomSheetValue.Expanded) {
