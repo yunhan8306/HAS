@@ -1,7 +1,6 @@
 package com.myStash.android
 
 import android.util.Log
-import android.util.Printer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.core.data.usecase.gender.GetSelectedGenderUseCase
@@ -27,7 +26,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch

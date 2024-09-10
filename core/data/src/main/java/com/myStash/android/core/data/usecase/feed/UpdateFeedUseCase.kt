@@ -1,14 +1,14 @@
 package com.myStash.android.core.data.usecase.feed
 
 import com.myStash.android.core.data.repository.feed.FeedRepository
+import com.myStash.android.core.data.repository.has.HasRepository
 import com.myStash.android.core.model.Feed
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import com.myStash.android.core.model.Has
 import javax.inject.Inject
 
-class GetFeedListUseCase @Inject constructor(
+class UpdateFeedUseCase @Inject constructor(
     private val feedRepository: FeedRepository
 ) {
-    val feedList: Flow<List<Feed>> =
-        feedRepository.selectAll().map { list -> list.filter { !it.isRemove } }
+    suspend fun invoke(feed: Feed) =
+        feedRepository.update(feed)
 }

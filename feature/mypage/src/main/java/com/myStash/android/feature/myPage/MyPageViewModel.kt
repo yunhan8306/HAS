@@ -1,7 +1,6 @@
 package com.myStash.android.feature.myPage
 
 import android.app.Application
-import android.util.Log
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.text2.input.textAsFlow

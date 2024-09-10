@@ -1,18 +1,13 @@
 package com.myStash.android.feature.essential
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.common.util.Quadruple
 import com.myStash.android.common.util.offerOrRemove
-import com.myStash.android.core.data.usecase.gender.GetSelectedGenderUseCase
 import com.myStash.android.core.data.usecase.has.DeleteHasUseCase
 import com.myStash.android.core.data.usecase.has.GetHasListUseCase
-import com.myStash.android.core.data.usecase.has.SaveHasUseCase
-import com.myStash.android.core.data.usecase.tag.DeleteTagUseCase
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
-import com.myStash.android.core.data.usecase.tag.SaveTagUseCase
 import com.myStash.android.core.data.usecase.type.GetTypeListUseCase
 import com.myStash.android.core.di.DefaultDispatcher
 import com.myStash.android.core.di.IoDispatcher
@@ -24,7 +19,6 @@ import com.myStash.android.core.model.getTagList
 import com.myStash.android.core.model.getTotalTypeList
 import com.myStash.android.core.model.getUnSelectTypeList
 import com.myStash.android.core.model.sortSelectedTagList
-import com.myStash.android.feature.gallery.ImageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted

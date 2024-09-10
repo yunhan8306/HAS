@@ -108,6 +108,7 @@ fun FeedRoute(
                     val intent = Intent(activity, ItemActivity::class.java)
                         .putExtra(ItemConstants.CMD_TAB_NAME, ItemTab.FEED.name)
                         .putExtra(ItemConstants.CMD_EDIT_TAB_NAME, ItemTab.FEED.name)
+                        .putExtra(ItemConstants.CMD_STYLE_ID, state.selectedFeed?.styleId)
                         .putExtra(ItemConstants.CMD_FEED, state.selectedFeed)
                     itemActivityLauncher.launch(intent)
                     activity.slideIn()
@@ -127,8 +128,8 @@ fun FeedRoute(
         confirmText = "confirm",
         dismissText = "cancel",
         onConfirm = {
-            deleteFeedConfirm = null
             viewModel.onAction(FeedScreenAction.Delete)
+            deleteFeedConfirm = null
         },
         onDismiss = { deleteFeedConfirm = null }
     )

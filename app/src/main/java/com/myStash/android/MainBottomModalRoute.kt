@@ -1,7 +1,6 @@
 package com.myStash.android
 
 import android.content.Intent
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Box
@@ -92,7 +91,7 @@ fun MainBottomModalRoute(
                         selectedStyle?.let {
                             val intent = Intent(activity, ItemActivity::class.java).apply {
                                 putExtra(ItemConstants.CMD_TAB_NAME, ItemTab.FEED.name)
-                                putExtra(ItemConstants.CMD_FEED, selectedStyle.id)
+                                putExtra(ItemConstants.CMD_STYLE_ID, selectedStyle.id)
                             }
                             itemActivityLauncher.launch(intent)
                             activity.slideIn()

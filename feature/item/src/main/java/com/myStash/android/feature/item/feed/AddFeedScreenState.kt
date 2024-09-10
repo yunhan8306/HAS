@@ -8,6 +8,7 @@ import com.myStash.android.core.model.Type
 import java.time.LocalDate
 
 data class AddFeedScreenState(
+    val isEdit: Boolean = false,
     val hasList: List<Has> = emptyList(),
     val selectedType: Type? = null,
     val selectedHasList: List<Has> = emptyList(),
