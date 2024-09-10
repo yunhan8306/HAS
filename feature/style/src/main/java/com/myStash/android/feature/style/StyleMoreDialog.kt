@@ -45,10 +45,7 @@ fun StyleMoreDialog(
                     .padding(horizontal = 16.dp),
                 contentAlignment = Alignment.Center
             ) {
-                LazyColumn(
-                    modifier = Modifier.heightIn(max = 2000.dp),
-                    userScrollEnabled = false
-                ) {
+                LazyColumn{
                     item { 
                         HasText(
                             modifier = Modifier.padding(top = 20.dp, bottom = 22.dp),
