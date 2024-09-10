@@ -108,6 +108,7 @@ fun StyleRoute(
                     val intent = Intent(activity, ItemActivity::class.java)
                         .putExtra(ItemConstants.CMD_TAB_NAME, ItemTab.STYLE.name)
                         .putExtra(ItemConstants.CMD_STYLE, action.style.hasList.map { it.id }.toTypedArray())
+                        .putExtra(ItemConstants.CMD_STYLE_ID, action.style.id)
                         .putExtra(ItemConstants.CMD_EDIT_TAB_NAME, ItemTab.STYLE.name)
                     itemActivityLauncher.launch(intent)
                     activity.slideIn()
@@ -134,8 +135,8 @@ fun StyleRoute(
         confirmText = "confirm",
         dismissText = "cancel",
         onConfirm = {
+            deleteStyleConfirm?.let { viewModel.onAction(StyleScreenAction.DeleteStyle(it)) }
             deleteStyleConfirm = null
-            viewModel.onAction(StyleScreenAction.DeleteStyle(deleteStyleConfirm))
         },
         onDismiss = { deleteStyleConfirm = null }
     )
@@ -236,10 +237,10 @@ fun StyleScreen(
                         style = style,
                         isSelected = isSelected,
                         isMain = true,
-                        onClick = { onAction.invoke(StyleScreenAction.ShowMoreStyle(style)) },
-                        onLongClick = { onAction.invoke(StyleScreenAction.SelectStyle(style)) },
-                        onEdit = { onAction.invoke(StyleScreenAction.ShowItemActivity(style)) },
-                        onDelete = { onAction.invoke(StyleScreenAction.DeleteStyle(style)) }
+                        onClick = { onAction.invoke(StyleScreenAction.ShowMoreStyle(it)) },
+                        onLongClick = { onAction.invoke(StyleScreenAction.SelectStyle(it)) },
+                        onEdit = { onAction.invoke(StyleScreenAction.ShowItemActivity(it)) },
+                        onDelete = { onAction.invoke(StyleScreenAction.DeleteStyle(it)) }
                     )
                 }
             }

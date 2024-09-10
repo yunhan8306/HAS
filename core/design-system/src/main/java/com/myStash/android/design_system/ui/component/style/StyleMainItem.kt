@@ -47,27 +47,27 @@ fun StyleMainItem(
     isMain: Boolean = false,
     onClick: (StyleScreenModel) -> Unit,
     onLongClick: (StyleScreenModel) -> Unit,
-    onEdit: () -> Unit = {},
-    onDelete: () -> Unit = {}
+    onEdit: (StyleScreenModel) -> Unit = {},
+    onDelete: (StyleScreenModel) -> Unit = {}
 ) {
     var balloonEvent by remember { mutableStateOf(HasBalloonState.NONE) }
     val balloonBuilder = rememberHasBalloonBuilder(
         onDismiss = { balloonEvent = HasBalloonState.NONE }
     )
-    val balloonMenuList = remember {
+    val balloonMenuList = remember(style) {
         listOf(
             HasBalloonItem(
                 name = "수정",
                 onClick = {
                     balloonEvent = HasBalloonState.CLOSE
-                    onEdit.invoke()
+                    onEdit.invoke(style)
                 }
             ),
             HasBalloonItem(
                 name = "삭제",
                 onClick = {
                     balloonEvent = HasBalloonState.CLOSE
-                    onDelete.invoke()
+                    onDelete.invoke(style)
                 }
             )
         )

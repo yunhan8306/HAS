@@ -14,6 +14,11 @@ data class Style(
             id = id!!,
             hasList = hasTotalList.filter { hass.contains(it.id) }
         )
+
+        fun StyleScreenModel.toStyle() = Style(
+            id = id,
+            hass = hasList.map { it.id!! }
+        )
     }
 }
 

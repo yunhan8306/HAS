@@ -138,11 +138,8 @@ fun AddStyleScreen(
             modifier = Modifier.padding(bottom = 12.dp, start = 16.dp, end = 16.dp),
         ) {
             HasButton(
-                modifier = Modifier.shadow(
-                    elevation = 3.dp,
-                    shape = RoundedCornerShape(size = 10.dp)
-                ),
-                text = "등록하기",
+                modifier = Modifier.shadow(elevation = 3.dp, shape = RoundedCornerShape(size = 10.dp)),
+                text = if(state.isEdit) "수정하기" else "등록하기",
                 isComplete = state.selectedHasList.isNotEmpty(),
                 onClick = { onAction.invoke(AddStyleScreenAction.SaveStyle) }
             )
