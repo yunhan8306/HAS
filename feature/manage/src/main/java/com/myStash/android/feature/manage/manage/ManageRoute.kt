@@ -4,7 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.myStash.android.feature.manage.tag.ManageTagAction
 import com.myStash.android.feature.manage.tag.ManageTagRoute
+import com.myStash.android.feature.manage.tag.ManageTagViewModel
 import com.myStash.android.feature.manage.type.ManageTypeAction
 import com.myStash.android.feature.manage.type.ManageTypeRoute
 import com.myStash.android.feature.manage.type.ManageTypeViewModel
@@ -14,6 +16,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 fun ManageRoute(
     viewModel: ManageViewModel = hiltViewModel(),
     manageTypeViewModel: ManageTypeViewModel = hiltViewModel(),
+    manageTagViewModel: ManageTagViewModel = hiltViewModel(),
     onBack: () -> Unit
 ) {
     val state by viewModel.collectAsState()
@@ -21,7 +24,7 @@ fun ManageRoute(
     LaunchedEffect(state.selectedTab) {
         when(state.selectedTab) {
             ItemTab.TYPE -> {
-
+                manageTagViewModel.onAction(ManageTagAction.FocusTag(null))
             }
             ItemTab.TAG -> {
                 manageTypeViewModel.onAction(ManageTypeAction.FocusType(null))

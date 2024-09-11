@@ -180,7 +180,7 @@ fun ManageTypeScreen(
     }
     if(isEdit) {
         Box(
-            modifier = Modifier.padding(top = 80.dp)
+            modifier = Modifier.padding(top = 92.dp)
         ) {
             Box(
                 modifier = Modifier
