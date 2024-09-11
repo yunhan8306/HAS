@@ -55,6 +55,7 @@ import com.myStash.android.common.util.isNotNull
 import com.myStash.android.core.model.Feed
 import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.design_system.animation.slideIn
+import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.color.ColorFamilyGray100AndGray800
 import com.myStash.android.design_system.ui.color.ColorFamilyGray500AndGray900
 import com.myStash.android.design_system.ui.component.balloon.HasBalloon
@@ -194,161 +195,165 @@ fun FeedScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Column(
-                modifier = Modifier
-                    .padding(top = 16.dp)
-                    .widthIn(max = 400.dp)
-                    .heightIn(max = 400.dp)
+                modifier = Modifier.widthIn(max = 400.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                HasCalender(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(shape = RoundedCornerShape(size = 12.dp)),
-                    year = state.calenderDate.year,
-                    month = state.calenderDate.monthValue,
-                    selectDate = state.selectedDate,
-                    calenderDataList = state.calenderDataList,
-                    onPrevMonth = { onAction.invoke(FeedScreenAction.PrevMonth) },
-                    onNextMonth = { onAction.invoke(FeedScreenAction.NextMonth) },
-                    onClickDay = { onAction.invoke(FeedScreenAction.SelectDay(it)) },
-                )
-            }
-            Box(
-                modifier = Modifier.padding(vertical = 16.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .clip(shape = RoundedCornerShape(size = 12.dp))
-                        .background(MaterialTheme.colors.background)
-                        .fillMaxWidth()
-                        .height(44.dp)
-                        .padding(start = 16.dp, end = 12.dp)
-                        .onGloballyPositioned { coordinates ->
-                            yPosition = coordinates.positionInWindow().y.toInt()
-                        },
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    HasText(
-                        modifier = Modifier.weight(1f),
-                        text = "${state.selectedDate.monthValue}.${state.selectedDate.dayOfMonth}"
-                    )
-                    if(!headerToggle && state.selectedFeed.isNotNull()) {
-                        HasBalloon(
-                            builder = balloonBuilder,
-                            menuList = balloonMenuList,
-                            content = { balloonWindow ->
-                                LaunchedEffect(balloonEvent) {
-                                    when (balloonEvent) {
-                                        HasBalloonState.NONE -> Unit
-                                        HasBalloonState.CLOSE -> balloonWindow.dismiss()
-                                        HasBalloonState.OPEN -> balloonWindow.showAsDropDown()
-                                    }
-                                }
-                                Image(
-                                    modifier = Modifier.clickableNoRipple { balloonEvent = HasBalloonState.OPEN },
-                                    painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.btn_more_dark else R.drawable.btn_more_light),
-                                    contentDescription = "feed more"
-                                )
-                            }
-                        )
-                    }
-                }
-            }
-            
-            state.selectedFeed?.let { feed ->
-                Box {
-                    SubcomposeAsyncImage(
-                        model = feed.images.firstOrNull(),
-                        contentDescription = "gallery image",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(1f)
-                            .clip(shape = RoundedCornerShape(size = 8.dp)),
-                        contentScale = ContentScale.Crop,
-                        loading = { ShimmerLoadingAnimation() },
-                        error = { ShimmerLoadingAnimation() }
-                    )
-                }
-                Box(modifier = Modifier.height(16.dp))
                 Column(
                     modifier = Modifier
-                        .clip(shape = RoundedCornerShape(size = 12.dp))
-                        .background(MaterialTheme.colors.background)
-                        .padding(top = 16.dp, bottom = 16.dp, start = 20.dp, end = 20.dp)
-                        .heightIn(max = 300.dp)
+                        .padding(top = 16.dp)
+                        .heightIn(max = 400.dp)
                 ) {
-                    HasText(
-                        text = "Tag",
-                        fontSize = 18.dp,
-                        fontWeight = HasFontWeight.Bold
-                    )
-                    Box(modifier = Modifier.height(20.dp))
-                    FlowRow(
+                    HasCalender(
                         modifier = Modifier
-                            .heightIn(max = if (flowToggle) 200.dp else Dp.Unspecified)
                             .fillMaxWidth()
-                            .verticalScroll(tagScrollState)
+                            .clip(shape = RoundedCornerShape(size = 12.dp)),
+                        year = state.calenderDate.year,
+                        month = state.calenderDate.monthValue,
+                        selectDate = state.selectedDate,
+                        calenderDataList = state.calenderDataList,
+                        onPrevMonth = { onAction.invoke(FeedScreenAction.PrevMonth) },
+                        onNextMonth = { onAction.invoke(FeedScreenAction.NextMonth) },
+                        onClickDay = { onAction.invoke(FeedScreenAction.SelectDay(it)) },
+                    )
+                }
+                Box(
+                    modifier = Modifier.padding(vertical = 16.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .clip(shape = RoundedCornerShape(size = 12.dp))
+                            .background(MaterialTheme.colors.background)
+                            .fillMaxWidth()
+                            .height(44.dp)
+                            .padding(start = 16.dp, end = 12.dp)
+                            .onGloballyPositioned { coordinates ->
+                                yPosition = coordinates.positionInWindow().y.toInt()
+                            },
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        state.selectedFeedTagList.forEachIndexed { index, tag ->
-                            if(index < 3 || flowToggle) {
-                                TagChipItem(
-                                    name = tag.name,
-                                    isSelected = true,
-                                    onClick = {}
-                                )
-                            }
-                        }
-                        if(state.selectedFeedTagList.size > 3) {
-                            TagMoreChipItem(
-                                cnt = "${state.selectedFeedTagList.size + (if(!flowToggle) -3 else 0)}",
-                                isFold = flowToggle,
-                                onClick = { flowToggle = !flowToggle }
+                        HasText(
+                            modifier = Modifier.weight(1f),
+                            text = "${state.selectedDate.monthValue}.${state.selectedDate.dayOfMonth}"
+                        )
+                        if(!headerToggle && state.selectedFeed.isNotNull()) {
+                            HasBalloon(
+                                builder = balloonBuilder,
+                                menuList = balloonMenuList,
+                                content = { balloonWindow ->
+                                    LaunchedEffect(balloonEvent) {
+                                        when (balloonEvent) {
+                                            HasBalloonState.NONE -> Unit
+                                            HasBalloonState.CLOSE -> balloonWindow.dismiss()
+                                            HasBalloonState.OPEN -> balloonWindow.showAsDropDown()
+                                        }
+                                    }
+                                    Image(
+                                        modifier = Modifier.clickableNoRipple { balloonEvent = HasBalloonState.OPEN },
+                                        painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.btn_more_dark else R.drawable.btn_more_light),
+                                        contentDescription = "feed more"
+                                    )
+                                }
                             )
                         }
                     }
                 }
-                Box(modifier = Modifier.height(16.dp))
-                state.selectedFeedStyle?.let { style ->
+
+                state.selectedFeed?.let { feed ->
+                    Box {
+                        SubcomposeAsyncImage(
+                            model = feed.images.firstOrNull(),
+                            contentDescription = "gallery image",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(1f)
+                                .clip(shape = RoundedCornerShape(size = 8.dp)),
+                            contentScale = ContentScale.Crop,
+                            loading = { ShimmerLoadingAnimation() },
+                            error = { ShimmerLoadingAnimation() }
+                        )
+                    }
+                    Box(modifier = Modifier.height(16.dp))
                     Column(
                         modifier = Modifier
                             .clip(shape = RoundedCornerShape(size = 12.dp))
                             .background(MaterialTheme.colors.background)
                             .padding(top = 16.dp, bottom = 16.dp, start = 20.dp, end = 20.dp)
+                            .heightIn(max = 300.dp)
                     ) {
-                        LazyColumn(
-                            modifier = Modifier.heightIn(max = 2000.dp),
-                            userScrollEnabled = false
+                        HasText(
+                            text = "Tag",
+                            fontSize = 18.dp,
+                            fontWeight = HasFontWeight.Bold
+                        )
+                        Box(modifier = Modifier.height(20.dp))
+                        FlowRow(
+                            modifier = Modifier
+                                .heightIn(max = if (flowToggle) 200.dp else Dp.Unspecified)
+                                .fillMaxWidth()
+                                .verticalScroll(tagScrollState)
                         ) {
-                            items(
-                                items = style.hasList,
-                                key = { it.id!! }
-                            ) { has ->
-                                AddStyleHasItem(
-                                    has = has,
-                                    typeTotalList = state.typeTotalList,
-                                    tagTotalList = state.selectedFeedTagList
+                            state.selectedFeedTagList.forEachIndexed { index, tag ->
+                                if(index < 3 || flowToggle) {
+                                    TagChipItem(
+                                        name = tag.name,
+                                        isSelected = true,
+                                        onClick = {}
+                                    )
+                                }
+                            }
+                            if(state.selectedFeedTagList.size > 3) {
+                                TagMoreChipItem(
+                                    cnt = "${state.selectedFeedTagList.size + (if(!flowToggle) -3 else 0)}",
+                                    isFold = flowToggle,
+                                    onClick = { flowToggle = !flowToggle }
                                 )
                             }
                         }
                     }
                     Box(modifier = Modifier.height(16.dp))
-                }
-            } ?: run {
-                Box(
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    state.selectedFeedStyle?.let { style ->
+                        Column(
+                            modifier = Modifier
+                                .clip(shape = RoundedCornerShape(size = 12.dp))
+                                .background(MaterialTheme.colors.background)
+                                .padding(top = 16.dp, bottom = 16.dp, start = 20.dp, end = 20.dp)
+                        ) {
+                            LazyColumn(
+                                modifier = Modifier.heightIn(max = 2000.dp),
+                                userScrollEnabled = false
+                            ) {
+                                items(
+                                    items = style.hasList,
+                                    key = { it.id!! }
+                                ) { has ->
+                                    AddStyleHasItem(
+                                        has = has,
+                                        typeTotalList = state.typeTotalList,
+                                        tagTotalList = state.selectedFeedTagList
+                                    )
+                                }
+                            }
+                        }
+                        Box(modifier = Modifier.height(16.dp))
+                    }
+                } ?: run {
+                    Box(
+                        contentAlignment = Alignment.Center
                     ) {
-                        Image(
-                            painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.img_hadung_empty_dark else R.drawable.img_hadung_empty_light),
-                            contentDescription = "feed gone"
-                        )
-                        HasText(
-                            modifier = Modifier.padding(top = 16.dp),
-                            text = "There is no registered Feed.",
-                            color = ColorFamilyGray500AndGray900,
-                            fontSize = 14.dp
-                        )
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.img_hadung_empty_dark else R.drawable.img_hadung_empty_light),
+                                contentDescription = "feed gone"
+                            )
+                            HasText(
+                                modifier = Modifier.padding(top = 16.dp, bottom = 40.dp),
+                                text = "There is no registered Feed.",
+                                color = ColorFamilyGray500AndGray900,
+                                fontSize = 14.dp
+                            )
+                        }
                     }
                 }
             }
@@ -393,4 +398,14 @@ fun FeedScreen(
             }
         }
     }
+}
+
+@DevicePreviews
+@Composable
+fun FeedScreenPreview() {
+    FeedScreen(
+        state = FeedScreenState(),
+        onAction = {}
+    )
+
 }
