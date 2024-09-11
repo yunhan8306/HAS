@@ -119,7 +119,7 @@ class AddHasViewModel @Inject constructor(
                             typeTotalList = typeList,
                             selectedType = state.selectedType ?: agoHas?.type?.getType(typeList),
                             tagTotalList = tagList,
-                            selectedTagList = selectedTagList,
+                            selectedTagList = selectedTagList.toList(),
                             searchTagList = tagList
                         )
                     }
