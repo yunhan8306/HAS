@@ -71,14 +71,16 @@ fun ManageTagScreen(
                         .height(64.dp)
                         .padding(top = 12.dp)
                 ) {
-                    ManageTextField(
-                        textState = addTagTextState,
-                        hint = "원하는 태그를 등록하세요.",
-                        add = {
-                            focusManager.clearFocus()
-                            onAction.invoke(ManageTagAction.AddTag)
-                        }
-                    )
+                    if(!isEdit) {
+                        ManageTextField(
+                            textState = addTagTextState,
+                            hint = "원하는 태그를 등록하세요.",
+                            add = {
+                                focusManager.clearFocus()
+                                onAction.invoke(ManageTagAction.AddTag)
+                            }
+                        )
+                    }
                 }
             }
             items(
@@ -110,7 +112,7 @@ fun ManageTagScreen(
                             },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Box(modifier = Modifier.width(30.dp))
+                        Box(modifier = Modifier.width(4.dp))
                         if(isSelected) {
                             HasTextField(
                                 modifier = Modifier.weight(1f),
@@ -192,21 +194,6 @@ fun ManageTagScreen(
                             .background(ColorFamilyGray200AndGray600)
                     )
                 }
-            }
-        }
-    }
-    if(isEdit) {
-        Box(
-            modifier = Modifier.padding(top = 92.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(64.dp)
-                    .background(MaterialTheme.colors.background)
-                    .clickableNoRipple { }
-            ) {
-
             }
         }
     }
