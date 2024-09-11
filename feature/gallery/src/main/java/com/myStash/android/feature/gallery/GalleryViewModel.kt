@@ -129,7 +129,7 @@ class GalleryViewModel @Inject constructor(
             }
             reduce {
                 state.copy(
-                    focusImage = image,
+                    focusImage = if(selectedList.isNotEmpty()) selectedList.last() else image,
                     selectedImageList = _selectedList.toList()
                 )
             }

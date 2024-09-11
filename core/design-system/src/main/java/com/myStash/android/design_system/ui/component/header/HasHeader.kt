@@ -17,6 +17,7 @@ import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.design_system.ui.component.text.TextConstant.HAS_TEXT_EMPTY
+import com.myStash.android.design_system.ui.theme.clickableNoRipple
 
 @Composable
 fun HasHeader(
@@ -36,7 +37,7 @@ fun HasHeader(
     ) {
         if(isBack) {
             Image(
-                modifier = Modifier.clickable { onBack.invoke() },
+                modifier = Modifier.clickableNoRipple { onBack.invoke() },
                 painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.btn_back_dark else R.drawable.btn_back_light),
                 contentDescription = "back",
             )
