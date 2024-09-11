@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.myStash.android.common.util.setImmersiveMode
 import com.myStash.android.design_system.ui.theme.HasSearchTheme
+import com.myStash.android.design_system.ui.theme.HasSplashTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @SuppressLint("CustomSplashScreen")
@@ -15,7 +16,7 @@ class SplashActivity: ComponentActivity() {
         super.onCreate(savedInstanceState)
         setImmersiveMode()
         setContent {
-            HasSearchTheme {
+            HasSplashTheme {
                 SplashRoute()
             }
         }

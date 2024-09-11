@@ -30,7 +30,7 @@ private val DarkColorScheme = lightColors(
     surface = Gray600
 )
 
-private val SearchDarkColorScheme = lightColors(
+private val DarkColorSchemeSecond = lightColors(
     primary = Lime,
     secondary = Black20,
     background = Gray800,
@@ -95,7 +95,7 @@ fun HasSearchTheme(
     content: @Composable () -> Unit
 ) {
     val colors = if (darkTheme) {
-        SearchDarkColorScheme
+        DarkColorSchemeSecond
     } else {
         LightColorScheme
     }
@@ -121,7 +121,7 @@ fun HasSplashTheme(
     content: @Composable () -> Unit
 ) {
     val colors = if (darkTheme) {
-        SearchDarkColorScheme
+        DarkColorSchemeSecond
     } else {
         LightColorScheme
     }
