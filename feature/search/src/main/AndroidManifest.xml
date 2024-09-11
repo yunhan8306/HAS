@@ -5,7 +5,8 @@
             android:name="com.myStash.android.feature.search.SearchActivity"
             android:exported="false"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
