@@ -143,8 +143,10 @@ class HasViewModel @Inject constructor(
 
                 reduce {
                     state.copy(
+                        isFoldTag = true,
+                        totalTagList = state.totalTagList.sortSelectedTagList(selectedTagList, true),
                         selectedTagList = selectedTagList.toList(),
-                        hasList = hasTotalList.value.getSelectedTypeAndTagHasList(state.selectedType, selectedTagList, typeRemoveList.value)
+                        hasList = hasTotalList.value.getSelectedTypeAndTagHasList(state.selectedType, selectedTagList, typeRemoveList.value),
                     )
                 }
             }

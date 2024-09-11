@@ -107,6 +107,8 @@ class StyleViewModel @Inject constructor(
                 selectedTagList.offerOrRemove(tag) { it.name == tag.name }
                 reduce {
                     state.copy(
+                        isFoldTag = true,
+                        totalTagList = state.totalTagList.sortSelectedTagList(selectedTagList, true),
                         selectedTagList = selectedTagList.toList(),
                         styleList = styleTotalList.value.filterSelectTag(selectedTagList)
                     )
