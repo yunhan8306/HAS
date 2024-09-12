@@ -5,8 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -222,16 +224,28 @@ fun MyPageScreen(
                     )
                 }
             }
-            HasTextField(
-                modifier = Modifier.padding(16.dp),
-                textState = nickNameState,
-                focusRequester = focusRequester,
-                fontSize = 18.dp,
-                fontWeight = HasFontWeight.Bold,
-                textAlign = TextAlign.Center,
-                hint = state.nickName,
-                hintColor = ColorFamilyBlack20AndWhite,
-            )
+            Box(
+                modifier = Modifier.padding(top = 16.dp),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                Row(
+                    modifier = Modifier.padding(10.dp)
+                ) {
+                    HasTextField(
+                        textState = nickNameState,
+                        focusRequester = focusRequester,
+                        fontSize = 18.dp,
+                        fontWeight = HasFontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        hint = state.nickName,
+                        hintColor = ColorFamilyBlack20AndWhite,
+                    )
+                }
+                Image(
+                    painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.btn_my_nick_edit_pencil_dark else R.drawable.btn_my_nick_edit_pencil_light),
+                    contentDescription = "profile edit nick"
+                )
+            }
         }
         SpacerLineBox()
         Column(
