@@ -204,8 +204,8 @@ fun MyPageScreen(
                         contentDescription = "profile edit"
                     )
                     Image(
-                        painter = painterResource(id = R.drawable.img_profile_edit_pencil),
-                        contentDescription = "profile edit pencil"
+                        painter = painterResource(id = R.drawable.btn_my_profile_edit_camera),
+                        contentDescription = "profile edit camera"
                     )
                 }
             }
