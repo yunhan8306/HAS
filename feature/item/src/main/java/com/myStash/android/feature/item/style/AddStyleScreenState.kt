@@ -6,6 +6,7 @@ import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.getTotalType
 
 data class AddStyleScreenState(
+    val isEdit: Boolean = false,
     val typeTotalList: List<Type> = emptyList(),
     val hasList: List<Has> = emptyList(),
     val selectedType: Type = getTotalType(),

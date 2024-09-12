@@ -3,6 +3,7 @@ package com.myStash.android.feature.gallery
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.myStash.android.design_system.animation.slideOut
 import com.myStash.android.design_system.ui.theme.HasGalleryTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -17,5 +18,12 @@ class GalleryActivity : ComponentActivity() {
                 GalleryRoute()
             }
         }
+    }
+
+    override fun onPause() {
+        if (isFinishing) {
+            slideOut()
+        }
+        super.onPause()
     }
 }

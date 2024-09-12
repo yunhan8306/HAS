@@ -16,6 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.myStash.android.common.util.CommonActivityResultContract
+import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.design_system.ui.theme.HasDefaultTheme
 import com.myStash.android.feature.essential.HasScreenAction
 import com.myStash.android.feature.item.ItemActivity
@@ -68,6 +69,7 @@ fun MainRoute(
                         Intent(activity, ItemActivity::class.java).apply {
                             putExtra(ItemConstants.CMD_TAB_NAME, navBackStackEntry?.destination?.route.getItemTab().name)
                             itemActivityLauncher.launch(this)
+                            activity.slideIn()
                         }
                     }
                 )

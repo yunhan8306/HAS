@@ -3,6 +3,8 @@ package com.myStash.android.feature.feed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.common.util.Quadruple
+import com.myStash.android.core.data.repository.profile.ProfileRepositoryImpl
+import com.myStash.android.core.data.usecase.feed.DeleteFeedUseCase
 import com.myStash.android.core.data.usecase.feed.GetFeedListUseCase
 import com.myStash.android.core.data.usecase.has.GetHasListUseCase
 import com.myStash.android.core.data.usecase.style.GetStyleListUseCase
@@ -23,6 +25,7 @@ import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import java.nio.file.Files.delete
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -32,7 +35,8 @@ class FeedViewModel @Inject constructor(
     private val getTagListUseCase: GetTagListUseCase,
     private val getHasListUseCase: GetHasListUseCase,
     private val getStyleListUseCase: GetStyleListUseCase,
-    private val getTypeListUseCase: GetTypeListUseCase
+    private val getTypeListUseCase: GetTypeListUseCase,
+    private val deleteFeedUseCase: DeleteFeedUseCase,
 ): ContainerHost<FeedScreenState, FeedSideEffect>, ViewModel() {
     override val container: Container<FeedScreenState, FeedSideEffect> =
         container(FeedScreenState())
@@ -109,6 +113,7 @@ class FeedViewModel @Inject constructor(
                 is FeedScreenAction.PrevMonth -> prevMonth()
                 is FeedScreenAction.NextMonth -> nextMonth()
                 is FeedScreenAction.SelectDay -> selectDay(action.date)
+                is FeedScreenAction.Delete -> deleteFeed()
                 else -> Unit
             }
         }
@@ -161,6 +166,14 @@ class FeedViewModel @Inject constructor(
                         typeTotalList = typeTotalList.value
                     )
                 }
+            }
+        }
+    }
+
+    private fun deleteFeed() {
+        intent {
+            viewModelScope.launch {
+                state.selectedFeed?.let { deleteFeedUseCase.invoke(it) }
             }
         }
     }

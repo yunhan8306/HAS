@@ -8,5 +8,5 @@ class DeleteStyleUseCase @Inject constructor(
     private val styleRepository: StyleRepository
 ) {
     suspend fun invoke(style: Style) =
-        styleRepository.delete(style)
+        styleRepository.update(style.copy(isRemove = true))
 }

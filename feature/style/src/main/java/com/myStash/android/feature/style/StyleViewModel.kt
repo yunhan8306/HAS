@@ -4,11 +4,13 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.common.util.offerOrRemove
+import com.myStash.android.core.data.usecase.style.DeleteStyleUseCase
 import com.myStash.android.core.data.usecase.style.GetStyleListUseCase
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
 import com.myStash.android.core.data.usecase.type.GetTypeListUseCase
 import com.myStash.android.core.di.DefaultDispatcher
 import com.myStash.android.core.di.IoDispatcher
+import com.myStash.android.core.model.Style.Companion.toStyle
 import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.filterSelectTag
@@ -34,6 +36,7 @@ class StyleViewModel @Inject constructor(
     private val getStyleListUseCase: GetStyleListUseCase,
     private val getTypeListUseCase: GetTypeListUseCase,
     private val getTagListUseCase: GetTagListUseCase,
+    private val deleteStyleUseCase: DeleteStyleUseCase,
     // dispatcher
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
@@ -93,6 +96,7 @@ class StyleViewModel @Inject constructor(
             is StyleScreenAction.SetTagList -> setTagList(action.tagIdList)
             is StyleScreenAction.ResetSelectStyle -> resetSelectStyle()
             is StyleScreenAction.TagToggle -> toggleTag()
+            is StyleScreenAction.DeleteStyle -> deleteStyle(action.style)
             else -> Unit
         }
     }
@@ -103,6 +107,8 @@ class StyleViewModel @Inject constructor(
                 selectedTagList.offerOrRemove(tag) { it.name == tag.name }
                 reduce {
                     state.copy(
+                        isFoldTag = true,
+                        totalTagList = state.totalTagList.sortSelectedTagList(selectedTagList, true),
                         selectedTagList = selectedTagList.toList(),
                         styleList = styleTotalList.value.filterSelectTag(selectedTagList)
                     )
@@ -163,6 +169,12 @@ class StyleViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    private fun deleteStyle(style: StyleScreenModel) {
+        viewModelScope.launch {
+            deleteStyleUseCase.invoke(style.toStyle())
         }
     }
 }

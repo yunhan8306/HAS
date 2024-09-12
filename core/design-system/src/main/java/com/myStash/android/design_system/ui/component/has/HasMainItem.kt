@@ -33,10 +33,16 @@ import com.myStash.android.core.model.Tag
 import com.myStash.android.design_system.ui.color.ColorFamilyGray300AndGray400
 import com.myStash.android.design_system.ui.color.Purple
 import com.myStash.android.design_system.ui.color.White
+import com.myStash.android.design_system.ui.component.balloon.HasBalloon
+import com.myStash.android.design_system.ui.component.balloon.HasBalloonItem
+import com.myStash.android.design_system.ui.component.balloon.HasBalloonState
+import com.myStash.android.design_system.ui.component.balloon.rememberHasBalloonBuilder
 import com.myStash.android.design_system.ui.component.tag.TagHasChipItem
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
+import com.myStash.android.design_system.ui.theme.clickableNoRipple
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
+import com.myStash.android.design_system.util.singleClick
 import kotlinx.coroutines.delay
 
 @Composable
@@ -46,10 +52,33 @@ fun HasMainItem(
     selectedNumber: Int?,
     tagList: List<Tag>,
     selectTagList: List<Tag>,
-    onSelectHas: (Has) -> Unit,
-    onEditHas: (Has) -> Unit,
-    onDeleteHas: (Has) -> Unit
+    onSelectHas: () -> Unit,
+    onEdit: (Has) -> Unit,
+    onDelete: (Has) -> Unit
 ) {
+
+    var balloonEvent by remember { mutableStateOf(HasBalloonState.NONE) }
+    val balloonBuilder = rememberHasBalloonBuilder(
+        onDismiss = { balloonEvent = HasBalloonState.NONE }
+    )
+    val balloonMenuList = remember(has) {
+        listOf(
+            HasBalloonItem(
+                name = "수정",
+                onClick = {
+                    balloonEvent = HasBalloonState.CLOSE
+                    onEdit.invoke(has)
+                }
+            ),
+            HasBalloonItem(
+                name = "삭제",
+                onClick = { balloonEvent = HasBalloonState.CLOSE
+                    onDelete.invoke(has)
+                }
+            )
+        )
+    }
+
     var shortClick by remember { mutableStateOf(false) }
 
     LaunchedEffect(shortClick) {
@@ -59,79 +88,127 @@ fun HasMainItem(
         }
     }
 
-    Box(
-        modifier = Modifier
-            .border(
-                width = if(selectedNumber.isNotNull()) 2.dp else 1.dp,
-                color = if(selectedNumber.isNotNull()) Purple else ColorFamilyGray300AndGray400,
-                shape = RoundedCornerShape(size = 12.dp)
-            )
-            .clip(shape = RoundedCornerShape(size = 12.dp))
-            .combinedClickable(
-                onLongClick = { if(isSelectedMode) shortClick = !shortClick else onSelectHas.invoke(has) },
-                onClick = { if(isSelectedMode) onSelectHas.invoke(has) else shortClick = !shortClick },
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        SubcomposeAsyncImage(
+    singleClick { singleClickEventListener ->
+        Box(
             modifier = Modifier
-                .aspectRatio(158f / 210f)
-                .fillMaxSize()
-                .alpha(if (shortClick) 0.4f else 1f),
-            loading = { ShimmerLoadingAnimation() },
-            error = { ShimmerLoadingAnimation() },
-            contentScale = ContentScale.Crop,
-            model = has.imagePath, // 엑박 이미지 필요?
-            contentDescription = "has image"
-        )
+                .border(
+                    width = if (selectedNumber.isNotNull()) 2.dp else 1.dp,
+                    color = if (selectedNumber.isNotNull()) Purple else ColorFamilyGray300AndGray400,
+                    shape = RoundedCornerShape(size = 12.dp)
+                )
+                .clip(shape = RoundedCornerShape(size = 12.dp))
+                .combinedClickable(
+                    onLongClick = {
+                        singleClickEventListener.onClick {
+                            if (isSelectedMode) shortClick =
+                                !shortClick else onSelectHas.invoke()
+                        }
+                    },
+                    onClick = {
+                        singleClickEventListener.onClick {
+                            if (isSelectedMode) onSelectHas.invoke() else shortClick =
+                                !shortClick
+                        }
+                    },
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            SubcomposeAsyncImage(
+                modifier = Modifier
+                    .aspectRatio(158f / 210f)
+                    .fillMaxSize()
+                    .alpha(if (shortClick) 0.4f else 1f),
+                loading = { ShimmerLoadingAnimation() },
+                error = { ShimmerLoadingAnimation() },
+                contentScale = ContentScale.Crop,
+                model = has.imagePath, // 엑박 이미지 필요?
+                contentDescription = "has image"
+            )
 
-        if(shortClick) {
-            FlowRow(
-                modifier = Modifier.padding(top = 17.dp, bottom = 17.dp, start = 15.dp, end = 15.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                tagList.forEach { tag ->
-                    TagHasChipItem(
-                        name = tag.name,
-                        isSelected = tag.checkSelected(selectTagList)
-                    )
+            if(shortClick) {
+                FlowRow(
+                    modifier = Modifier.padding(top = 17.dp, bottom = 17.dp, start = 15.dp, end = 15.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    tagList.forEach { tag ->
+                        TagHasChipItem(
+                            name = tag.name,
+                            isSelected = tag.checkSelected(selectTagList)
+                        )
+                    }
                 }
             }
         }
-    }
 
-    if(isSelectedMode) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(12.dp),
-            contentAlignment = Alignment.TopEnd
-        ) {
+        if(isSelectedMode) {
             Box(
                 modifier = Modifier
-                    .size(18.dp)
-                    .clickable { onSelectHas.invoke(has) }
-                ,
-                contentAlignment = Alignment.Center
+                    .fillMaxSize()
+                    .padding(12.dp),
+                contentAlignment = Alignment.TopEnd
             ) {
-                if(selectedNumber.isNotNull()) {
-                    Image(
-                        painter = painterResource(id = R.drawable.btn_purple_select),
-                        contentDescription = "has select"
-                    )
-                    HasText(
-                        text = selectedNumber.toString(),
-                        color = White,
-                        fontSize = 12.dp,
-                        fontWeight = HasFontWeight.Bold
-                    )
-                } else {
-                    Image(
-                        painter = painterResource(id = R.drawable.btn_purple_no_select),
-                        contentDescription = "has select"
-                    )
+                Box(
+                    modifier = Modifier
+                        .size(18.dp)
+                        .clickable { singleClickEventListener.onClick { onSelectHas.invoke() } }
+                    ,
+                    contentAlignment = Alignment.Center
+                ) {
+                    if(selectedNumber.isNotNull()) {
+                        Image(
+                            painter = painterResource(id = R.drawable.btn_purple_select),
+                            contentDescription = "has select"
+                        )
+                        HasText(
+                            text = selectedNumber.toString(),
+                            color = White,
+                            fontSize = 12.dp,
+                            fontWeight = HasFontWeight.Bold
+                        )
+                    } else {
+                        Image(
+                            painter = painterResource(id = R.drawable.btn_purple_no_select),
+                            contentDescription = "has select"
+                        )
+                    }
                 }
             }
+        } else {
+            HasBalloon(
+                builder = balloonBuilder,
+                menuList = balloonMenuList,
+                content = { balloonWindow ->
+                    LaunchedEffect(balloonEvent) {
+                        when (balloonEvent) {
+                            HasBalloonState.NONE -> Unit
+                            HasBalloonState.CLOSE -> balloonWindow.dismiss()
+                            HasBalloonState.OPEN -> balloonWindow.showAsDropDown()
+                        }
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top = 4.dp),
+                        contentAlignment = Alignment.TopEnd
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .padding(6.dp)
+                                .clickableNoRipple {
+                                    singleClickEventListener.onClick {
+                                        balloonEvent = HasBalloonState.OPEN
+                                    }
+                                }
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.btn_more_light),
+                                contentDescription = "has more"
+                            )
+                        }
+                    }
+                }
+            )
         }
     }
 }

@@ -17,11 +17,13 @@ data class StyleScreenState(
 sealed interface StyleSideEffect
 
 sealed interface StyleScreenAction {
-    data class SelectStyle(val style: StyleScreenModel?) : StyleScreenAction
-    data class SelectTag(val tag: Tag) : StyleScreenAction
+    data class SelectStyle(val style: StyleScreenModel?): StyleScreenAction
+    data class SelectTag(val tag: Tag): StyleScreenAction
     data class ShowMoreStyle(val style: StyleScreenModel): StyleScreenAction
-    data class SetTagList(val tagIdList: List<Long>) : StyleScreenAction
-    object ShowSearch : StyleScreenAction
+    data class SetTagList(val tagIdList: List<Long>): StyleScreenAction
+    data class ShowItemActivity(val style: StyleScreenModel): StyleScreenAction
+    data class DeleteStyle(val style: StyleScreenModel): StyleScreenAction
+    object ShowSearch: StyleScreenAction
     object ResetSelectStyle: StyleScreenAction
     object TagToggle: StyleScreenAction
 }

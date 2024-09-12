@@ -1,7 +1,6 @@
 package com.myStash.android
 
 import android.content.Intent
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Box
@@ -17,6 +16,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.myStash.android.common.util.CommonActivityResultContract
+import com.myStash.android.common.util.isNotNull
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.StyleScreenModel
 import com.myStash.android.design_system.animation.slideIn
@@ -69,39 +69,33 @@ fun MainBottomModalRoute(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
-        when(currentRoute) {
-            MainNavType.HAS.name -> {
-                MainHasBottomModal(
-                    hasList = hasSelectedList,
-                    onDelete = { hasViewModel.onAction(HasScreenAction.SelectHas(it)) },
-                    onSelect = {
-                        val intent = Intent(activity, ItemActivity::class.java).apply {
-                            putExtra(ItemConstants.CMD_TAB_NAME, ItemTab.STYLE.name)
-                            putExtra(ItemConstants.CMD_STYLE, hasSelectedList.map { it.id }.toTypedArray())
-                        }
-                        itemActivityLauncher.launch(intent)
-                        activity.slideIn()
-                    },
-                    onCancel = { hasViewModel.onAction(HasScreenAction.ResetSelectHas) },
-                )
-            }
-            MainNavType.STYLE.name -> {
-                StyleBottomModal(
-                    selectedStyle = selectedStyle,
-                    onSelect = {
-                        selectedStyle?.let {
-                            val intent = Intent(activity, ItemActivity::class.java).apply {
-                                putExtra(ItemConstants.CMD_TAB_NAME, ItemTab.FEED.name)
-                                putExtra(ItemConstants.CMD_FEED, selectedStyle.id)
-                            }
-                            itemActivityLauncher.launch(intent)
-                            activity.slideIn()
-                        }
-                    },
-                    onCancel = { styleViewModel.onAction(StyleScreenAction.ResetSelectStyle) },
-                )
-            }
-            else -> Unit
-        }
+        MainHasBottomModal(
+            isShow = currentRoute == MainNavType.HAS.name && hasSelectedList.isNotEmpty(),
+            hasList = hasSelectedList,
+            onDelete = { hasViewModel.onAction(HasScreenAction.SelectHas(it)) },
+            onSelect = {
+                val intent = Intent(activity, ItemActivity::class.java).apply {
+                    putExtra(ItemConstants.CMD_TAB_NAME, ItemTab.STYLE.name)
+                    putExtra(ItemConstants.CMD_STYLE, hasSelectedList.map { it.id }.toTypedArray())
+                }
+                itemActivityLauncher.launch(intent)
+                activity.slideIn()
+            },
+            onCancel = { hasViewModel.onAction(HasScreenAction.ResetSelectHas) },
+        )
+        StyleBottomModal(
+            isShow = currentRoute == MainNavType.STYLE.name && selectedStyle.isNotNull(),
+            onSelect = {
+                selectedStyle?.let {
+                    val intent = Intent(activity, ItemActivity::class.java).apply {
+                        putExtra(ItemConstants.CMD_TAB_NAME, ItemTab.FEED.name)
+                        putExtra(ItemConstants.CMD_STYLE_ID, selectedStyle.id)
+                    }
+                    itemActivityLauncher.launch(intent)
+                    activity.slideIn()
+                }
+            },
+            onCancel = { styleViewModel.onAction(StyleScreenAction.ResetSelectStyle) },
+        )
     }
 }

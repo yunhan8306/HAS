@@ -284,7 +284,7 @@ fun AddFeedScreen(
                     )
             ) {
                 HasButton(
-                    text = "등록하기",
+                    text = if(state.isEdit) "수정하기" else "등록하기",
                     isComplete = isComplete,
                     onClick = { onAction.invoke(AddFeedScreenAction.SaveFeed) }
                 )

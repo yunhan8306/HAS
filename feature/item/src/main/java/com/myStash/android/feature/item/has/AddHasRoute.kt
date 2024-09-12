@@ -50,11 +50,12 @@ fun AddHasRoute(
         activity = activity,
         scope = scope,
         grant = {
-            val intent = Intent(activity.apply { slideIn() }, GalleryActivity::class.java).apply {
+            val intent = Intent(activity, GalleryActivity::class.java).apply {
                 putExtra(GalleryConstants.TYPE, GalleryConstants.SINGLE)
                 putExtra(GalleryConstants.AGO_IMAGE_URI_ARRAY, arrayOf(state.imageUri))
             }
             galleryActivityLauncher.launch(intent)
+            activity.slideIn()
         },
         denied = {
             isShowPermissionRequestConfirm = true

@@ -1,5 +1,7 @@
 package com.myStash.android
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -38,65 +40,65 @@ import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 
 @Composable
 fun MainHasBottomModal(
+    isShow: Boolean,
     hasList: List<Has>,
     onDelete: (Has) -> Unit,
     onSelect: () -> Unit,
     onCancel: () -> Unit,
 ) {
-    var isShow by remember { mutableStateOf(false) }
 
-    LaunchedEffect(hasList) {
-        isShow = hasList.isNotEmpty()
-    }
+    val modalHeight by animateDpAsState(
+        targetValue = if(isShow) 168.dp else 0.dp,
+        animationSpec = tween(400),
+        label = "modal height"
+    )
 
-    if(isShow) {
-        Column(
+    Column(
+        modifier = Modifier
+            .shadow(elevation = 10.dp, shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+            .background(color = MaterialTheme.colors.surface, shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+            .fillMaxWidth()
+            .height(modalHeight)
+            .clickableNoRipple {  }
+            .padding(14.dp)
+    ) {
+        LazyRow(
             modifier = Modifier
-                .shadow(elevation = 10.dp, shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-                .background(color = MaterialTheme.colors.surface, shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                .height(68.dp)
                 .fillMaxWidth()
-                .height(168.dp)
-                .clickableNoRipple {  }
-                .padding(14.dp)
         ) {
-            LazyRow(
-                modifier = Modifier
-                    .height(68.dp)
-                    .fillMaxWidth()
-            ) {
-                items(hasList) { has ->
-                    Box(
+            items(hasList) { has ->
+                Box(
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .clickable { onDelete.invoke(has) },
+                    contentAlignment = Alignment.TopEnd
+                ) {
+                    SubcomposeAsyncImage(
                         modifier = Modifier
-                            .padding(2.dp)
-                            .clickable { onDelete.invoke(has) },
-                        contentAlignment = Alignment.TopEnd
-                    ) {
-                        SubcomposeAsyncImage(
-                            modifier = Modifier
-                                .aspectRatio(1f)
-                                .clip(shape = RoundedCornerShape(size = 6.dp))
-                                .border(width = 1.dp, color = Gray300, shape = RoundedCornerShape(size = 6.dp))
-                                .clip(RoundedCornerShape(size = 6.dp))
-                                .size(68.dp),
-                            loading = { ShimmerLoadingAnimation() },
-                            error = { ShimmerLoadingAnimation() },
-                            contentScale = ContentScale.Crop,
-                            model = has.imagePath,
-                            contentDescription = "main has modal image"
-                        )
-                        Image(
-                            painter = painterResource(id = R.drawable.btn_delete),
-                            contentDescription = "delete"
-                        )
-                    }
+                            .aspectRatio(1f)
+                            .clip(shape = RoundedCornerShape(size = 6.dp))
+                            .border(width = 1.dp, color = Gray300, shape = RoundedCornerShape(size = 6.dp))
+                            .clip(RoundedCornerShape(size = 6.dp))
+                            .size(68.dp),
+                        loading = { ShimmerLoadingAnimation() },
+                        error = { ShimmerLoadingAnimation() },
+                        contentScale = ContentScale.Crop,
+                        model = has.imagePath,
+                        contentDescription = "main has modal image"
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.btn_delete),
+                        contentDescription = "delete"
+                    )
                 }
             }
-            HasSelectButton(
-                modifier = Modifier.padding(top = 16.dp),
-                selectText = "Style 등록",
-                onSelect = onSelect,
-                onCancel = onCancel
-            )
         }
+        HasSelectButton(
+            modifier = Modifier.padding(top = 16.dp),
+            selectText = "Style 등록",
+            onSelect = onSelect,
+            onCancel = onCancel
+        )
     }
 }

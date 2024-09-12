@@ -78,17 +78,19 @@ fun ManageTextField(
                     } else {
                         innerTextField()
                         Spacer(modifier = Modifier.weight(1f))
-                        Box(
-                            modifier = Modifier
-                                .height(24.dp)
-                                .width(45.dp)
-                                .clickable { add.invoke() },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            HasText(
-                                text = "Add",
-                                color = ColorFamilyLime700AndGray400
-                            )
+                        if(textState.text.length > 1) {
+                            Box(
+                                modifier = Modifier
+                                    .height(24.dp)
+                                    .width(45.dp)
+                                    .clickable { add.invoke() },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                HasText(
+                                    text = "Add",
+                                    color = ColorFamilyLime700AndGray400
+                                )
+                            }
                         }
                     }
                 }

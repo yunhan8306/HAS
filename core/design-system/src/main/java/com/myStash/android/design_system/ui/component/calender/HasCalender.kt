@@ -93,8 +93,15 @@ fun HasCalender(
                                 }
                             }
 
+                            val isToday by remember(year, month) {
+                                derivedStateOf {
+                                    year == LocalDate.now().year && month == LocalDate.now().monthValue && calenderData.day == LocalDate.now().dayOfMonth.toString()
+                                }
+                            }
+
                             FeedCalenderDayItem(
                                 day = calenderData.day,
+                                isToday = isToday,
                                 isSelect = isSelect,
                                 onClick = { onClickDay.invoke(LocalDate.of(year, month, calenderData.day.toInt())) }
                             )
@@ -106,9 +113,16 @@ fun HasCalender(
                                 }
                             }
 
+                            val isToday by remember(year, month) {
+                                derivedStateOf {
+                                    year == LocalDate.now().year && month == LocalDate.now().monthValue && calenderData.day == LocalDate.now().dayOfMonth.toString()
+                                }
+                            }
+
                             FeedCalenderRecordDayItem(
-                                isSelect = isSelect,
                                 day = calenderData.day,
+                                isToday = isToday,
+                                isSelect = isSelect,
                                 imageUri = calenderData.imageUri,
                                 onClick = { onClickDay.invoke(LocalDate.of(year, month, calenderData.day.toInt())) }
                             )
@@ -191,6 +205,7 @@ fun FeedCalenderSpacerItem() {
 @Composable
 fun FeedCalenderDayItem(
     day: String,
+    isToday: Boolean,
     isSelect: Boolean,
     onClick: (String) -> Unit,
 ) {
@@ -210,7 +225,7 @@ fun FeedCalenderDayItem(
             HasText(
                 text = day,
                 fontSize = 12.dp,
-                color = if(LocalDate.now().dayOfMonth.toString() == day && !isSelect) Lime300 else Gray350
+                color = if(isToday && !isSelect) Lime300 else Gray350
             )
         }
     }
@@ -218,8 +233,9 @@ fun FeedCalenderDayItem(
 
 @Composable
 fun FeedCalenderRecordDayItem(
-    isSelect: Boolean,
     day: String,
+    isToday: Boolean,
+    isSelect: Boolean,
     imageUri: String,
     onClick: (String) -> Unit,
 ) {
@@ -259,7 +275,7 @@ fun FeedCalenderRecordDayItem(
         HasText(
             text = day,
             fontSize = 12.dp,
-            color = if(isSelect) Black20 else if(LocalDate.now().dayOfMonth.toString() == day) Lime300 else White
+            color = if(isSelect) Black20 else if(isToday) Lime300 else White
         )
     }
 }

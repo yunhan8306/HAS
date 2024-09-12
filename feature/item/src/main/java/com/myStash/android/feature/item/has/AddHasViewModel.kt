@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.myStash.android.common.util.offer
 import com.myStash.android.common.util.offerOrRemove
 import com.myStash.android.core.data.usecase.has.SaveHasUseCase
+import com.myStash.android.core.data.usecase.has.UpdateHasUseCase
 import com.myStash.android.core.data.usecase.tag.CheckAvailableTagUseCase
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
 import com.myStash.android.core.data.usecase.tag.SaveTagUseCase
@@ -19,8 +20,11 @@ import com.myStash.android.core.di.DefaultDispatcher
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
+import com.myStash.android.core.model.getTagList
+import com.myStash.android.core.model.getType
 import com.myStash.android.core.model.tagAddAndFoundFromSearchText
 import com.myStash.android.feature.item.ItemConstants
+import com.myStash.android.feature.item.item.ItemTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
@@ -45,8 +49,8 @@ class AddHasViewModel @Inject constructor(
 
     private val getTagListUseCase: GetTagListUseCase,
     private val getTypeListUseCase: GetTypeListUseCase,
-
     private val saveHasUseCase: SaveHasUseCase,
+    private val updateHasUseCase: UpdateHasUseCase,
     private val saveTagUseCase: SaveTagUseCase,
     private val stateHandle: SavedStateHandle,
     // dispatcher
@@ -63,6 +67,8 @@ class AddHasViewModel @Inject constructor(
     private val selectedTagList = mutableListOf<Tag>()
 
     val searchTextState = TextFieldState()
+    private val agoHas = stateHandle.get<Has?>(ItemConstants.CMD_HAS)
+    private val isEdit = stateHandle.get<String>(ItemConstants.CMD_EDIT_TAB_NAME) == ItemTab.HAS.tabName
 
     private val searchTagList = searchTextState
         .textAsFlow()
@@ -99,14 +105,21 @@ class AddHasViewModel @Inject constructor(
     private fun fetch() {
         intent {
             viewModelScope.launch {
-                val has = stateHandle.get<Has?>("has")
                 combine(tagTotalList, typeTotalList) { tagList, typeList ->
                     Pair(tagList, typeList)
                 }.collectLatest { (tagList, typeList) ->
+                    if(selectedTagList.isEmpty()) {
+                        selectedTagList.addAll(agoHas?.tags?.getTagList(tagList) ?: emptyList())
+                    }
+
                     reduce {
                         state.copy(
-                            tagTotalList = tagList,
+                            isEdit = isEdit,
+                            imageUri = state.imageUri ?: agoHas?.imagePath,
                             typeTotalList = typeList,
+                            selectedType = state.selectedType ?: agoHas?.type?.getType(typeList),
+                            tagTotalList = tagList,
+                            selectedTagList = selectedTagList.toList(),
                             searchTagList = tagList
                         )
                     }
@@ -139,7 +152,7 @@ class AddHasViewModel @Inject constructor(
                 selectTag(action.tag)
             }
             is AddHasScreenAction.Save -> {
-                saveItem()
+                if(isEdit) updateItem() else saveItem()
             }
             else -> Unit
         }
@@ -204,6 +217,26 @@ class AddHasViewModel @Inject constructor(
                 )
 
                 saveHasUseCase.invoke(newHas)
+
+                Intent().apply {
+                    putExtra(ItemConstants.CMD_COMPLETE, ItemConstants.CMD_HAS)
+                    postSideEffect(AddHasSideEffect.Finish(this))
+                }
+            }
+        }
+    }
+
+    private fun updateItem() {
+        intent {
+            viewModelScope.launch {
+                val updateHas = Has(
+                    id = agoHas?.id,
+                    tags = getTagIdList(),
+                    type = state.selectedType?.id!!,
+                    imagePath = state.imageUri,
+                )
+
+                updateHasUseCase.invoke(updateHas)
 
                 Intent().apply {
                     putExtra(ItemConstants.CMD_COMPLETE, ItemConstants.CMD_HAS)

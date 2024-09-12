@@ -1,5 +1,8 @@
 package com.myStash.android.feature.feed
 
+import android.content.Intent
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -23,6 +26,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -37,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -45,9 +50,20 @@ import androidx.navigation.NavGraphBuilder
 import coil.compose.SubcomposeAsyncImage
 import com.google.accompanist.navigation.animation.composable
 import com.myStash.android.common.resource.R
+import com.myStash.android.common.util.CommonActivityResultContract
+import com.myStash.android.common.util.isNotNull
+import com.myStash.android.core.model.Feed
+import com.myStash.android.core.model.StyleScreenModel
+import com.myStash.android.design_system.animation.slideIn
+import com.myStash.android.design_system.ui.DevicePreviews
 import com.myStash.android.design_system.ui.color.ColorFamilyGray100AndGray800
 import com.myStash.android.design_system.ui.color.ColorFamilyGray500AndGray900
+import com.myStash.android.design_system.ui.component.balloon.HasBalloon
+import com.myStash.android.design_system.ui.component.balloon.HasBalloonItem
+import com.myStash.android.design_system.ui.component.balloon.HasBalloonState
+import com.myStash.android.design_system.ui.component.balloon.rememberHasBalloonBuilder
 import com.myStash.android.design_system.ui.component.calender.HasCalender
+import com.myStash.android.design_system.ui.component.dialog.HasConfirmDialog
 import com.myStash.android.design_system.ui.component.header.HasLogoHeader
 import com.myStash.android.design_system.ui.component.tag.TagChipItem
 import com.myStash.android.design_system.ui.component.tag.TagMoreChipItem
@@ -55,7 +71,10 @@ import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
 import com.myStash.android.design_system.ui.theme.clickableNoRipple
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
+import com.myStash.android.feature.item.ItemActivity
+import com.myStash.android.feature.item.ItemConstants
 import com.myStash.android.feature.item.feed.AddStyleHasItem
+import com.myStash.android.feature.item.item.ItemTab
 import com.myStash.android.navigation.MainNavType
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
@@ -73,15 +92,47 @@ fun FeedRoute(
     viewModel: FeedViewModel = hiltViewModel()
 ) {
     val state by viewModel.collectAsState()
+    val activity = LocalContext.current as ComponentActivity
+
+    val itemActivityLauncher = rememberLauncherForActivityResult(
+        contract = CommonActivityResultContract(),
+        onResult = {}
+    )
+
+    var deleteFeedConfirm: Feed? by remember { mutableStateOf(null) }
 
     FeedScreen(
         state = state,
         onAction = { action ->
             when(action) {
-                is FeedScreenAction.More -> {}
+                is FeedScreenAction.Edit -> {
+                    val intent = Intent(activity, ItemActivity::class.java)
+                        .putExtra(ItemConstants.CMD_TAB_NAME, ItemTab.FEED.name)
+                        .putExtra(ItemConstants.CMD_EDIT_TAB_NAME, ItemTab.FEED.name)
+                        .putExtra(ItemConstants.CMD_STYLE_ID, state.selectedFeed?.styleId)
+                        .putExtra(ItemConstants.CMD_FEED, state.selectedFeed)
+                    itemActivityLauncher.launch(intent)
+                    activity.slideIn()
+                }
+                is FeedScreenAction.Delete -> {
+                    deleteFeedConfirm = state.selectedFeed
+                }
                 else -> viewModel.onAction(action)
             }
         }
+    )
+
+    HasConfirmDialog(
+        isShow = deleteFeedConfirm.isNotNull(),
+        title = "Feed",
+        content = "Do you want to delete this Feed?",
+        confirmText = "confirm",
+        dismissText = "cancel",
+        onConfirm = {
+            viewModel.onAction(FeedScreenAction.Delete)
+            deleteFeedConfirm = null
+        },
+        onDismiss = { deleteFeedConfirm = null }
     )
 }
 
@@ -103,6 +154,32 @@ fun FeedScreen(
         label = "header calender fade ani"
     )
 
+    var balloonEvent by remember { mutableStateOf(HasBalloonState.NONE) }
+    val balloonBuilder = rememberHasBalloonBuilder(
+        onDismiss = { balloonEvent = HasBalloonState.NONE },
+        block = {
+            setMarginRight(16)
+        }
+    )
+    val balloonMenuList = remember {
+        listOf(
+            HasBalloonItem(
+                name = "수정",
+                onClick = {
+                    balloonEvent = HasBalloonState.CLOSE
+                    onAction.invoke(FeedScreenAction.Edit)
+                }
+            ),
+            HasBalloonItem(
+                name = "삭제",
+                onClick = {
+                    balloonEvent = HasBalloonState.CLOSE
+                    onAction.invoke(FeedScreenAction.Delete)
+                }
+            )
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -118,152 +195,171 @@ fun FeedScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Column(
-                modifier = Modifier
-                    .padding(top = 16.dp)
-                    .widthIn(max = 400.dp)
-                    .heightIn(max = 400.dp)
+                modifier = Modifier.widthIn(max = 400.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                HasCalender(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(shape = RoundedCornerShape(size = 12.dp)),
-                    year = state.calenderDate.year,
-                    month = state.calenderDate.monthValue,
-                    selectDate = state.selectedDate,
-                    calenderDataList = state.calenderDataList,
-                    onPrevMonth = { onAction.invoke(FeedScreenAction.PrevMonth) },
-                    onNextMonth = { onAction.invoke(FeedScreenAction.NextMonth) },
-                    onClickDay = { onAction.invoke(FeedScreenAction.SelectDay(it)) },
-                )
-            }
-            Box(
-                modifier = Modifier.padding(vertical = 16.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .clip(shape = RoundedCornerShape(size = 12.dp))
-                        .background(MaterialTheme.colors.background)
-                        .fillMaxWidth()
-                        .height(44.dp)
-                        .padding(start = 16.dp, end = 12.dp)
-                        .onGloballyPositioned { coordinates ->
-                            yPosition = coordinates.positionInWindow().y.toInt()
-                        },
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    HasText(
-                        modifier = Modifier.weight(1f),
-                        text = "${state.selectedDate.monthValue}.${state.selectedDate.dayOfMonth}"
-                    )
-                    Image(
-                        modifier = Modifier.clickableNoRipple { onAction.invoke(FeedScreenAction.More) },
-                        painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.btn_more_dark else R.drawable.btn_more_light),
-                        contentDescription = "feed more"
-                    )
-                }
-            }
-            
-            state.selectedFeed?.let { feed ->
-                Box {
-                    SubcomposeAsyncImage(
-                        model = feed.images.firstOrNull(),
-                        contentDescription = "gallery image",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(1f)
-                            .clip(shape = RoundedCornerShape(size = 8.dp)),
-                        contentScale = ContentScale.Crop,
-                        loading = { ShimmerLoadingAnimation() },
-                        error = { ShimmerLoadingAnimation() }
-                    )
-                }
-                Box(modifier = Modifier.height(16.dp))
                 Column(
                     modifier = Modifier
-                        .clip(shape = RoundedCornerShape(size = 12.dp))
-                        .background(MaterialTheme.colors.background)
-                        .padding(top = 16.dp, bottom = 16.dp, start = 20.dp, end = 20.dp)
-                        .heightIn(max = 300.dp)
+                        .padding(top = 16.dp)
+                        .heightIn(max = 400.dp)
                 ) {
-                    HasText(
-                        text = "Tag",
-                        fontSize = 18.dp,
-                        fontWeight = HasFontWeight.Bold
-                    )
-                    Box(modifier = Modifier.height(20.dp))
-                    FlowRow(
+                    HasCalender(
                         modifier = Modifier
-                            .heightIn(max = if (flowToggle) 200.dp else Dp.Unspecified)
                             .fillMaxWidth()
-                            .verticalScroll(tagScrollState)
+                            .clip(shape = RoundedCornerShape(size = 12.dp)),
+                        year = state.calenderDate.year,
+                        month = state.calenderDate.monthValue,
+                        selectDate = state.selectedDate,
+                        calenderDataList = state.calenderDataList,
+                        onPrevMonth = { onAction.invoke(FeedScreenAction.PrevMonth) },
+                        onNextMonth = { onAction.invoke(FeedScreenAction.NextMonth) },
+                        onClickDay = { onAction.invoke(FeedScreenAction.SelectDay(it)) },
+                    )
+                }
+                Box(
+                    modifier = Modifier.padding(vertical = 16.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .clip(shape = RoundedCornerShape(size = 12.dp))
+                            .background(MaterialTheme.colors.background)
+                            .fillMaxWidth()
+                            .height(44.dp)
+                            .padding(start = 16.dp, end = 12.dp)
+                            .onGloballyPositioned { coordinates ->
+                                yPosition = coordinates.positionInWindow().y.toInt()
+                            },
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        state.selectedFeedTagList.forEachIndexed { index, tag ->
-                            if(index < 3 || flowToggle) {
-                                TagChipItem(
-                                    name = tag.name,
-                                    isSelected = true,
-                                    onClick = {}
-                                )
-                            }
-                        }
-                        if(state.selectedFeedTagList.size > 3) {
-                            TagMoreChipItem(
-                                cnt = "${state.selectedFeedTagList.size + (if(!flowToggle) -3 else 0)}",
-                                isFold = flowToggle,
-                                onClick = { flowToggle = !flowToggle }
+                        HasText(
+                            modifier = Modifier.weight(1f),
+                            text = "${state.selectedDate.monthValue}.${state.selectedDate.dayOfMonth}"
+                        )
+                        if(!headerToggle && state.selectedFeed.isNotNull()) {
+                            HasBalloon(
+                                builder = balloonBuilder,
+                                menuList = balloonMenuList,
+                                content = { balloonWindow ->
+                                    LaunchedEffect(balloonEvent) {
+                                        when (balloonEvent) {
+                                            HasBalloonState.NONE -> Unit
+                                            HasBalloonState.CLOSE -> balloonWindow.dismiss()
+                                            HasBalloonState.OPEN -> balloonWindow.showAsDropDown()
+                                        }
+                                    }
+                                    Image(
+                                        modifier = Modifier.clickableNoRipple { balloonEvent = HasBalloonState.OPEN },
+                                        painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.btn_more_dark else R.drawable.btn_more_light),
+                                        contentDescription = "feed more"
+                                    )
+                                }
                             )
                         }
                     }
                 }
-                Box(modifier = Modifier.height(16.dp))
-                state.selectedFeedStyle?.let { style ->
+
+                state.selectedFeed?.let { feed ->
+                    Box {
+                        SubcomposeAsyncImage(
+                            model = feed.images.firstOrNull(),
+                            contentDescription = "gallery image",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(1f)
+                                .clip(shape = RoundedCornerShape(size = 8.dp)),
+                            contentScale = ContentScale.Crop,
+                            loading = { ShimmerLoadingAnimation() },
+                            error = { ShimmerLoadingAnimation() }
+                        )
+                    }
+                    Box(modifier = Modifier.height(16.dp))
                     Column(
                         modifier = Modifier
                             .clip(shape = RoundedCornerShape(size = 12.dp))
                             .background(MaterialTheme.colors.background)
                             .padding(top = 16.dp, bottom = 16.dp, start = 20.dp, end = 20.dp)
+                            .heightIn(max = 300.dp)
                     ) {
-                        LazyColumn(
-                            modifier = Modifier.heightIn(max = 2000.dp),
-                            userScrollEnabled = false
+                        HasText(
+                            text = "Tag",
+                            fontSize = 18.dp,
+                            fontWeight = HasFontWeight.Bold
+                        )
+                        Box(modifier = Modifier.height(20.dp))
+                        FlowRow(
+                            modifier = Modifier
+                                .heightIn(max = if (flowToggle) 200.dp else Dp.Unspecified)
+                                .fillMaxWidth()
+                                .verticalScroll(tagScrollState)
                         ) {
-                            items(
-                                items = style.hasList,
-                                key = { it.id!! }
-                            ) { has ->
-                                AddStyleHasItem(
-                                    has = has,
-                                    typeTotalList = state.typeTotalList,
-                                    tagTotalList = state.selectedFeedTagList
+                            state.selectedFeedTagList.forEachIndexed { index, tag ->
+                                if(index < 3 || flowToggle) {
+                                    TagChipItem(
+                                        name = tag.name,
+                                        isSelected = true,
+                                        onClick = {}
+                                    )
+                                }
+                            }
+                            if(state.selectedFeedTagList.size > 3) {
+                                TagMoreChipItem(
+                                    cnt = "${state.selectedFeedTagList.size + (if(!flowToggle) -3 else 0)}",
+                                    isFold = flowToggle,
+                                    onClick = { flowToggle = !flowToggle }
                                 )
                             }
                         }
                     }
                     Box(modifier = Modifier.height(16.dp))
-                }
-            } ?: run {
-                Box(
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    state.selectedFeedStyle?.let { style ->
+                        Column(
+                            modifier = Modifier
+                                .clip(shape = RoundedCornerShape(size = 12.dp))
+                                .background(MaterialTheme.colors.background)
+                                .padding(top = 16.dp, bottom = 16.dp, start = 20.dp, end = 20.dp)
+                        ) {
+                            LazyColumn(
+                                modifier = Modifier.heightIn(max = 2000.dp),
+                                userScrollEnabled = false
+                            ) {
+                                items(
+                                    items = style.hasList,
+                                    key = { it.id!! }
+                                ) { has ->
+                                    AddStyleHasItem(
+                                        has = has,
+                                        typeTotalList = state.typeTotalList,
+                                        tagTotalList = state.selectedFeedTagList
+                                    )
+                                }
+                            }
+                        }
+                        Box(modifier = Modifier.height(16.dp))
+                    }
+                } ?: run {
+                    Box(
+                        contentAlignment = Alignment.Center
                     ) {
-                        Image(
-                            painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.img_hadung_empty_dark else R.drawable.img_hadung_empty_light),
-                            contentDescription = "feed gone"
-                        )
-                        HasText(
-                            modifier = Modifier.padding(top = 16.dp),
-                            text = "There is no registered Feed.",
-                            color = ColorFamilyGray500AndGray900,
-                            fontSize = 14.dp
-                        )
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.img_hadung_empty_dark else R.drawable.img_hadung_empty_light),
+                                contentDescription = "feed gone"
+                            )
+                            HasText(
+                                modifier = Modifier.padding(top = 16.dp, bottom = 40.dp),
+                                text = "There is no registered Feed.",
+                                color = ColorFamilyGray500AndGray900,
+                                fontSize = 14.dp
+                            )
+                        }
                     }
                 }
             }
         }
     }
-    if(headerCalenderFade > 0f) {
+    if(headerCalenderFade > 0f && state.selectedFeed.isNotNull()) {
         Column(
             modifier = Modifier.alpha(headerCalenderFade)
         ) {
@@ -281,12 +377,35 @@ fun FeedScreen(
                     modifier = Modifier.weight(1f),
                     text = "${state.selectedDate.monthValue}.${state.selectedDate.dayOfMonth}"
                 )
-                Image(
-                    modifier = Modifier.clickableNoRipple { onAction.invoke(FeedScreenAction.More) },
-                    painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.btn_more_dark else R.drawable.btn_more_light),
-                    contentDescription = "feed more"
+                HasBalloon(
+                    builder = balloonBuilder,
+                    menuList = balloonMenuList,
+                    content = { balloonWindow ->
+                        LaunchedEffect(balloonEvent) {
+                            when (balloonEvent) {
+                                HasBalloonState.NONE -> Unit
+                                HasBalloonState.CLOSE -> balloonWindow.dismiss()
+                                HasBalloonState.OPEN -> balloonWindow.showAsDropDown()
+                            }
+                        }
+                        Image(
+                            modifier = Modifier.clickableNoRipple { balloonEvent = HasBalloonState.OPEN },
+                            painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.btn_more_dark else R.drawable.btn_more_light),
+                            contentDescription = "feed more"
+                        )
+                    }
                 )
             }
         }
     }
+}
+
+@DevicePreviews
+@Composable
+fun FeedScreenPreview() {
+    FeedScreen(
+        state = FeedScreenState(),
+        onAction = {}
+    )
+
 }

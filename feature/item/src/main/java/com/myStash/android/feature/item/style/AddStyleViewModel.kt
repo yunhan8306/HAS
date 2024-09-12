@@ -11,8 +11,8 @@ import com.myStash.android.common.util.Quadruple
 import com.myStash.android.common.util.removeBlank
 import com.myStash.android.core.data.usecase.has.GetHasListUseCase
 import com.myStash.android.core.data.usecase.style.SaveStyleUseCase
+import com.myStash.android.core.data.usecase.style.UpdateStyleUseCase
 import com.myStash.android.core.data.usecase.tag.GetTagListUseCase
-import com.myStash.android.core.data.usecase.tag.SaveTagUseCase
 import com.myStash.android.core.data.usecase.type.GetTypeListUseCase
 import com.myStash.android.core.di.DefaultDispatcher
 import com.myStash.android.core.model.Has
@@ -24,6 +24,7 @@ import com.myStash.android.core.model.getTotalTypeList
 import com.myStash.android.core.model.getUnSelectTypeList
 import com.myStash.android.core.model.searchSelectedTypeHasList
 import com.myStash.android.feature.item.ItemConstants
+import com.myStash.android.feature.item.item.ItemTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
@@ -46,7 +47,7 @@ import javax.inject.Inject
 class AddStyleViewModel @Inject constructor(
     private val getTagListUseCase: GetTagListUseCase,
     private val saveStyleUseCase: SaveStyleUseCase,
-    private val saveTagUseCase: SaveTagUseCase,
+    private val updateStyleUseCase: UpdateStyleUseCase,
     private val stateHandle: SavedStateHandle,
 
     private val getHasListUseCase: GetHasListUseCase,
@@ -64,6 +65,10 @@ class AddStyleViewModel @Inject constructor(
 
     val searchTextState = TextFieldState()
     var selectedType = getTotalType()
+
+    private val agoHasIdList = stateHandle.get<Array<Long>>(ItemConstants.CMD_STYLE)?.toList() ?: emptyList()
+    private val agoStyleId = stateHandle.get<Long?>(ItemConstants.CMD_STYLE_ID)
+    private val isEdit = stateHandle.get<String>(ItemConstants.CMD_EDIT_TAB_NAME) == ItemTab.STYLE.tabName
 
     private val searchHasList = searchTextState
         .textAsFlow()
@@ -108,16 +113,15 @@ class AddStyleViewModel @Inject constructor(
     private fun fetch() {
         intent {
             viewModelScope.launch {
-                val selectedHasIdList = stateHandle.get<Array<Long>>("style")?.toList() ?: emptyList()
-
                 combine(typeTotalList, hasTotalList, tagTotalList, typeRemoveList) { typeList, hasList, tagTotalList, typeRemoveList ->
                     Quadruple(typeList, hasList, tagTotalList, typeRemoveList)
                 }.collectLatest { (typeList, hasList, _, _) ->
                     reduce {
                         state.copy(
+                            isEdit = isEdit,
                             typeTotalList = typeList,
                             hasList = hasList,
-                            selectedHasList = hasList.filter { selectedHasIdList.contains(it.id) }
+                            selectedHasList = hasList.filter { agoHasIdList.contains(it.id) }
                         )
                     }
                 }
@@ -146,7 +150,7 @@ class AddStyleViewModel @Inject constructor(
                 selectHas(action.has)
             }
             is AddStyleScreenAction.SaveStyle -> {
-                saveStyle()
+                if(isEdit) editStyle() else saveStyle()
             }
         }
     }
@@ -184,6 +188,23 @@ class AddStyleViewModel @Inject constructor(
                     hass = state.selectedHasList.map { it.id!! }
                 )
                 saveStyleUseCase.invoke(saveStyle)
+
+                Intent().apply {
+                    putExtra(ItemConstants.CMD_COMPLETE, ItemConstants.CMD_STYLE)
+                    postSideEffect(AddStyleSideEffect.Finish(this))
+                }
+            }
+        }
+    }
+
+    private fun editStyle() {
+        intent {
+            viewModelScope.launch {
+                val editStyle = Style(
+                    id = agoStyleId,
+                    hass = state.selectedHasList.map { it.id!! }
+                )
+                saveStyleUseCase.invoke(editStyle)
 
                 Intent().apply {
                     putExtra(ItemConstants.CMD_COMPLETE, ItemConstants.CMD_STYLE)

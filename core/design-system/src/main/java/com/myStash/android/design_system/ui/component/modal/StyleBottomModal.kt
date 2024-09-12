@@ -1,5 +1,7 @@
 package com.myStash.android.design_system.ui.component.modal
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,31 +25,29 @@ import com.myStash.android.design_system.ui.theme.clickableNoRipple
 
 @Composable
 fun StyleBottomModal(
-    selectedStyle: StyleScreenModel?,
+    isShow: Boolean,
     onSelect: () -> Unit,
     onCancel: () -> Unit,
 ) {
-    var isShow by remember { mutableStateOf(false) }
+    val modalHeight by animateDpAsState(
+        targetValue = if(isShow) 84.dp else 0.dp,
+        animationSpec = tween(400),
+        label = "modal height"
+    )
 
-    LaunchedEffect(selectedStyle) {
-        isShow = selectedStyle.isNotNull()
-    }
-
-    if(isShow) {
-        Column(
-            modifier = Modifier
-                .shadow(elevation = 10.dp, shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-                .background(color = MaterialTheme.colors.surface, shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-                .fillMaxWidth()
-                .height(84.dp)
-                .clickableNoRipple { }
-                .padding(16.dp)
-        ) {
-            HasSelectButton(
-                selectText = "등록하기",
-                onSelect = onSelect,
-                onCancel = onCancel
-            )
-        }
+    Column(
+        modifier = Modifier
+            .shadow(elevation = 10.dp, shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+            .background(color = MaterialTheme.colors.surface, shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+            .fillMaxWidth()
+            .height(modalHeight)
+            .clickableNoRipple { }
+            .padding(16.dp)
+    ) {
+        HasSelectButton(
+            selectText = "등록하기",
+            onSelect = onSelect,
+            onCancel = onCancel
+        )
     }
 }

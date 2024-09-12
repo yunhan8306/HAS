@@ -14,3 +14,12 @@ fun String?.getItemTab(): ItemTab {
         else -> ItemTab.HAS
     }
 }
+
+fun String?.getEditTab(): ItemTab? {
+    return when(this) {
+        ItemTab.HAS.tabName -> ItemTab.HAS
+        ItemTab.STYLE.tabName -> ItemTab.STYLE
+        ItemTab.FEED.tabName -> ItemTab.FEED
+        else -> null
+    }
+}

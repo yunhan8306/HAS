@@ -72,14 +72,16 @@ fun ManageTypeScreen(
                         .height(64.dp)
                         .padding(top = 12.dp)
                 ) {
-                    ManageTextField(
-                        textState = addTypeTextState,
-                        hint = "원하는 카테고리를 등록하세요.",
-                        add = {
-                            focusManager.clearFocus()
-                            onAction.invoke(ManageTypeAction.AddType)
-                        }
-                    )
+                    if (!isEdit) {
+                        ManageTextField(
+                            textState = addTypeTextState,
+                            hint = "원하는 카테고리를 등록하세요.",
+                            add = {
+                                focusManager.clearFocus()
+                                onAction.invoke(ManageTypeAction.AddType)
+                            }
+                        )
+                    }
                 }
             }
             items(
@@ -111,7 +113,7 @@ fun ManageTypeScreen(
                             },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Box(modifier = Modifier.width(30.dp))
+                        Box(modifier = Modifier.width(4.dp))
                         if(isSelected) {
                             HasTextField(
                                 modifier = Modifier.weight(1f),
@@ -175,21 +177,6 @@ fun ManageTypeScreen(
                             .background(ColorFamilyGray200AndGray600)
                     )
                 }
-            }
-        }
-    }
-    if(isEdit) {
-        Box(
-            modifier = Modifier.padding(top = 80.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(64.dp)
-                    .background(MaterialTheme.colors.background)
-                    .clickableNoRipple { }
-            ) {
-
             }
         }
     }
