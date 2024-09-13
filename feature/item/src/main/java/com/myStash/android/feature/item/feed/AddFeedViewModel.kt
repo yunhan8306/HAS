@@ -26,7 +26,7 @@ import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.filterSelectTag
 import com.myStash.android.core.model.getStyleScreenModel
 import com.myStash.android.core.model.tagFoundFromSearchText
-import com.myStash.android.feature.item.ItemConstants
+import com.myStash.android.common.util.constants.ItemConstants
 import com.myStash.android.feature.item.item.ItemTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher

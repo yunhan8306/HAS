@@ -3,7 +3,6 @@ package com.myStash.android.feature.feed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myStash.android.common.util.Quadruple
-import com.myStash.android.core.data.repository.profile.ProfileRepositoryImpl
 import com.myStash.android.core.data.usecase.feed.DeleteFeedUseCase
 import com.myStash.android.core.data.usecase.feed.GetFeedListUseCase
 import com.myStash.android.core.data.usecase.has.GetHasListUseCase
@@ -14,6 +13,9 @@ import com.myStash.android.core.model.filterDate
 import com.myStash.android.core.model.getFeedByDate
 import com.myStash.android.core.model.getUsedTagList
 import com.myStash.android.core.model.setCalender
+import com.myStash.android.feature.feed.ui.FeedScreenAction
+import com.myStash.android.feature.feed.ui.FeedScreenState
+import com.myStash.android.feature.feed.ui.FeedSideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
@@ -25,7 +27,6 @@ import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
-import java.nio.file.Files.delete
 import java.time.LocalDate
 import javax.inject.Inject
 

@@ -9,6 +9,7 @@ import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.myStash.android.common.util.constants.SearchConstants
 import com.myStash.android.common.util.offer
 import com.myStash.android.common.util.offerOrRemove
 import com.myStash.android.core.data.usecase.has.GetHasListUseCase
@@ -22,6 +23,9 @@ import com.myStash.android.core.model.setUsedHasCnt
 import com.myStash.android.core.model.setUsedStyleCnt
 import com.myStash.android.core.model.selectTag
 import com.myStash.android.core.model.tagFoundFromSearchText
+import com.myStash.android.feature.search.ui.SearchAction
+import com.myStash.android.feature.search.ui.SearchScreenState
+import com.myStash.android.feature.search.ui.SearchSideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted

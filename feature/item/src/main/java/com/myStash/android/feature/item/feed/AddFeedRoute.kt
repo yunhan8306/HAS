@@ -20,7 +20,7 @@ import com.myStash.android.common.util.CommonActivityResultContract
 import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.design_system.ui.component.dialog.HasConfirmDialog
 import com.myStash.android.feature.gallery.GalleryActivity
-import com.myStash.android.feature.gallery.GalleryConstants
+import com.myStash.android.common.util.constants.GalleryConstants
 import com.myStash.android.common.util.constants.PermissionConstants
 import com.myStash.android.design_system.util.rememberPermissionLauncher
 import kotlinx.coroutines.launch

@@ -12,6 +12,9 @@ import com.myStash.android.core.data.usecase.profile.GetNickNameUseCase
 import com.myStash.android.core.data.usecase.profile.GetProfileUriUseCase
 import com.myStash.android.core.data.usecase.profile.SetNickNameUseCase
 import com.myStash.android.core.data.usecase.profile.SetProfileUriUseCase
+import com.myStash.android.feature.myPage.ui.MyPageScreenAction
+import com.myStash.android.feature.myPage.ui.MyPageScreenState
+import com.myStash.android.feature.myPage.ui.MyPageSideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest

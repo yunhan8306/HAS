@@ -7,6 +7,9 @@ import androidx.compose.foundation.text2.input.clearText
 import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.myStach.android.feature.contact.ui.ContactAction
+import com.myStach.android.feature.contact.ui.ContactSideEffect
+import com.myStach.android.feature.contact.ui.ContactState
 import com.myStash.android.common.util.checkEmail
 import com.myStash.android.common.util.getUri
 import com.myStash.android.common.util.isNotNull

@@ -23,7 +23,7 @@ import com.myStash.android.core.model.getTotalType
 import com.myStash.android.core.model.getTotalTypeList
 import com.myStash.android.core.model.getUnSelectTypeList
 import com.myStash.android.core.model.searchSelectedTypeHasList
-import com.myStash.android.feature.item.ItemConstants
+import com.myStash.android.common.util.constants.ItemConstants
 import com.myStash.android.feature.item.item.ItemTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher

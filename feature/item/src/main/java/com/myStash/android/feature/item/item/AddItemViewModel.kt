@@ -3,7 +3,7 @@ package com.myStash.android.feature.item.item
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.myStash.android.feature.item.ItemConstants
+import com.myStash.android.common.util.constants.ItemConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container

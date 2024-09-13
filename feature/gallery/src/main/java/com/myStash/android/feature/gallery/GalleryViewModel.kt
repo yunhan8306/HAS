@@ -16,11 +16,14 @@ import com.myStash.android.core.model.addTotalFolder
 import com.myStash.android.core.model.getFirstImage
 import com.myStash.android.core.model.getFolderList
 import com.myStash.android.core.model.getImageList
-import com.myStash.android.feature.gallery.GalleryConstants.AGO_IMAGE_URI_ARRAY
-import com.myStash.android.feature.gallery.GalleryConstants.MULTI
-import com.myStash.android.feature.gallery.GalleryConstants.MULTI_CNT
-import com.myStash.android.feature.gallery.GalleryConstants.SINGLE
-import com.myStash.android.feature.gallery.GalleryConstants.TYPE
+import com.myStash.android.common.util.constants.GalleryConstants.AGO_IMAGE_URI_ARRAY
+import com.myStash.android.common.util.constants.GalleryConstants.MULTI
+import com.myStash.android.common.util.constants.GalleryConstants.MULTI_CNT
+import com.myStash.android.common.util.constants.GalleryConstants.SINGLE
+import com.myStash.android.common.util.constants.GalleryConstants.TYPE
+import com.myStash.android.core.data.repository.gallery.GalleryRepository
+import com.myStash.android.feature.gallery.ui.GalleryScreenState
+import com.myStash.android.feature.gallery.ui.GallerySideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collectLatest
@@ -31,12 +34,13 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import java.util.Locale.filter
 import javax.inject.Inject
 
 @HiltViewModel
 class GalleryViewModel @Inject constructor(
     private val application: Application,
-    private val imageRepository: ImageRepository,
+    private val galleryRepository: GalleryRepository,
     private val stateHandle: SavedStateHandle,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ): ContainerHost<GalleryScreenState, GallerySideEffect>, ViewModel() {
@@ -58,7 +62,7 @@ class GalleryViewModel @Inject constructor(
                 val agoImageArray = stateHandle.get<Array<String>>(AGO_IMAGE_URI_ARRAY) ?: emptyArray()
 
                 getGalleryImages()
-                imageRepository.imagesStateFlow.collectLatest { imageList ->
+                galleryRepository.imagesStateFlow.collectLatest { imageList ->
                     AppConfig.allowReadMediaVisualUserSelected = imageList.size > 30
                     val imageFolderList = imageList.getFolderList().addTotalFolder(application.packageName, imageList.size)
                     val agoImageList = agoImageArray.getImageList(imageList)
@@ -80,7 +84,7 @@ class GalleryViewModel @Inject constructor(
 
     fun getGalleryImages() {
         viewModelScope.launch(ioDispatcher) {
-            imageRepository.init()
+            galleryRepository.init()
         }
     }
 
@@ -154,7 +158,7 @@ class GalleryViewModel @Inject constructor(
                 reduce {
                     state.copy(
                         selectedFolder = imageFolder,
-                        imageList = imageRepository.imagesStateFlow.value.run {
+                        imageList = galleryRepository.imagesStateFlow.value.run {
                             if(imageFolder.id == null) this else filter { it.folderId == imageFolder.id }
                         }
                     )
@@ -179,7 +183,7 @@ class GalleryViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        imageRepository.cleanup()
+        galleryRepository.cleanup()
     }
 }
 

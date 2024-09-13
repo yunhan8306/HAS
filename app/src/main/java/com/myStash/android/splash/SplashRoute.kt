@@ -9,10 +9,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myStash.android.MainActivity
 import com.myStash.android.common.util.CommonActivityResultContract
-import com.myStash.android.design_system.animation.slideIn
-import com.myStash.android.feature.splash.SplashScreen
-import com.myStash.android.feature.splash.SplashSideEffect
-import com.myStash.android.feature.splash.SplashStatus
+import com.myStash.android.feature.splash.ui.SplashScreen
+import com.myStash.android.feature.splash.ui.SplashSideEffect
+import com.myStash.android.feature.splash.ui.SplashStatus
 import com.myStash.android.feature.splash.SplashViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect

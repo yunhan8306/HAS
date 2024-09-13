@@ -2,6 +2,9 @@ package com.myStash.android.feature.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.myStash.android.feature.splash.ui.SplashScreenState
+import com.myStash.android.feature.splash.ui.SplashSideEffect
+import com.myStash.android.feature.splash.ui.SplashStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

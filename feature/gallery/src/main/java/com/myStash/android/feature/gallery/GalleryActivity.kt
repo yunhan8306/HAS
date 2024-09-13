@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.myStash.android.design_system.animation.slideOut
 import com.myStash.android.design_system.ui.theme.HasGalleryTheme
+import com.myStash.android.feature.gallery.ui.GalleryRoute
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

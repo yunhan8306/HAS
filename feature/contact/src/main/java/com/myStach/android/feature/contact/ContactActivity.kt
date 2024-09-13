@@ -3,8 +3,8 @@ package com.myStach.android.feature.contact
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.myStach.android.feature.contact.ui.ContactRoute
 import com.myStash.android.design_system.animation.slideOut
-import com.myStash.android.design_system.ui.theme.HasDefaultTheme
 import com.myStash.android.design_system.ui.theme.HasMoreTheme
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -23,7 +23,7 @@ import com.myStash.android.core.model.Type
 import com.myStash.android.core.model.getTagList
 import com.myStash.android.core.model.getType
 import com.myStash.android.core.model.tagAddAndFoundFromSearchText
-import com.myStash.android.feature.item.ItemConstants
+import com.myStash.android.common.util.constants.ItemConstants
 import com.myStash.android.feature.item.item.ItemTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher

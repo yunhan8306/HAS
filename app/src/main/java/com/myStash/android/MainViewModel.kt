@@ -18,9 +18,11 @@ import com.myStash.android.core.di.IoDispatcher
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.testManTypeTotalList
 import com.myStash.android.core.model.testTagList
-import com.myStash.android.feature.gallery.ImageRepository
+import com.myStash.android.core.data.repository.gallery.GalleryRepository
 import com.myStash.android.feature.gender.GenderType
 import com.myStash.android.feature.gender.getGenderType
+import com.myStash.android.ui.MainSideEffect
+import com.myStash.android.ui.MainState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
@@ -52,7 +54,7 @@ class MainViewModel @Inject constructor(
     private val getTagListUseCase: GetTagListUseCase,
     private val getTypeListUseCase: GetTypeListUseCase,
 
-    private val imageRepository: ImageRepository,
+    private val galleryRepository: GalleryRepository,
     // dispatcher
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
@@ -134,7 +136,7 @@ class MainViewModel @Inject constructor(
 
     private suspend fun testSaveHasList() {
         val testHastCnt = 9
-        combine(typeTotalList, tagTotalList, imageRepository.imagesStateFlow) { typeList, tagList, imageList ->
+        combine(typeTotalList, tagTotalList, galleryRepository.imagesStateFlow) { typeList, tagList, imageList ->
             Triple(typeList, tagList, imageList)
         }.collectLatest { (typeList, tagList, imageList) ->
             if(typeList.isNotEmpty() && tagList.isNotEmpty() && imageList.isNotEmpty() && imageList.size >= testHastCnt) {
