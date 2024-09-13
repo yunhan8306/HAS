@@ -130,10 +130,11 @@ fun AddStyleModalSheet(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                itemsIndexed(
+                items(3) { SpacerBox(16.dp) }
+                items(
                     items = state.hasList,
-                    key = { _, it -> it.id!! }
-                ) { index, has ->
+                    key = { it.id!! }
+                ) { has ->
                     val isSelected by remember(state.selectedHasList) {
                         derivedStateOf {
                             has.checkSelected(state.selectedHasList)
@@ -145,7 +146,6 @@ fun AddStyleModalSheet(
                             state.selectedHasList.indexOf(has) + 1
                         }
                     }
-                    if(index < 2) Box(modifier = Modifier.height(12.dp))
                     Box(
                         modifier = if(isSelected) {
                             Modifier.border(width = 2.dp, color = Purple, shape = RoundedCornerShape(size = 8.dp))
@@ -195,7 +195,7 @@ fun AddStyleModalSheet(
                         }
                     }
                 }
-                items(3) { SpacerBox(52.dp) }
+                items(3) { SpacerBox(72.dp) }
             }
         }
     }
