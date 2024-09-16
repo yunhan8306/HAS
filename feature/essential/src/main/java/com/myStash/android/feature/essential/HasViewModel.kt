@@ -14,6 +14,7 @@ import com.myStash.android.core.di.IoDispatcher
 import com.myStash.android.core.model.Has
 import com.myStash.android.core.model.Tag
 import com.myStash.android.core.model.Type
+import com.myStash.android.core.model.checkTypeAndSelectHas
 import com.myStash.android.core.model.getSelectedTypeAndTagHasList
 import com.myStash.android.core.model.getTagList
 import com.myStash.android.core.model.getTotalTypeList
@@ -84,7 +85,6 @@ class HasViewModel @Inject constructor(
         )
 
     private val selectedTagList = mutableListOf<Tag>()
-    private val selectedHasList = mutableListOf<Has>()
 
     private fun fetch() {
         intent {
@@ -169,10 +169,9 @@ class HasViewModel @Inject constructor(
     private fun selectHas(has: Has) {
         intent {
             viewModelScope.launch {
-                selectedHasList.offerOrRemove(has) { it.id == has.id }
                 reduce {
                     state.copy(
-                        selectedHasList = selectedHasList.toList()
+                        selectedHasList = state.selectedHasList.checkTypeAndSelectHas(has)
                     )
                 }
             }
@@ -182,10 +181,9 @@ class HasViewModel @Inject constructor(
     private fun resetSelectHas() {
         intent {
             viewModelScope.launch {
-                selectedHasList.clear()
                 reduce {
                     state.copy(
-                        selectedHasList = selectedHasList.toList()
+                        selectedHasList = emptyList()
                     )
                 }
             }
