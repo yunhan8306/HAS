@@ -17,12 +17,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myStash.android.common.util.CommonActivityResultContract
+import com.myStash.android.common.util.constants.PermissionConstants
 import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.design_system.ui.component.dialog.HasConfirmDialog
+import com.myStash.android.design_system.util.rememberPermissionLauncher
 import com.myStash.android.feature.gallery.GalleryActivity
 import com.myStash.android.feature.gallery.GalleryConstants
-import com.myStash.android.common.util.constants.PermissionConstants
-import com.myStash.android.design_system.util.rememberPermissionLauncher
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -76,16 +76,14 @@ fun AddFeedRoute(
     AddFeedScreen(
         searchModalState = selectStyleModalState,
         state = state,
-//        selectedHasList = state.selectedHasList,
-//        saveItem = viewModel::saveFeed,
-        showGalleryActivity = {
-            requestPermissionLauncher.launch(PermissionConstants.GALLERY_PERMISSIONS)
-        },
-        showStyleSheet = {
-            scope.launch { selectStyleModalState.show() }
-        },
         onAction = { action ->
             when(action) {
+                is AddFeedScreenAction.ShowGalleryActivity -> {
+                    requestPermissionLauncher.launch(PermissionConstants.GALLERY_PERMISSIONS)
+                }
+                is AddFeedScreenAction.ShowStyleSheet -> {
+                    scope.launch { selectStyleModalState.show() }
+                }
                 else -> viewModel.onAction(action)
             }
         },
@@ -94,13 +92,10 @@ fun AddFeedRoute(
                 selectStyleModalState = selectStyleModalState,
                 state = state,
                 searchTextState = viewModel.searchTextState,
-
                 totalTagList = state.tagList,
                 selectTagList = state.selectedTagList,
                 searchTagList = state.tagList,
                 onBack = { scope.launch { selectStyleModalState.hide() } },
-
-
                 onAction = { action ->
                     when(action) {
                         is AddFeedScreenAction.SelectStyle -> {

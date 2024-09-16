@@ -145,6 +145,9 @@ class AddHasViewModel @Inject constructor(
 
     fun onAction(action: AddHasScreenAction) {
         when(action) {
+            is AddHasScreenAction.UnselectImage -> {
+                unselectImage(action.uri)
+            }
             is AddHasScreenAction.SelectType -> {
                 selectType(action.type)
             }
@@ -172,7 +175,7 @@ class AddHasViewModel @Inject constructor(
         }
     }
 
-    fun removeImage() {
+    private fun unselectImage(uri: String) {
         intent {
             reduce {
                 state.copy(

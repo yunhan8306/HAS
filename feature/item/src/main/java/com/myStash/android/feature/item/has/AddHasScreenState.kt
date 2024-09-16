@@ -21,6 +21,7 @@ sealed interface AddHasSideEffect {
 sealed interface AddHasScreenAction {
     data class SelectType(val type: Type): AddHasScreenAction
     data class SelectTag(val tag: Tag): AddHasScreenAction
+    data class UnselectImage(val uri: String): AddHasScreenAction
     object ShowSearch: AddHasScreenAction
     object Save: AddHasScreenAction
     object Back: AddHasScreenAction

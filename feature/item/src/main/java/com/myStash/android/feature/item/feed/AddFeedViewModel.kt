@@ -165,6 +165,7 @@ class AddFeedViewModel @Inject constructor(
 
     fun onAction(action: AddFeedScreenAction) {
         when(action) {
+            is AddFeedScreenAction.UnselectImage -> unselectImage(action.uri)
             is AddFeedScreenAction.SelectStyle -> selectStyle(action.style)
             is AddFeedScreenAction.DeleteSearchText -> deleteSearchText()
             is AddFeedScreenAction.SelectTag -> selectTag(action.tag)
@@ -172,6 +173,19 @@ class AddFeedViewModel @Inject constructor(
             is AddFeedScreenAction.SaveFeed -> if(isEdit) editFeed() else saveFeed()
             is AddFeedScreenAction.PrevMonth -> prevMonth()
             is AddFeedScreenAction.NextMonth -> nextMonth()
+            else -> Unit
+        }
+    }
+
+    private fun unselectImage(uri: String) {
+        intent {
+            viewModelScope.launch {
+                reduce {
+                    state.copy(
+                        selectedImageList = state.selectedImageList.toMutableList().apply { offerOrRemove(uri) { it == uri } }.toList()
+                    )
+                }
+            }
         }
     }
 
