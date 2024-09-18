@@ -19,5 +19,6 @@ local.properties
 /build-logic/convention/build/
 /app/release/
 /keystore/
+/app/google-services.json
 private_key.pepk
 gradle.properties
