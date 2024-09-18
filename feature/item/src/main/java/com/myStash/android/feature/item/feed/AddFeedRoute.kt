@@ -17,12 +17,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myStash.android.common.util.CommonActivityResultContract
+import com.myStash.android.common.util.constants.GalleryConstants
 import com.myStash.android.common.util.constants.PermissionConstants
 import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.design_system.ui.component.dialog.HasConfirmDialog
 import com.myStash.android.design_system.util.rememberPermissionLauncher
 import com.myStash.android.feature.gallery.GalleryActivity
-import com.myStash.android.feature.gallery.GalleryConstants
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
