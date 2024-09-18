@@ -36,7 +36,6 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -71,13 +70,9 @@ import com.myStash.android.feature.item.component.ItemTitleText
 fun AddFeedScreen(
     searchModalState: ModalBottomSheetState,
     state: AddFeedScreenState,
-    showGalleryActivity: () -> Unit,
     onAction: (AddFeedScreenAction) -> Unit,
-    showStyleSheet: () -> Unit,
     sheetContent: @Composable (ColumnScope.() -> Unit),
 ) {
-    val scope = rememberCoroutineScope()
-
     var isShowDate by remember { mutableStateOf(false) }
 
     val dateFadeIn by animateFloatAsState(
@@ -142,7 +137,7 @@ fun AddFeedScreen(
                         item {
                             UnselectPhotoItem(
                                 cnt = state.selectedImageList.size,
-                                onClick = showGalleryActivity
+                                onClick = { onAction.invoke(AddFeedScreenAction.ShowGalleryActivity) }
                             )
                         }
                     }
@@ -150,7 +145,8 @@ fun AddFeedScreen(
                         Row {
                             SelectPhotoItem(
                                 imageUri = uri,
-                                onClick = showGalleryActivity
+                                onClick = { onAction.invoke(AddFeedScreenAction.ShowGalleryActivity) },
+                                onDelete = { onAction.invoke(AddFeedScreenAction.UnselectImage(uri)) }
                             )
                         }
                     }
@@ -213,7 +209,7 @@ fun AddFeedScreen(
                     )
                     if(state.selectedStyle != null) {
                         Row(
-                            modifier = Modifier.clickableNoRipple { showStyleSheet.invoke() },
+                            modifier = Modifier.clickableNoRipple { onAction.invoke(AddFeedScreenAction.ShowStyleSheet) },
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Image(
@@ -238,7 +234,7 @@ fun AddFeedScreen(
                             .height(44.dp)
                             .clip(shape = RoundedCornerShape(size = 10.dp))
                             .background(ColorFamilyGray200AndGray600)
-                            .clickable { showStyleSheet.invoke() },
+                            .clickable { onAction.invoke(AddFeedScreenAction.ShowStyleSheet) },
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
@@ -299,8 +295,6 @@ fun AddFeedScreenPreview() {
     AddFeedScreen(
         searchModalState = ModalBottomSheetState(ModalBottomSheetValue.Expanded),
         state = AddFeedScreenState(),
-        showGalleryActivity = {},
-        showStyleSheet = {},
         onAction = {},
         sheetContent = {}
     )

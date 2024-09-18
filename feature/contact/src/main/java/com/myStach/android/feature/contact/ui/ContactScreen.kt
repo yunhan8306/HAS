@@ -215,7 +215,8 @@ fun ContactScreen(
                     Row {
                         SelectPhotoItem(
                             imageUri = uri,
-                            onClick = { onAction.invoke(ContactAction.ShowGalleryActivity) }
+                            onClick = { onAction.invoke(ContactAction.ShowGalleryActivity) },
+                            onDelete = { onAction.invoke(ContactAction.UnselectImage(uri)) },
                         )
                     }
                 }

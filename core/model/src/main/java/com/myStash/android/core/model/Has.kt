@@ -85,5 +85,5 @@ fun List<Has>.checkTypeAndSelectHas(has: Has): List<Has> {
             }
             else -> add(has)
         }
-    }.toList()
+    }.sortedBy { it.type }
 }

@@ -101,7 +101,8 @@ fun AddHasScreen(
                 state.imageUri?.let {
                     SelectPhotoItem(
                         imageUri = it,
-                        onClick = { onAction.invoke(AddHasScreenAction.ShowGalleryActivity) }
+                        onClick = { onAction.invoke(AddHasScreenAction.ShowGalleryActivity) },
+                        onDelete = { onAction.invoke(AddHasScreenAction.UnselectImage(it)) }
                     )
                 } ?: run {
                     UnselectPhotoItem(onClick = { onAction.invoke(AddHasScreenAction.ShowGalleryActivity) })

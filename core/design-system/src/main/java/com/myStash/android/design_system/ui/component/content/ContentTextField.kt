@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text2.BasicTextField2
 import androidx.compose.foundation.text2.input.TextFieldState
@@ -45,7 +46,8 @@ fun ContentTextField(
     hint: String,
     isBack: Boolean = false,
     back: () -> Unit = {},
-    delete: () -> Unit
+    delete: () -> Unit,
+    onDone: () -> Unit = {}
 ) {
 
     val fontSizeSp = with(LocalDensity.current) { 15.dp.toSp() }
@@ -66,6 +68,7 @@ fun ContentTextField(
             .padding(start = 12.dp, end = 10.dp),
         state = textState,
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(onDone = { onDone.invoke() }),
         textStyle = TextStyle(color = ColorFamilyBlack20AndWhite, fontSize = fontSizeSp, fontWeight = FontWeight.Medium),
         decorator = { innerTextField ->
             Box(

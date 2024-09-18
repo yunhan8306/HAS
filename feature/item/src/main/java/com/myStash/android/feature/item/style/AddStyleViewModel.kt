@@ -121,7 +121,7 @@ class AddStyleViewModel @Inject constructor(
                             isEdit = isEdit,
                             typeTotalList = typeList,
                             hasList = hasList,
-                            selectedHasList = hasList.filter { agoHasIdList.contains(it.id) }
+                            selectedHasList = hasList.filter { agoHasIdList.contains(it.id) }.sortedBy { it.type }
                         )
                     }
                 }

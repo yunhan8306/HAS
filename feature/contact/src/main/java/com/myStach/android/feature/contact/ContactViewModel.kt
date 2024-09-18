@@ -13,6 +13,7 @@ import com.myStach.android.feature.contact.ui.ContactState
 import com.myStash.android.common.util.checkEmail
 import com.myStash.android.common.util.getUri
 import com.myStash.android.common.util.isNotNull
+import com.myStash.android.common.util.offerOrRemove
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -54,7 +55,9 @@ class ContactViewModel @Inject constructor(
 
     fun onAction(action: ContactAction) {
         when(action) {
-
+            is ContactAction.UnselectImage -> {
+                unselectImage(action.uri)
+            }
             is ContactAction.SelectType -> {
                 selectType(action.type)
             }
@@ -66,6 +69,18 @@ class ContactViewModel @Inject constructor(
             }
             else -> Unit
 
+        }
+    }
+
+    private fun unselectImage(uri: String) {
+        intent {
+            viewModelScope.launch {
+                reduce {
+                    state.copy(
+                        selectedImages = state.selectedImages.toMutableList().apply { offerOrRemove(uri) { it == uri } }.toList()
+                    )
+                }
+            }
         }
     }
 

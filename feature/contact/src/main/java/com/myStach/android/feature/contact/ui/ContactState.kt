@@ -18,6 +18,7 @@ sealed interface ContactAction {
     data class SelectType(val type: String) : ContactAction
     data class ChangeContent(val content: String) : ContactAction
     data class ChangeImages(val images: List<String>) : ContactAction
+    data class UnselectImage(val uri: String): ContactAction
     object ShowGalleryActivity: ContactAction
     object DeleteEmail: ContactAction
     object Confirm: ContactAction

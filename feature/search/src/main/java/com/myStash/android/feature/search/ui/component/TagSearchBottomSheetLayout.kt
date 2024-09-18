@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text2.input.TextFieldState
+import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetState
@@ -103,7 +104,8 @@ fun TagSearchBottomSheetLayout(
                     ContentTextField(
                         textState = searchTextState,
                         hint = "원하는 태그를 검색해 보세요",
-                        delete = onDelete
+                        delete = onDelete,
+                        onDone = { searchTextState.setTextAndPlaceCursorAtEnd("${searchTextState.text} ") }
                     )
                     Box(
                         modifier = Modifier

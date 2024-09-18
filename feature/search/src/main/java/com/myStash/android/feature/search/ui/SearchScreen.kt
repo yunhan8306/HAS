@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text2.input.TextFieldState
+import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -72,7 +73,8 @@ fun SearchScreen(
                 hint = "원하는 태그를 검색해 보세요",
                 isBack = true,
                 back = { onAction.invoke(SearchAction.Finish) },
-                delete = { onAction.invoke(SearchAction.DeleteText) }
+                delete = { onAction.invoke(SearchAction.DeleteText) },
+                onDone = { searchTextState.setTextAndPlaceCursorAtEnd("${searchTextState.text} ") }
             )
 
             Box(
