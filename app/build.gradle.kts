@@ -95,7 +95,8 @@ dependencies {
 
     // firebase
     implementation(libs.android.play.services)
-    implementation(libs.firebase.bom)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

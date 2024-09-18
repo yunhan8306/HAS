@@ -4,10 +4,10 @@ buildscript {
         google()
         mavenCentral()
     }
-//    dependencies {
-//        classpath(libs.firebase.crashlytics.gradle)
-//        classpath(libs.android.play.services)
-//    }
+    dependencies {
+        classpath(libs.firebase.crashlytics.gradle)
+        classpath(libs.android.play.services)
+    }
 }
 
 plugins {

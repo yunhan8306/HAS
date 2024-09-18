@@ -18,4 +18,7 @@ dependencies {
 
     implementation(libs.appcompat)
     implementation(libs.material)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
 }

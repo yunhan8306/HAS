@@ -34,7 +34,6 @@ json = "20230227"
 orbit = "6.0.0"
 firebaseBom = "33.1.2"
 firebaseCrashlyticsGradle = "3.0.2"
-webview = "0.33.2-alpha"
 
 androidPlayServices = "4.4.2"
 
@@ -121,8 +120,6 @@ accompanist-pager-indicators = { module = "com.google.accompanist:accompanist-pa
 orbit-compose = { module = "org.orbit-mvi:orbit-compose", version.ref = "orbit" }
 orbit-viewmodel = { module = "org.orbit-mvi:orbit-viewmodel", version.ref = "orbit" }
 
-opengraph = { module = "com.github.Priyansh-Kedia:OpenGraphParser", version.ref = "openGraph" }
-webview = { module = "com.google.accompanist:accompanist-webview", version.ref = "webview" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
