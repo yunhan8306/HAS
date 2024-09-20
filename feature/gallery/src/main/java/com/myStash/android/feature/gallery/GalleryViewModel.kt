@@ -170,6 +170,7 @@ class GalleryViewModel @Inject constructor(
     private fun complete() {
         intent {
             viewModelScope.launch {
+                if(selectedList.isEmpty()) return@launch
                 Intent().apply {
                     when(state.type) {
                         SINGLE -> putExtra(SINGLE, selectedList[0].uri.toString())
