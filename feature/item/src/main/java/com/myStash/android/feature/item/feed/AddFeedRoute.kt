@@ -41,7 +41,8 @@ fun AddFeedRoute(
     val galleryActivityLauncher = rememberLauncherForActivityResult(
         contract = CommonActivityResultContract(),
         onResult = { intent ->
-            intent?.getStringArrayExtra(GalleryConstants.SINGLE)?.let { viewModel.addImageList(it.toList()) }
+//            intent?.getStringArrayExtra(GalleryConstants.MULTI)?.let { viewModel.addImageList(it.toList()) }
+            intent?.getStringExtra(GalleryConstants.SINGLE)?.let { viewModel.addImageList(listOf(it)) }
         }
     )
 
@@ -50,6 +51,7 @@ fun AddFeedRoute(
         scope = scope,
         grant = {
             val intent = Intent(activity, GalleryActivity::class.java).apply {
+//                putExtra(GalleryConstants.TYPE, GalleryConstants.MULTI)
                 putExtra(GalleryConstants.TYPE, GalleryConstants.SINGLE)
                 putExtra(GalleryConstants.AGO_IMAGE_URI_ARRAY, state.selectedImageList.toTypedArray())
             }
