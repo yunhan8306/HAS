@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -132,25 +131,39 @@ fun AddFeedScreen(
                     modifier = Modifier.padding(top = 24.dp, bottom = 16.dp),
                     text = "사진"
                 )
-                LazyRow {
-                    if (state.selectedImageList.size < 5) {
-                        item {
-                            UnselectPhotoItem(
-                                cnt = state.selectedImageList.size,
-                                onClick = { onAction.invoke(AddFeedScreenAction.ShowGalleryActivity) }
-                            )
-                        }
-                    }
-                    items(state.selectedImageList) { uri ->
-                        Row {
-                            SelectPhotoItem(
-                                imageUri = uri,
-                                onClick = { onAction.invoke(AddFeedScreenAction.ShowGalleryActivity) },
-                                onDelete = { onAction.invoke(AddFeedScreenAction.UnselectImage(uri)) }
-                            )
-                        }
-                    }
+//                LazyRow {
+//                    /** multi */
+//                    if (state.selectedImageList.size < 5) {
+//                        item {
+//                            UnselectPhotoItem(
+//                                cnt = state.selectedImageList.size,
+//                                onClick = { onAction.invoke(AddFeedScreenAction.ShowGalleryActivity) }
+//                            )
+//                        }
+//                    }
+//                    items(state.selectedImageList) { uri ->
+//                        Row {
+//                            SelectPhotoItem(
+//                                imageUri = uri,
+//                                onClick = { onAction.invoke(AddFeedScreenAction.ShowGalleryActivity) },
+//                                onDelete = { onAction.invoke(AddFeedScreenAction.UnselectImage(uri)) }
+//                            )
+//                        }
+//                    }
+//                }
+                /** single */
+                if(state.selectedImageList.isEmpty()) {
+                    UnselectPhotoItem(
+                        onClick = { onAction.invoke(AddFeedScreenAction.ShowGalleryActivity) }
+                    )
+                } else {
+                    SelectPhotoItem(
+                        imageUri = state.selectedImageList[0],
+                        onClick = { onAction.invoke(AddFeedScreenAction.ShowGalleryActivity) },
+                        onDelete = { onAction.invoke(AddFeedScreenAction.UnselectImage(state.selectedImageList[0])) }
+                    )
                 }
+
                 ItemTitleText(
                     modifier = Modifier.padding(top = 32.dp, bottom = 16.dp),
                     text = "날짜"
