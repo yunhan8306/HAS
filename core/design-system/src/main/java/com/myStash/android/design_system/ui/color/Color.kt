@@ -30,6 +30,7 @@ val Lime200 = Color(0xFFBFD320)
 val Lime300 = Color(0xFFE4F562) // Lime Green
 val Lime500 = Color(0xFF95A70F) // Medium Lime
 val Lime700 = Color(0xFF8A9918) // Dark Lime
+val Lime800 = Color(0xFFBFD320)
 
 val DimWhite60 = Color(0x99FFFFFF) // 60% opacity
 val DimBackground60 = Color(0x99000000) // 60% opacity

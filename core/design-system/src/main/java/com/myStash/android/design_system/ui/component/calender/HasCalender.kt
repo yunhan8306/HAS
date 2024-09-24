@@ -41,6 +41,7 @@ import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
 import com.myStash.android.design_system.ui.color.DimWhite60
 import com.myStash.android.design_system.ui.color.Gray350
 import com.myStash.android.design_system.ui.color.Lime300
+import com.myStash.android.design_system.ui.color.Lime800
 import com.myStash.android.design_system.ui.color.White
 import com.myStash.android.design_system.ui.component.text.HasFontWeight
 import com.myStash.android.design_system.ui.component.text.HasText
@@ -225,7 +226,7 @@ fun FeedCalenderDayItem(
             HasText(
                 text = day,
                 fontSize = 12.dp,
-                color = if(isToday && !isSelect) Lime300 else Gray350
+                color = if(isToday && !isSelect) Lime300 else if(isToday) Lime800 else Gray350
             )
         }
     }
