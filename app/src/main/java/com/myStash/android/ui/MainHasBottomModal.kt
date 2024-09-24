@@ -18,11 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -88,6 +84,7 @@ fun MainHasBottomModal(
                         contentDescription = "main has modal image"
                     )
                     Image(
+                        modifier = Modifier.padding(4.dp),
                         painter = painterResource(id = R.drawable.btn_delete),
                         contentDescription = "delete"
                     )
