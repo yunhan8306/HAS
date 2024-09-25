@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import com.myStash.android.design_system.ui.color.Gray350
 import com.myStash.android.design_system.ui.color.Purple
@@ -49,7 +48,6 @@ fun HasSelectButton(
         Box(modifier = Modifier.width(8.dp))
         Box(
             modifier = Modifier
-                .shadow(elevation = 10.dp, shape = RoundedCornerShape(size = 10.dp))
                 .clip(shape = RoundedCornerShape(size = 10.dp))
                 .background(Purple)
                 .weight(1f)

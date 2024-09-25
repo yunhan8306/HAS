@@ -46,7 +46,9 @@ import com.google.accompanist.navigation.animation.composable
 import com.myStach.android.feature.contact.ContactActivity
 import com.myStash.android.common.resource.R
 import com.myStash.android.common.util.CommonActivityResultContract
+import com.myStash.android.common.util.constants.GalleryConstants
 import com.myStash.android.common.util.constants.PermissionConstants
+import com.myStash.android.common.util.constants.WebViewConstants
 import com.myStash.android.design_system.animation.slideIn
 import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
 import com.myStash.android.design_system.ui.component.SpacerLineBox
@@ -59,13 +61,11 @@ import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 import com.myStash.android.design_system.util.addFocusCleaner
 import com.myStash.android.design_system.util.rememberPermissionLauncher
 import com.myStash.android.feature.gallery.GalleryActivity
-import com.myStash.android.common.util.constants.GalleryConstants
 import com.myStash.android.feature.manage.ManageActivity
-import com.myStash.android.feature.myPage.ui.component.MyPageItem
 import com.myStash.android.feature.myPage.MyPageViewModel
+import com.myStash.android.feature.myPage.ui.component.MyPageItem
 import com.myStash.android.feature.myPage.ui.component.ProfileNoneImage
 import com.myStash.android.feature.webview.WebView
-import com.myStash.android.common.util.constants.WebViewConstants
 import com.myStash.android.navigation.MainNavType
 import org.orbitmvi.orbit.compose.collectAsState
 
@@ -219,12 +219,8 @@ fun MyPageScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.btn_my_profile_edit),
+                        painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.btn_my_profile_edit_dark else R.drawable.btn_my_profile_edit_light),
                         contentDescription = "profile edit"
-                    )
-                    Image(
-                        painter = painterResource(id = R.drawable.btn_my_profile_edit_camera),
-                        contentDescription = "profile edit camera"
                     )
                 }
             }

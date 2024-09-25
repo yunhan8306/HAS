@@ -102,6 +102,7 @@ fun ContentTextField(
                             contentAlignment = Alignment.Center
                         ) {
                             Image(
+                                modifier = Modifier.padding(4.dp),
                                 painter = painterResource(id = R.drawable.btn_delete),
                                 contentDescription = "input delete"
                             )
