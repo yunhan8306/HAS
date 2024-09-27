@@ -38,4 +38,3 @@ val DimBackground60 = Color(0x99000000) // 60% opacity
 
 val TagGray = Color(0xFF85867C) // Tag Gray
 val DimBackground40 = Color(0x66000000) // 40% opacity
-val ButtonDisabledGray = Color(0xFFD4D4D4) // Disabled Button Gray
