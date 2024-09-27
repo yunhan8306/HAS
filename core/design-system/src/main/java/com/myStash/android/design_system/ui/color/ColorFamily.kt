@@ -11,12 +11,6 @@ data class ColorFamily constructor(
     val color: Color @Composable get() = if (isSystemInDarkTheme()) darkColor else lightColor
 }
 
-val ColorFamilyBlackAndWhite
-    @Composable get() = ColorFamily(Black, White).color
-
-val ColorFamilyWhiteAndBlack
-    @Composable get() = ColorFamily(White, Black).color
-
 val ColorFamilyWhiteAndGray600
     @Composable get() = ColorFamily(White, Gray600).color
 
@@ -94,71 +88,3 @@ val ColorFamilyGray350AndGray400
 
 val ColorFamilyGray300AndGray500
     @Composable get() = ColorFamily(Gray300, Gray500).color
-
-
-
-val ColorFamilyBackground
-    @Composable get() = ColorFamily(White, Gray800)
-
-val ColorFamilyHeaderBackground
-    @Composable get() = ColorFamily(White, Gray600)
-
-val ColorFamilyBottomSheetBackground
-    @Composable get() = ColorFamily(White, Gray800)
-
-val ColorFamilyCategoryTipBackground
-    @Composable get() = ColorFamily(Gray400, Gray200)
-
-val ColorFamilyInputBoxBackground
-    @Composable get() = ColorFamily(Gray200, Gray600)
-
-val ColorFamilyInputDefaultLine
-    @Composable get() = ColorFamily(Gray300, Gray500)
-
-val ColorFamilyInputFocusLine
-    @Composable get() = ColorFamily(Gray700, White)
-
-val ColorFamilyInputBackground
-    @Composable get() = ColorFamily(White, Gray700)
-
-val ColorFamilyPlaceholder
-    @Composable get() = ColorFamily(Gray400, Gray500)
-
-val ColorFamilyText
-    @Composable get() = ColorFamily(Gray700, White)
-
-val ColorFamilySecondaryText
-    @Composable get() = ColorFamily(Gray500, Gray400)
-
-val ColorFamilyAccentText
-    @Composable get() = ColorFamily(Lime300, Lime300)
-
-val ColorFamilyLine
-    @Composable get() = ColorFamily(Gray200, Gray600)
-
-val ColorFamilySecondaryLine
-    @Composable get() = ColorFamily(Gray300, Gray400)
-
-val ColorFamilyTagBackground
-    @Composable get() = ColorFamily(Gray200, Gray500)
-
-val ColorFamilyTagText
-    @Composable get() = ColorFamily(Gray700, Color(0xFFC8C8C8))
-
-val ColorFamilyDimBackground
-    @Composable get() = ColorFamily(DimBackground40, DimBackground60)
-
-val ColorFamilyButtonActiveBackground
-    @Composable get() = ColorFamily(Gray700, Lime300)
-
-val ColorFamilyButtonActiveText
-    @Composable get() = ColorFamily(Lime300, Gray700)
-
-val ColorFamilyButtonDisabledBackground
-    @Composable get() = ColorFamily(ButtonDisabledGray, Gray600)
-
-val ColorFamilyButtonDisabledText
-    @Composable get() = ColorFamily(White, Gray400)
-
-val ColorFamilyToastBackground
-    @Composable get() = ColorFamily(TagGray, Gray500)

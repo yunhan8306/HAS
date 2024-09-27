@@ -34,7 +34,3 @@ val Lime800 = Color(0xFFBFD320)
 
 val DimWhite60 = Color(0x99FFFFFF) // 60% opacity
 val DimBackground60 = Color(0x99000000) // 60% opacity
-
-
-val TagGray = Color(0xFF85867C) // Tag Gray
-val DimBackground40 = Color(0x66000000) // 40% opacity
