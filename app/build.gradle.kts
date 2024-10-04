@@ -4,7 +4,7 @@ import java.util.Properties
 
 plugins {
     id("myStash.android.application")
-    id("myStash.android.application.compose")
+    id("myStash.android.compose")
     id("myStash.android.hilt")
     id("org.jetbrains.kotlin.android")
 }

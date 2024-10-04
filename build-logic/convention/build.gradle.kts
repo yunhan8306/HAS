@@ -18,6 +18,7 @@ tasks.withType(KotlinCompile::class.java).configureEach {
 dependencies {
     compileOnly(libs.android.gradle.plugin)
     compileOnly(libs.kotlin.gradle.plugin)
+    compileOnly(libs.compose.compiler.extension)
 }
 
 gradlePlugin {
@@ -27,7 +28,7 @@ gradlePlugin {
             implementationClass = "AndroidApplicationConventionPlugin"
         }
         register("androidApplicationCompose") {
-            id = "myStash.android.application.compose"
+            id = "myStash.android.compose"
             implementationClass = "AndroidApplicationComposeConventionPlugin"
         }
         register("androidHilt") {

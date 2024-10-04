@@ -5,6 +5,7 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
 
@@ -17,17 +18,22 @@ internal fun Project.configureAndroidCompose(
         buildFeatures {
             compose = true
         }
-        composeOptions {
-            kotlinCompilerExtensionVersion = libs.findVersion("androidxComposeCompiler").get().toString()
-        }
+//        composeOptions {
+//            kotlinCompilerExtensionVersion = libs.findVersion("androidxComposeCompiler").get().toString()
+//        }
         dependencies {
             val bom = libs.findLibrary("androidx-compose-bom").get()
             add("implementation", platform(bom))
             add("androidTestImplementation", platform(bom))
         }
         tasks.withType(KotlinCompile::class.java).configureEach {
-            kotlinOptions {
-                freeCompilerArgs = freeCompilerArgs + buildComposeMetricsParameters()
+//            kotlinOptions {
+//                freeCompilerArgs = freeCompilerArgs + buildComposeMetricsParameters()
+//            }
+
+            compilerOptions {
+                freeCompilerArgs.addAll(buildComposeMetricsParameters())
+                jvmTarget.set(JvmTarget.JVM_17)
             }
         }
     }

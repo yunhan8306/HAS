@@ -4,6 +4,7 @@ import android.app.Activity
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.material.BottomSheetValue
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,13 +16,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myStash.android.common.compose.LifecycleEventObserver
 import com.myStash.android.common.util.constants.PermissionConstants
+import com.myStash.android.feature.gallery.GalleryViewModel
 import com.myStash.android.feature.gallery.ui.component.GalleryFolderWindow
 import com.myStash.android.feature.gallery.ui.component.GalleryModalSheet
-import com.myStash.android.feature.gallery.GalleryViewModel
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun GalleryRoute(
     viewModel: GalleryViewModel = hiltViewModel()

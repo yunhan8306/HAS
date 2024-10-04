@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetScaffoldState
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,6 +37,7 @@ import com.myStash.android.design_system.ui.theme.clickableNoRipple
 import com.myStash.android.design_system.util.ShimmerLoadingAnimation
 import com.myStash.android.feature.gallery.GalleryAction
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun GalleryScreen(
     scaffoldState: BottomSheetScaffoldState,

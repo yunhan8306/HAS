@@ -1,6 +1,6 @@
 plugins {
     id("myStash.android.library")
-    id("myStash.android.library.compose")
+    id("myStash.android.compose")
     id("myStash.android.hilt")
 }
 

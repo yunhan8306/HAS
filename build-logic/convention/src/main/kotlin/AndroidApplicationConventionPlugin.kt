@@ -4,6 +4,9 @@ import com.myStash.convention.configureKotlinAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.getByType
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
 class AndroidApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -18,6 +21,12 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             extensions.configure<ApplicationExtension> {
                 configureKotlinAndroid(this)
                 defaultConfig.targetSdk = VersionConstants.TARGET_SDK
+            }
+
+            extensions.getByType<KotlinAndroidProjectExtension>().apply {
+                compilerOptions {
+                    jvmTarget.set(JvmTarget.JVM_17)
+                }
             }
         }
     }
