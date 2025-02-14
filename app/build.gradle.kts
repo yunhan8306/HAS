@@ -69,9 +69,9 @@ dependencies {
     implementation(projects.feature.mypage)
     implementation(projects.common.compose)
     implementation(projects.common.util)
-    implementation(projects.core.data)
+    implementation(projects.domain)
     implementation(projects.core.model)
-    implementation(projects.core.di)
+    implementation(projects.di)
     implementation(projects.core.designSystem)
 
     implementation(libs.androidx.core.ktx)

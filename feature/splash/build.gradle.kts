@@ -12,7 +12,6 @@ android {
 dependencies {
     implementation(projects.core.model)
     implementation(projects.core.designSystem)
-    implementation(projects.core.di)
     implementation(projects.common.compose)
     implementation(projects.common.util)
     implementation(projects.common.resource)

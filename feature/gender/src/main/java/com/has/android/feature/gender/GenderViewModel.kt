@@ -2,8 +2,8 @@ package com.has.android.feature.gender
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.has.android.core.data.usecase.gender.GetSelectedGenderUseCase
-import com.has.android.core.data.usecase.gender.SaveGenderUseCase
+import com.has.android.domain.database.datasource.usecase.gender.GetSelectedGenderUseCase
+import com.has.android.domain.database.datasource.usecase.gender.SaveGenderUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch

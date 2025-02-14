@@ -9,27 +9,26 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.has.android.common.util.Quadruple
+import com.has.android.common.util.constants.ItemConstants
 import com.has.android.common.util.isNotNull
 import com.has.android.common.util.offer
 import com.has.android.common.util.offerOrRemove
-import com.has.android.core.data.usecase.feed.SaveFeedUseCase
-import com.has.android.core.data.usecase.feed.UpdateFeedUseCase
-import com.has.android.core.data.usecase.has.GetHasListUseCase
-import com.has.android.core.data.usecase.style.GetStyleListUseCase
-import com.has.android.core.data.usecase.tag.CheckAvailableTagUseCase
-import com.has.android.core.data.usecase.tag.GetTagListUseCase
-import com.has.android.core.data.usecase.type.GetTypeListUseCase
-import com.has.android.core.di.DefaultDispatcher
 import com.has.android.core.model.Feed
 import com.has.android.core.model.StyleScreenModel
 import com.has.android.core.model.Tag
 import com.has.android.core.model.filterSelectTag
 import com.has.android.core.model.getStyleScreenModel
 import com.has.android.core.model.tagFoundFromSearchText
-import com.has.android.common.util.constants.ItemConstants
+import com.has.android.domain.database.database.usecase.feed.SaveFeedUseCase
+import com.has.android.domain.database.database.usecase.feed.UpdateFeedUseCase
+import com.has.android.domain.database.database.usecase.has.GetHasListUseCase
+import com.has.android.domain.database.database.usecase.style.GetStyleListUseCase
+import com.has.android.domain.database.database.usecase.tag.CheckAvailableTagUseCase
+import com.has.android.domain.database.database.usecase.tag.GetTagListUseCase
+import com.has.android.domain.database.database.usecase.type.GetTypeListUseCase
 import com.has.android.feature.item.item.ItemTab
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -60,8 +59,6 @@ class AddFeedViewModel @Inject constructor(
     private val saveFeedUseCase: SaveFeedUseCase,
     private val updateFeedUseCase: UpdateFeedUseCase,
     private val stateHandle: SavedStateHandle,
-    // dispatcher
-    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ): ContainerHost<AddFeedScreenState, AddFeedSideEffect>, ViewModel() {
     override val container: Container<AddFeedScreenState, AddFeedSideEffect> =
         container(AddFeedScreenState())
@@ -77,7 +74,7 @@ class AddFeedViewModel @Inject constructor(
 
     private val searchTagList = searchTextState
         .textAsFlow()
-        .flowOn(defaultDispatcher)
+        .flowOn(Dispatchers.Default)
         .onEach { text ->
             tagTotalList.value.tagFoundFromSearchText(
                 text = text,

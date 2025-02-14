@@ -12,8 +12,7 @@ android {
 dependencies {
     implementation(projects.core.model)
     implementation(projects.core.designSystem)
-    implementation(projects.core.di)
-    implementation(projects.core.data)
+    implementation(projects.domain)
     implementation(projects.common.compose)
     implementation(projects.common.util)
     implementation(projects.common.resource)
@@ -33,4 +32,5 @@ dependencies {
     implementation(libs.orbit.viewmodel)
 
     implementation(libs.androidx.compose.hilt.navigation)
+    implementation(project(":di"))
 }

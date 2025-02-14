@@ -8,10 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.has.android.common.util.getAppVersion
 import com.has.android.common.util.ifEmptyReturnNull
-import com.has.android.core.data.usecase.profile.GetNickNameUseCase
-import com.has.android.core.data.usecase.profile.GetProfileUriUseCase
-import com.has.android.core.data.usecase.profile.SetNickNameUseCase
-import com.has.android.core.data.usecase.profile.SetProfileUriUseCase
+import com.has.android.domain.database.datasource.usecase.profile.GetNickNameUseCase
+import com.has.android.domain.database.datasource.usecase.profile.GetProfileUriUseCase
+import com.has.android.domain.database.datasource.usecase.profile.SetNickNameUseCase
+import com.has.android.domain.database.datasource.usecase.profile.SetProfileUriUseCase
 import com.has.android.feature.myPage.ui.MyPageScreenAction
 import com.has.android.feature.myPage.ui.MyPageScreenState
 import com.has.android.feature.myPage.ui.MyPageSideEffect

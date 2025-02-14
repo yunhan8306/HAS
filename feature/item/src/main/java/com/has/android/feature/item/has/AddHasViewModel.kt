@@ -8,25 +8,24 @@ import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.has.android.common.util.constants.ItemConstants
 import com.has.android.common.util.offer
 import com.has.android.common.util.offerOrRemove
-import com.has.android.core.data.usecase.has.SaveHasUseCase
-import com.has.android.core.data.usecase.has.UpdateHasUseCase
-import com.has.android.core.data.usecase.tag.CheckAvailableTagUseCase
-import com.has.android.core.data.usecase.tag.GetTagListUseCase
-import com.has.android.core.data.usecase.tag.SaveTagUseCase
-import com.has.android.core.data.usecase.type.GetTypeListUseCase
-import com.has.android.core.di.DefaultDispatcher
 import com.has.android.core.model.Has
 import com.has.android.core.model.Tag
 import com.has.android.core.model.Type
 import com.has.android.core.model.getTagList
 import com.has.android.core.model.getType
 import com.has.android.core.model.tagAddAndFoundFromSearchText
-import com.has.android.common.util.constants.ItemConstants
+import com.has.android.domain.database.database.usecase.has.SaveHasUseCase
+import com.has.android.domain.database.database.usecase.has.UpdateHasUseCase
+import com.has.android.domain.database.database.usecase.tag.CheckAvailableTagUseCase
+import com.has.android.domain.database.database.usecase.tag.GetTagListUseCase
+import com.has.android.domain.database.database.usecase.tag.SaveTagUseCase
+import com.has.android.domain.database.database.usecase.type.GetTypeListUseCase
 import com.has.android.feature.item.item.ItemTab
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -46,15 +45,12 @@ import javax.inject.Inject
 @HiltViewModel
 class AddHasViewModel @Inject constructor(
     private val checkAvailableTagUseCase: CheckAvailableTagUseCase,
-
     private val getTagListUseCase: GetTagListUseCase,
     private val getTypeListUseCase: GetTypeListUseCase,
     private val saveHasUseCase: SaveHasUseCase,
     private val updateHasUseCase: UpdateHasUseCase,
     private val saveTagUseCase: SaveTagUseCase,
     private val stateHandle: SavedStateHandle,
-    // dispatcher
-    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ): ContainerHost<AddHasScreenState, AddHasSideEffect>, ViewModel() {
     override val container: Container<AddHasScreenState, AddHasSideEffect> =
         container(AddHasScreenState())
@@ -72,7 +68,7 @@ class AddHasViewModel @Inject constructor(
 
     private val searchTagList = searchTextState
         .textAsFlow()
-        .flowOn(defaultDispatcher)
+        .flowOn(Dispatchers.Default)
         .onEach { text ->
             tagTotalList.value.tagAddAndFoundFromSearchText(
                 text = text,

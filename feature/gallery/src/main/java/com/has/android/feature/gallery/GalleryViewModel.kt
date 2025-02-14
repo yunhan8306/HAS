@@ -7,25 +7,24 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.has.android.common.util.AppConfig
 import com.has.android.common.util.checkContain
+import com.has.android.common.util.constants.GalleryConstants.AGO_IMAGE_URI_ARRAY
+import com.has.android.common.util.constants.GalleryConstants.MULTI
+import com.has.android.common.util.constants.GalleryConstants.MULTI_CNT
+import com.has.android.common.util.constants.GalleryConstants.SINGLE
+import com.has.android.common.util.constants.GalleryConstants.TYPE
 import com.has.android.common.util.offerFirst
 import com.has.android.common.util.offerOrRemove
-import com.has.android.core.di.IoDispatcher
 import com.has.android.core.model.Image
 import com.has.android.core.model.ImageFolder
 import com.has.android.core.model.addTotalFolder
 import com.has.android.core.model.getFirstImage
 import com.has.android.core.model.getFolderList
 import com.has.android.core.model.getImageList
-import com.has.android.common.util.constants.GalleryConstants.AGO_IMAGE_URI_ARRAY
-import com.has.android.common.util.constants.GalleryConstants.MULTI
-import com.has.android.common.util.constants.GalleryConstants.MULTI_CNT
-import com.has.android.common.util.constants.GalleryConstants.SINGLE
-import com.has.android.common.util.constants.GalleryConstants.TYPE
-import com.has.android.core.data.repository.gallery.GalleryRepository
+import com.has.android.domain.database.database.repository.gallery.GalleryRepository
 import com.has.android.feature.gallery.ui.GalleryScreenState
 import com.has.android.feature.gallery.ui.GallerySideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
@@ -34,7 +33,6 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
-import java.util.Locale.filter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,7 +40,6 @@ class GalleryViewModel @Inject constructor(
     private val application: Application,
     private val galleryRepository: GalleryRepository,
     private val stateHandle: SavedStateHandle,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ): ContainerHost<GalleryScreenState, GallerySideEffect>, ViewModel() {
 
     override val container: Container<GalleryScreenState, GallerySideEffect> =
@@ -83,7 +80,7 @@ class GalleryViewModel @Inject constructor(
     }
 
     fun getGalleryImages() {
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch(Dispatchers.IO) {
             galleryRepository.init()
         }
     }
@@ -154,7 +151,7 @@ class GalleryViewModel @Inject constructor(
 
     private fun selectFolder(imageFolder: ImageFolder) {
         intent {
-            viewModelScope.launch(ioDispatcher) {
+            viewModelScope.launch(Dispatchers.IO) {
                 reduce {
                     state.copy(
                         selectedFolder = imageFolder,

@@ -5,12 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.has.android.common.util.Quadruple
 import com.has.android.common.util.offerOrRemove
-import com.has.android.core.data.usecase.has.DeleteHasUseCase
-import com.has.android.core.data.usecase.has.GetHasListUseCase
-import com.has.android.core.data.usecase.tag.GetTagListUseCase
-import com.has.android.core.data.usecase.type.GetTypeListUseCase
-import com.has.android.core.di.DefaultDispatcher
-import com.has.android.core.di.IoDispatcher
 import com.has.android.core.model.Has
 import com.has.android.core.model.Tag
 import com.has.android.core.model.Type
@@ -20,11 +14,14 @@ import com.has.android.core.model.getTagList
 import com.has.android.core.model.getTotalTypeList
 import com.has.android.core.model.getUnSelectTypeList
 import com.has.android.core.model.sortSelectedTagList
+import com.has.android.domain.database.database.usecase.has.DeleteHasUseCase
+import com.has.android.domain.database.database.usecase.has.GetHasListUseCase
+import com.has.android.domain.database.database.usecase.tag.GetTagListUseCase
+import com.has.android.domain.database.database.usecase.type.GetTypeListUseCase
 import com.has.android.feature.essential.ui.HasScreenAction
 import com.has.android.feature.essential.ui.HasScreenState
 import com.has.android.feature.essential.ui.HasSideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -46,9 +43,6 @@ class HasViewModel @Inject constructor(
     private val deleteHasUseCase: DeleteHasUseCase,
     // type
     private val getTypeListUseCase: GetTypeListUseCase,
-    // dispatcher
-    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ContainerHost<HasScreenState, HasSideEffect>, ViewModel() {
     override val container: Container<HasScreenState, HasSideEffect> =
         container(HasScreenState())

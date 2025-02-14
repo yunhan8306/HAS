@@ -4,9 +4,9 @@ import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.text2.input.clearText
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.has.android.core.data.usecase.type.GetTypeListUseCase
-import com.has.android.core.data.usecase.type.SaveTypeUseCase
-import com.has.android.core.data.usecase.type.UpdateTypeUseCase
+import com.has.android.domain.database.database.usecase.type.GetTypeListUseCase
+import com.has.android.domain.database.database.usecase.type.SaveTypeUseCase
+import com.has.android.domain.database.database.usecase.type.UpdateTypeUseCase
 import com.has.android.core.model.Type
 import com.has.android.core.model.update
 import dagger.hilt.android.lifecycle.HiltViewModel

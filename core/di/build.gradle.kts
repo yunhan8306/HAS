@@ -8,9 +8,8 @@ android {
 }
 
 dependencies {
-    implementation(projects.core.dataBase)
-    implementation(projects.core.dataStore)
-    implementation(projects.core.data)
+    implementation(projects.domain)
+    implementation(projects.data)
 
     implementation(libs.androidx.room)
     implementation(libs.androidx.room.runtime)

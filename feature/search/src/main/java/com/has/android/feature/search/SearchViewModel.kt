@@ -12,22 +12,21 @@ import androidx.lifecycle.viewModelScope
 import com.has.android.common.util.constants.SearchConstants
 import com.has.android.common.util.offer
 import com.has.android.common.util.offerOrRemove
-import com.has.android.core.data.usecase.has.GetHasListUseCase
-import com.has.android.core.data.usecase.style.GetStyleListUseCase
-import com.has.android.core.data.usecase.tag.GetTagListUseCase
-import com.has.android.core.di.DefaultDispatcher
 import com.has.android.core.model.Tag
 import com.has.android.core.model.filterSelectTag
 import com.has.android.core.model.getTagList
+import com.has.android.core.model.selectTag
 import com.has.android.core.model.setUsedHasCnt
 import com.has.android.core.model.setUsedStyleCnt
-import com.has.android.core.model.selectTag
 import com.has.android.core.model.tagFoundFromSearchText
+import com.has.android.domain.database.database.usecase.has.GetHasListUseCase
+import com.has.android.domain.database.database.usecase.style.GetStyleListUseCase
+import com.has.android.domain.database.database.usecase.tag.GetTagListUseCase
 import com.has.android.feature.search.ui.SearchAction
 import com.has.android.feature.search.ui.SearchScreenState
 import com.has.android.feature.search.ui.SearchSideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -50,7 +49,6 @@ class SearchViewModel @Inject constructor(
     private val getTagListUseCase: GetTagListUseCase,
     private val getHasListUseCase: GetHasListUseCase,
     private val getStyleListUseCase: GetStyleListUseCase,
-    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ): ContainerHost<SearchScreenState, SearchSideEffect>, ViewModel() {
     override val container: Container<SearchScreenState, SearchSideEffect> =
         container(SearchScreenState())
@@ -65,7 +63,7 @@ class SearchViewModel @Inject constructor(
 
     private val searchTagList = searchTextState
         .textAsFlow()
-        .flowOn(defaultDispatcher)
+        .flowOn(Dispatchers.Default)
         .onEach { text ->
             tagTotalList.value.tagFoundFromSearchText(
                 text = text,

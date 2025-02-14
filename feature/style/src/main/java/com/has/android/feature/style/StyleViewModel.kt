@@ -4,23 +4,20 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.has.android.common.util.offerOrRemove
-import com.has.android.core.data.usecase.style.DeleteStyleUseCase
-import com.has.android.core.data.usecase.style.GetStyleListUseCase
-import com.has.android.core.data.usecase.tag.GetTagListUseCase
-import com.has.android.core.data.usecase.type.GetTypeListUseCase
-import com.has.android.core.di.DefaultDispatcher
-import com.has.android.core.di.IoDispatcher
 import com.has.android.core.model.Style.Companion.toStyle
 import com.has.android.core.model.StyleScreenModel
 import com.has.android.core.model.Tag
 import com.has.android.core.model.filterSelectTag
 import com.has.android.core.model.getTagList
 import com.has.android.core.model.sortSelectedTagList
+import com.has.android.domain.database.database.usecase.style.DeleteStyleUseCase
+import com.has.android.domain.database.database.usecase.style.GetStyleListUseCase
+import com.has.android.domain.database.database.usecase.tag.GetTagListUseCase
+import com.has.android.domain.database.database.usecase.type.GetTypeListUseCase
 import com.has.android.feature.style.ui.StyleScreenAction
 import com.has.android.feature.style.ui.StyleScreenState
 import com.has.android.feature.style.ui.StyleSideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -40,9 +37,6 @@ class StyleViewModel @Inject constructor(
     private val getTypeListUseCase: GetTypeListUseCase,
     private val getTagListUseCase: GetTagListUseCase,
     private val deleteStyleUseCase: DeleteStyleUseCase,
-    // dispatcher
-    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ContainerHost<StyleScreenState, StyleSideEffect>, ViewModel() {
     override val container: Container<StyleScreenState, StyleSideEffect> =
         container(StyleScreenState())
