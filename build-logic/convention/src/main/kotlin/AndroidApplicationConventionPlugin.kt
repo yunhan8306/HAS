@@ -1,6 +1,6 @@
 import com.android.build.api.dsl.ApplicationExtension
-import com.myStash.convention.VersionConstants
-import com.myStash.convention.configureKotlinAndroid
+import com.has.convention.VersionConstants
+import com.has.convention.configureKotlinAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure

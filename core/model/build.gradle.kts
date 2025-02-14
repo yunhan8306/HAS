@@ -1,10 +1,10 @@
 plugins {
-    id("myStash.android.library")
+    id("has.android.library")
     id("kotlin-parcelize")
 }
 
 android {
-    namespace = "com.myStash.android.core.model"
+    namespace = "com.has.android.core.model"
 }
 
 dependencies {

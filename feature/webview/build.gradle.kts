@@ -1,12 +1,12 @@
 plugins {
-    id("myStash.android.library")
-    id("myStash.android.compose")
-    id("myStash.android.library.compose")
-    id("myStash.android.hilt")
+    id("has.android.library")
+    id("has.android.compose")
+    id("has.android.library.compose")
+    id("has.android.hilt")
 }
 
 android {
-    namespace = "com.myStash.android.feature.webview"
+    namespace = "com.has.android.feature.webview"
 }
 
 dependencies {

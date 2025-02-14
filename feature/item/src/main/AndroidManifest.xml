@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.myStash.android.feature.item">
+    package="com.has.android.feature.item">
 
     <application>
         <activity
-            android:name="com.myStash.android.feature.item.ItemActivity"
+            android:name="com.has.android.feature.item.ItemActivity"
             android:exported="false"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize"

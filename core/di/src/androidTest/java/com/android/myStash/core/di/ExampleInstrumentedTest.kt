@@ -1,4 +1,4 @@
-package com.android.myStash.core.di
+package com.android.has.core.di
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.myStash.android.core.di.test", appContext.packageName)
+        assertEquals("com.has.android.core.di.test", appContext.packageName)
     }
 }

@@ -10,10 +10,10 @@ import androidx.lifecycle.viewModelScope
 import com.myStach.android.feature.contact.ui.ContactAction
 import com.myStach.android.feature.contact.ui.ContactSideEffect
 import com.myStach.android.feature.contact.ui.ContactState
-import com.myStash.android.common.util.checkEmail
-import com.myStash.android.common.util.getUri
-import com.myStash.android.common.util.isNotNull
-import com.myStash.android.common.util.offerOrRemove
+import com.has.android.common.util.checkEmail
+import com.has.android.common.util.getUri
+import com.has.android.common.util.isNotNull
+import com.has.android.common.util.offerOrRemove
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine

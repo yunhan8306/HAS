@@ -1,5 +1,5 @@
 import com.android.build.gradle.LibraryExtension
-import com.myStash.convention.configureAndroidCompose
+import com.has.convention.configureAndroidCompose
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.getByType

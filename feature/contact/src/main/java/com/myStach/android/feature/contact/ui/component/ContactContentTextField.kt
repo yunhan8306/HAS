@@ -24,12 +24,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.myStash.android.design_system.ui.DevicePreviews
-import com.myStash.android.design_system.ui.color.ColorFamilyBlack20AndWhite
-import com.myStash.android.design_system.ui.color.ColorFamilyGray300AndGray600
-import com.myStash.android.design_system.ui.color.ColorFamilyGray900AndGray400
-import com.myStash.android.design_system.ui.color.ColorFamilyWhiteAndBlack20
-import com.myStash.android.design_system.ui.component.text.HasText
+import com.has.android.design_system.ui.DevicePreviews
+import com.has.android.design_system.ui.color.ColorFamilyBlack20AndWhite
+import com.has.android.design_system.ui.color.ColorFamilyGray300AndGray600
+import com.has.android.design_system.ui.color.ColorFamilyGray900AndGray400
+import com.has.android.design_system.ui.color.ColorFamilyWhiteAndBlack20
+import com.has.android.design_system.ui.component.text.HasText
 
 @Composable
 fun ContactContentTextField(

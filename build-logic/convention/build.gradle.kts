@@ -24,27 +24,27 @@ dependencies {
 gradlePlugin {
     plugins {
         register("androidApplication") {
-            id = "myStash.android.application"
+            id = "has.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
         register("androidApplicationCompose") {
-            id = "myStash.android.compose"
+            id = "has.android.compose"
             implementationClass = "AndroidApplicationComposeConventionPlugin"
         }
         register("androidHilt") {
-            id = "myStash.android.hilt"
+            id = "has.android.hilt"
             implementationClass = "AndroidHiltConventionPlugin"
         }
         register("androidLibrary") {
-            id = "myStash.android.library"
+            id = "has.android.library"
             implementationClass = "AndroidLibraryConventionPlugin"
         }
         register("androidLibraryCompose") {
-            id = "myStash.android.library.compose"
+            id = "has.android.library.compose"
             implementationClass = "AndroidLibraryComposeConventionPlugin"
         }
         register("kotlinLibraryCompose") {
-            id = "myStash.kotlin.library"
+            id = "has.kotlin.library"
             implementationClass = "KotlinLibraryConventionPlugin"
         }
     }

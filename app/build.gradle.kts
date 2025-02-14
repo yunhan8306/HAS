@@ -1,17 +1,17 @@
-import com.myStash.convention.VersionConstants
+import com.has.convention.VersionConstants
 import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    id("myStash.android.application")
-    id("myStash.android.compose")
-    id("myStash.android.hilt")
+    id("has.android.application")
+    id("has.android.compose")
+    id("has.android.hilt")
     id("org.jetbrains.kotlin.android")
 }
 
 android {
     defaultConfig {
-        applicationId = "com.myStash.android"
+        applicationId = "com.has.android"
         versionCode = VersionConstants.VERSION_CODE
         versionName = VersionConstants.VERSION_NAME
 
@@ -53,7 +53,7 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    namespace = "com.myStash.android"
+    namespace = "com.has.android"
 }
 
 dependencies {

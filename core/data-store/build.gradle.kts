@@ -1,10 +1,10 @@
 plugins {
-    id("myStash.android.library")
-    id("myStash.android.hilt")
+    id("has.android.library")
+    id("has.android.hilt")
 }
 
 android {
-    namespace = "com.myStash.android.core.data_store"
+    namespace = "com.has.android.core.data_store"
 }
 
 dependencies {

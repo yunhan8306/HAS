@@ -1,0 +1,10 @@
+package com.has.android.core.data.usecase.profile
+
+import com.has.android.core.data.repository.profile.ProfileRepository
+import javax.inject.Inject
+
+class GetProfileUriUseCase @Inject constructor(
+    private val profileRepository: ProfileRepository
+) {
+    operator fun invoke() = profileRepository.getProfileUri
+}

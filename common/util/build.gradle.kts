@@ -1,11 +1,11 @@
 plugins {
-    id("myStash.android.library")
-    id("myStash.android.compose")
-    id("myStash.android.hilt")
+    id("has.android.library")
+    id("has.android.compose")
+    id("has.android.hilt")
 }
 
 android {
-    namespace = "com.myStash.android.common.util"
+    namespace = "com.has.android.common.util"
 }
 
 

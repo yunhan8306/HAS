@@ -1,9 +1,9 @@
 plugins {
-    id("myStash.android.library")
+    id("has.android.library")
 }
 
 android {
-    namespace = "com.myStash.android.common.resource"
+    namespace = "com.has.android.common.resource"
 }
 
 
