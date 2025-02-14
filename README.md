@@ -12,5 +12,5 @@
 - Architecture : Orbit-MVI, Clean Architecture, Multi Module
 - DI : Hilt
 - Serialization : Moshi, Kotlinx Serialization
-- DataBase : Room, Data Stroe
+- DataBase : Room, Data Store
 - Tool : FireBase
